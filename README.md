@@ -122,14 +122,6 @@ Esta pesquisa se insere na interseção entre **métodos quantitativos**, **fina
 
 ---
 
-## 📊 Atividade do GitHub
-
-<div align="center">
-  <img src="https://github-readme-activity-graph.vercel.app/graph?username=camisabino28&theme=react-dark&bg_color=1a0a0a&color=f5c0c0&line=6b2020&point=e05555&area=true&hide_border=true" width="100%" />
-</div>
-
----
-
 ## 📬 Contato
 
 <div align="center">
