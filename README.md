@@ -31,10 +31,10 @@ Para o desenvolvimento das análises, utilizo:
     * `manuscript/`: Versões do texto da monografia.
 * `output/`: Gráficos, tabelas e resultados exportados.
 
-<div align="center">
-
 ## Cronograma e Status
 Acompanhamento das etapas de desenvolvimento do projeto:
+<div align="center">
+
 | Etapa | Descrição | Status |
 | :--- | :--- | :--- |
 | **Estruturação** | Criação do repositório e organização de pastas | ✅ Concluído |
