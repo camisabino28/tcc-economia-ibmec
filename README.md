@@ -1,12 +1,11 @@
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:1a0a0a,50:3d1515,100:6b2020&height=200&section=header&text=TCC%20—%20Ciências%20Econômicas&fontSize=36&fontColor=e8f4f8&fontAlignY=38&desc=Ibmec-DF%20·%20Camila%20Sabino%20Ribeiro&descAlignY=58&descSize=16&descColor=f5c0c0" width="100%" />
 
-
 <div align="center">
 
-[![Last Commit](https://img.shields.io/github/last-commit/camisabino28/tcc-economia-ibmec?style=flat-square&color=2c5364&label=último%20commit)](https://github.com/camisabino28/tcc-economia-ibmec/commits)
-[![Repo Size](https://img.shields.io/github/repo-size/camisabino28/tcc-economia-ibmec?style=flat-square&color=203a43&label=tamanho)](https://github.com/camisabino28/tcc-economia-ibmec)
-[![Top Language](https://img.shields.io/github/languages/top/camisabino28/tcc-economia-ibmec?style=flat-square&color=0f2027)](https://github.com/camisabino28/tcc-economia-ibmec)
-[![Status](https://img.shields.io/badge/status-em%20desenvolvimento-f0a500?style=flat-square)](https://github.com/camisabino28/tcc-economia-ibmec)
+[![Last Commit](https://img.shields.io/github/last-commit/camisabino28/tcc-economia-ibmec?style=flat-square&color=6b2020&label=último%20commit)](https://github.com/camisabino28/tcc-economia-ibmec/commits)
+[![Repo Size](https://img.shields.io/github/repo-size/camisabino28/tcc-economia-ibmec?style=flat-square&color=3d1515&label=tamanho)](https://github.com/camisabino28/tcc-economia-ibmec)
+[![Top Language](https://img.shields.io/github/languages/top/camisabino28/tcc-economia-ibmec?style=flat-square&color=1a0a0a)](https://github.com/camisabino28/tcc-economia-ibmec)
+[![Status](https://img.shields.io/badge/status-em%20desenvolvimento-e05555?style=flat-square)](https://github.com/camisabino28/tcc-economia-ibmec)
 
 </div>
 
@@ -67,12 +66,12 @@ Esta pesquisa se insere na interseção entre **métodos quantitativos**, **fina
 
 <div align="center">
 
-![Python](https://img.shields.io/badge/Python-0f2027?style=for-the-badge&logo=python&logoColor=ffdd54)
-![R](https://img.shields.io/badge/R-203a43?style=for-the-badge&logo=r&logoColor=75AADB)
-![Jupyter](https://img.shields.io/badge/Jupyter-2c5364?style=for-the-badge&logo=jupyter&logoColor=F37626)
-![Git](https://img.shields.io/badge/Git-0f2027?style=for-the-badge&logo=git&logoColor=F05032)
-![VS Code](https://img.shields.io/badge/VS%20Code-203a43?style=for-the-badge&logo=visual-studio-code&logoColor=007ACC)
-![LaTeX](https://img.shields.io/badge/LaTeX-2c5364?style=for-the-badge&logo=latex&logoColor=white)
+![Python](https://img.shields.io/badge/Python-1a0a0a?style=for-the-badge&logo=python&logoColor=ffdd54)
+![R](https://img.shields.io/badge/R-3d1515?style=for-the-badge&logo=r&logoColor=f5c0c0)
+![Jupyter](https://img.shields.io/badge/Jupyter-6b2020?style=for-the-badge&logo=jupyter&logoColor=F37626)
+![Git](https://img.shields.io/badge/Git-1a0a0a?style=for-the-badge&logo=git&logoColor=F05032)
+![VS Code](https://img.shields.io/badge/VS%20Code-3d1515?style=for-the-badge&logo=visual-studio-code&logoColor=007ACC)
+![LaTeX](https://img.shields.io/badge/LaTeX-6b2020?style=for-the-badge&logo=latex&logoColor=white)
 
 </div>
 
@@ -137,6 +136,7 @@ Esta pesquisa se insere na interseção entre **métodos quantitativos**, **fina
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Camila%20Sabino-1a0a0a?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/camila-sabino-r-a8919830a/)
 [![Gmail](https://img.shields.io/badge/Gmail-camilasab2806%40gmail.com-3d1515?style=for-the-badge&logo=gmail&logoColor=white)](mailto:camilasab2806@gmail.com)
+
 </div>
 
 <br>
