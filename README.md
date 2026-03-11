@@ -1,8 +1,5 @@
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f2027,50:203a43,100:2c5364&height=200&section=header&text=TCC%20—%20Ciências%20Econômicas&fontSize=36&fontColor=e8f4f8&fontAlignY=38&desc=Ibmec-DF%20·%20Camila%20Sabino%20Ribeiro&descAlignY=58&descSize=16&descColor=a8d8ea" width="100%" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:1a0a0a,50:3d1515,100:6b2020&height=200&section=header&text=TCC%20—%20Ciências%20Econômicas&fontSize=36&fontColor=e8f4f8&fontAlignY=38&desc=Ibmec-DF%20·%20Camila%20Sabino%20Ribeiro&descAlignY=58&descSize=16&descColor=f5c0c0" width="100%" />
 
-<div align="center">
-  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3JRcLjIIgjZMb_mnEyxHUWgT-Zla-HZXgsg&s" width="80px" />
-</div>
 
 <div align="center">
 
@@ -28,7 +25,7 @@
 </tr>
 <tr>
 <td><b>Instituição</b></td>
-<td>Ibmec-DF</td>
+<td><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3JRcLjIIgjZMb_mnEyxHUWgT-Zla-HZXgsg&s" height="20px" /> Ibmec-DF</td>
 </tr>
 <tr>
 <td><b>Curso</b></td>
@@ -126,10 +123,10 @@ Esta pesquisa se insere na interseção entre **métodos quantitativos**, **fina
 
 ---
 
-## 📊 Atividade do Repositório
+## 📊 Atividade do GitHub
 
 <div align="center">
-  <img src="https://github-readme-activity-graph.vercel.app/graph?username=camisabino28&theme=react-dark&bg_color=0f2027&color=a8d8ea&line=2c5364&point=f0a500&area=true&hide_border=true" width="100%" />
+  <img src="https://github-readme-activity-graph.vercel.app/graph?username=camisabino28&theme=react-dark&bg_color=1a0a0a&color=f5c0c0&line=6b2020&point=e05555&area=true&hide_border=true" width="100%" />
 </div>
 
 ---
@@ -138,11 +135,10 @@ Esta pesquisa se insere na interseção entre **métodos quantitativos**, **fina
 
 <div align="center">
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Camila%20Sabino-0f2027?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/camila-sabino-r-a8919830a/)
-[![Gmail](https://img.shields.io/badge/Gmail-camilasab2806%40gmail.com-203a43?style=for-the-badge&logo=gmail&logoColor=white)](mailto:camilasab2806@gmail.com)
-
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Camila%20Sabino-1a0a0a?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/camila-sabino-r-a8919830a/)
+[![Gmail](https://img.shields.io/badge/Gmail-camilasab2806%40gmail.com-3d1515?style=for-the-badge&logo=gmail&logoColor=white)](mailto:camilasab2806@gmail.com)
 </div>
 
 <br>
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:2c5364,50:203a43,100:0f2027&height=100&section=footer" width="100%" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:6b2020,50:3d1515,100:1a0a0a&height=100&section=footer" width="100%" />
