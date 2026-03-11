@@ -1,10 +1,14 @@
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f2027,50:203a43,100:2c5364&height=200&section=header&text=TCC%20—%20Ciências%20Econômicas&fontSize=36&fontColor=e8f4f8&fontAlignY=38&desc=Ibmec-DF%20·%20Camila%20Sabino%20Ribeiro&descAlignY=58&descSize=16&descColor=a8d8ea" width="100%" />
 
 <div align="center">
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3JRcLjIIgjZMb_mnEyxHUWgT-Zla-HZXgsg&s" width="80px" />
+</div>
 
-[![Last Commit](https://img.shields.io/github/last-commit/SEU_USUARIO/SEU_REPO?style=flat-square&color=2c5364&label=último%20commit)](https://github.com/camisabino28/SEU_REPO/commits)
-[![Repo Size](https://img.shields.io/github/repo-size/SEU_USUARIO/SEU_REPO?style=flat-square&color=203a43&label=tamanho)](https://github.com/camisabino28/tcc-economia-ibmec)
-[![Top Language](https://img.shields.io/github/languages/top/SEU_USUARIO/SEU_REPO?style=flat-square&color=0f2027)](https://github.com/camisabino28/tcc-economia-ibmec)
+<div align="center">
+
+[![Last Commit](https://img.shields.io/github/last-commit/camisabino28/tcc-economia-ibmec?style=flat-square&color=2c5364&label=último%20commit)](https://github.com/camisabino28/tcc-economia-ibmec/commits)
+[![Repo Size](https://img.shields.io/github/repo-size/camisabino28/tcc-economia-ibmec?style=flat-square&color=203a43&label=tamanho)](https://github.com/camisabino28/tcc-economia-ibmec)
+[![Top Language](https://img.shields.io/github/languages/top/camisabino28/tcc-economia-ibmec?style=flat-square&color=0f2027)](https://github.com/camisabino28/tcc-economia-ibmec)
 [![Status](https://img.shields.io/badge/status-em%20desenvolvimento-f0a500?style=flat-square)](https://github.com/camisabino28/tcc-economia-ibmec)
 
 </div>
@@ -125,7 +129,7 @@ Esta pesquisa se insere na interseção entre **métodos quantitativos**, **fina
 ## 📊 Atividade do Repositório
 
 <div align="center">
-  <img src="https://github-readme-activity-graph.vercel.app/graph?username=SEU_USUARIO&repo=SEU_REPO&theme=react-dark&bg_color=0f2027&color=a8d8ea&line=2c5364&point=f0a500&area=true&hide_border=true" width="100%" />
+  <img src="https://github-readme-activity-graph.vercel.app/graph?username=camisabino28&theme=react-dark&bg_color=0f2027&color=a8d8ea&line=2c5364&point=f0a500&area=true&hide_border=true" width="100%" />
 </div>
 
 ---
