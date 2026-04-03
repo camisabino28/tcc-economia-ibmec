@@ -1,0 +1,71 @@
+\documentclass[12pt,a4paper]{report}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{csquotes}
+\usepackage{import}
+\usepackage{hyperref}
+\usepackage[numbers]{natbib}
+
+\geometry{margin=2.5cm}
+\onehalfspacing
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=blue,
+    plainpages=false,
+    pdftitle={TCC Camila},
+    pdfauthor={Camila Sabino Ribeiro}
+}
+
+\title{Titulo Provisorio do TCC}
+\author{Camila Sabino Ribeiro}
+\date{\today}
+
+\begin{document}
+
+\pagenumbering{gobble}
+
+\begin{titlepage}
+    \centering
+    {\large Ibmec-DF\par}
+    \vspace{1.5cm}
+    {\Large Camila Sabino Ribeiro\par}
+    \vspace{2cm}
+    {\LARGE \bfseries Titulo Provisorio do TCC\par}
+    \vspace{2cm}
+    {\large Trabalho de Conclusao de Curso apresentado ao curso de Ciencias Economicas.\par}
+    \vfill
+    {\large Brasilia\par}
+    {\large \today\par}
+\end{titlepage}
+
+\clearpage
+\pagenumbering{roman}
+\tableofcontents
+\clearpage
+
+\pagenumbering{arabic}
+
+\subimport{capitulos/}{01_introducao.tex}
+\subimport{capitulos/}{02_revisao_literatura.tex}
+\subimport{capitulos/}{03_metodologia.tex}
+\subimport{capitulos/}{04_base_dados_estrategia.tex}
+\subimport{capitulos/}{05_resultados.tex}
+\subimport{capitulos/}{06_conclusao.tex}
+
+\bibliographystyle{plainnat}
+\bibliography{referencias}
+
+\end{document}
