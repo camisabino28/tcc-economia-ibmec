@@ -85,19 +85,26 @@ Esta pesquisa se insere na interseção entre **métodos quantitativos**, **fina
 ## 🗂️ Estrutura do Repositório
 
 ```
-📦 tcc-economia/
+📦 tccCamila/
 ├── 📁 data/
-│   ├── raw/          # Bases brutas originais (não modificadas)
-│   └── processed/    # Dados após tratamento e limpeza
-├── 📁 scripts/
+│   ├── raw/                 # Bases brutas originais (não modificadas)
+│   └── processed/           # Dados após tratamento e limpeza
+├── 📁 scripts/              # Rotinas de coleta, limpeza e análise
 ├── 📁 docs/
-│   ├── references/   # Artigos, livros e base bibliográfica
-│   └── manuscript/   # Versões do texto da monografia
-├── 📁 output/
-│   ├── figures/      # Gráficos e visualizações exportadas
-│   └── tables/       # Tabelas de resultados (LaTeX/CSV)
+│   ├── references/          # Artigos, livros e base bibliográfica
+│   └── manuscript/          # Roteiro, pré-projeto e versões do texto
+├── 📁 outputs/
+│   ├── figures/             # Gráficos e visualizações exportadas
+│   └── tables/              # Tabelas de resultados (LaTeX/CSV)
+├── 📄 .gitignore
 └── 📄 README.md
 ```
+
+### Arquivos-base já preparados
+
+- `docs/manuscript/roteiro_tcc_camila.pdf` para referência inicial do trabalho.
+- `docs/manuscript/plano_de_trabalho.md` para organizar tema, hipótese, dados e cronograma.
+- `scripts/README.md` com convenções mínimas para os scripts do projeto.
 
 ---
 
