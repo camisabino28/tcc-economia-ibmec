@@ -4,16 +4,95 @@ Este capitulo deve apresentar o tema, a pergunta de pesquisa, a relevancia do es
 
 \section{Contexto}
 
-Escrever aqui o contexto economico e academico do problema investigado.
+    A volatilidade dos preços de ativos financeiros é uma das variáveis mais relevantes em
+finanças quantitativas. Ela representa a dispersão dos retornos de um ativo ao longo do tempo
+e serve como insumo central para uma ampla quantidade de aplicações práticas, como o cálculo
+do Value at Risk (VaR) e do Expected Shortfall (ES), medidas utilizadas por bancos e gestoras
+de recursos para dimensionamento de reservas de capital, depende diretamente de estimativas
+precisas da volatilidade. Da mesma forma, a precificação de opções e demais derivativos financeiros, 
+fundamentada no modelo pioneiro de Black e Scholes (1973), e as estratégias de alocação de portfólio 
+baseadas em controle de risco (volatility targeting) são diretamente sensíveis à qualidade dessas 
+estimativas. No âmbito regulatório, o Acordo de Basileia III, estabelecido pelo Bank for International 
+Settlements (BIS, 2011), vigente internacionalmente, exige que instituições financeiras utilizem 
+o Expected Shortfall como métrica de risco de mercado, reforçando a importância de modelos de previsão de
+volatilidade robustos.
+
+    Entretanto, séries de retornos financeiros apresentam características que dificultam a modelagem
+estatística convencional, incluindo heterocedasticidade condicional, clustering de volatilidade, distribuições com caudas pesadas
+e evidências de assimetria na resposta da volatilidade a choques de mercado (Fama, 1965; Akgiray, 1989). Com isso, a família de modelos GARCH 
+(Generalized Autoregressive Conditional Heteroskedasticity), introduzida por Engle (1982) e generalizada por Bollerslev 
+(1986), foi desenvolvida para capturar essas características e permanece como referência consolidada na literatura acadêmica e 
+na prática do setor financeiro. Além disso, extensões como o EGARCH (Nelson, 1991) incorporam o efeito alavancagem, em que choques 
+negativos tendem a elevar a volatilidade de forma assimétrica em relação a choques positivos de mesma magnitude.
+
+    Contudo, os modelos GARCH apresentam limitações relevantes. Por construção, os modelos 
+são lineares na modelagem da variância condicional e têm dificuldade em capturar dinâmicas
+não lineares complexas que frequentemente caracterizam mercados em
+momentos de estresse. Por outro lado, o avanço dos algoritmos de machine learning nas últimas
+décadas, em particular Random Forest, Gradient Boosting (XGBoost) e redes neurais
+recorrentes do tipo Long Short-Term Memory (LSTM), abriram a possibilidade de abordagens
+orientadas a dados com maior flexibilidade para identificar padrões não lineares. A questão
+central que surge é se essa flexibilidade se traduz em ganho preditivo efetivo, especialmente
+fora da amostra de treinamento.
+
+    Dessa forma, o mercado acionário brasileiro constitui um ambiente particularmente relevante para a aplicação desses modelos. 
+A Bolsa de Valores (B3) combina elevada volatilidade com forte sensibilidade a fatores externos, além da recorrência de choques 
+políticos domésticos. Nesse contexto, torna-se relevante investigar se a maior flexibilidade dos algoritmos de machine learning, 
+em comparação aos modelos econométricos tradicionais como o GARCH, se traduz em ganhos preditivos efetivos na previsão da volatilidade 
+no mercado acionário brasileiro.
 
 \section{Pergunta de pesquisa}
 
-Definir claramente a pergunta central do TCC.
+Modelos de machine learning (Random Forest, XGBoost e LSTM) superam modelos
+GARCH (GARCH(1,1) e EGARCH) na previsão da volatilidade diária de ativos do mercado
+acionário brasileiro?
+
 
 \section{Objetivos}
 
-Apresentar o objetivo geral e os objetivos especificos.
+\subsection{Objetivo Geral}
+
+O objetivo do estudo é comparar o desempenho preditivo de modelos GARCH e de algoritmos de machine
+learning na previsão da volatilidade diária de ativos do mercado acionário brasileiro, avaliando
+em que condições cada abordagem apresenta maior acurácia.
+
+\subsection{Objetivos Específicos}
+Para alcançar o objetivo geral, definem-se os seguintes passos:
+\begin{itemize}
+    \item Estimar modelos GARCH(1,1) e EGARCH para a série de retornos do ativo
+selecionado e obter previsões de volatilidade fora da amostra;
+    \item Treinar e calibrar modelos de machine learning (Random Forest, XGBoost e LSTM)
+para a previsão da volatilidade, com engenharia de features baseada em retornos passados e
+indicadores de mercado;
+    \item Analisar se a vantagem preditiva dos modelos se mantém em subperíodos de alta
+volatilidade, como crises e choques macroeconômicos.
+\end{itemize}
+
+\section{Justificativa}
+
+    A rigidez paramétrica dos modelos tradicionais de volatilidade constitui um desafio relevante na modelagem de séries financeiras, 
+especialmente em contextos caracterizados por elevada instabilidade. No caso brasileiro, essa limitação torna-se ainda mais significativa,
+uma vez que a dinâmica dos preços de ativos é fortemente influenciada por fatores externos, instabilidade macroeconômica e componentes 
+comportamentais dos investidores.
+
+    Nesse sentido, evidências empíricas sugerem que o comportamento dos agentes pode amplificar movimentos de mercado. Ferreira, Machado e Silva (2021) 
+destacam que o pessimismo do investidor atua como um fator de propagação de incerteza, contribuindo para a formação de mispricings e para uma resposta 
+assimétrica da volatilidade a novos choques de informação.
+
+    Paralelamente, a literatura internacional aponta que modelos não lineares podem capturar dinâmicas de volatilidade não observadas por modelos econométricos 
+tradicionais. Nesse contexto, Donaldson e Kamstra (1997) demonstram que redes neurais apresentam capacidade superior para modelar padrões complexos em séries financeiras,
+sugerindo potencial ganho preditivo em relação à família GARCH.
+
+    Apesar desses avanços, ainda não há consenso sobre a superioridade dessas abordagens, especialmente em mercados emergentes, onde características estruturais e 
+institucionais podem afetar o desempenho dos modelos. Dessa forma, este trabalho contribui para a literatura ao comparar, no contexto do mercado acionário brasileiro, o 
+desempenho preditivo de modelos GARCH e de algoritmos de machine learning na previsão da volatilidade, com foco na acurácia fora da amostra e em períodos de maior instabilidade.
 
 \section{Estrutura do trabalho}
 
-Descrever brevemente o conteudo de cada capitulo.
+    Este trabalho está estruturado em seis capítulos, incluindo esta introdução. No segundo capítulo, apresenta-se a revisão de literatura,
+que abrange a base teórica e as evidências empíricas pertinentes ao tema, fundamentando a evolução dos modelos de volatilidade e as aplicações 
+de Machine Learning no setor financeiro. O terceiro capítulo detalha a metodologia, descrevendo o desenho  da pesquisa, os modelos propostos e 
+as limitações do estudo. Em seguida, o quarto capítulo aborda a base de dados e a estratégia empírica, explicitando as fontes, a construção das 
+variáveis e o tratamento de dados. Os resultados são discutidos no quinto capítulo, que compreende a análise descritiva, os resultados principais 
+e testes de robustez, incluindo procedimentos de backtesting para validar a capacidade preditiva  e a estabilidade do modelo proposto. Por fim, o 
+sexto capítulo apresenta a conclusão, sintetizando os achados, as contribuições do trabalho e as sugestões para pesquisas futuras. 

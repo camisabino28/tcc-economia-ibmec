@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pipeline TCC – Volatilidade Financeira</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #1a0505;
+    --bg2:     #220808;
+    --panel:   #2a0d0d;
+    --panel2:  #330f0f;
+    --border:  #5a1a1a;
+    --border2: #7a2020;
+
+    --maroon:  #800000;
+    --crimson: #a31515;
+    --red:     #c0392b;
+    --rose:    #e05555;
+    --blush:   #f08080;
+
+    --white:   #ffffff;
+    --offwhite:#f5e8e8;
+    --light:   #e8c8c8;
+    --muted:   #b07070;
+    --dim:     #7a4040;
+
+    --gold:    #d4a054;
+    --amber:   #c8860a;
+    --cream:   #f0d080;
+
+    --mono: 'IBM Plex Mono', monospace;
+    --display: 'Syne', sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--offwhite);
+    font-family: var(--mono);
+    min-height: 100vh;
+    padding: 44px 24px 64px;
+    overflow-x: hidden;
+  }
+
+  /* subtle texture */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,180,180,.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,180,180,.018) 1px, transparent 1px);
+    background-size: 36px 36px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* radial glow at center-top */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -120px; left: 50%;
+    transform: translateX(-50%);
+    width: 700px; height: 400px;
+    background: radial-gradient(ellipse, rgba(160,20,20,.22) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper { position: relative; z-index: 1; max-width: 1140px; margin: 0 auto; }
+
+  /* ── HEADER ── */
+  header { text-align: center; margin-bottom: 54px; }
+  .header-eyebrow {
+    font-size: .62rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  header h1 {
+    font-family: var(--display);
+    font-size: clamp(1.5rem, 3.2vw, 2.4rem);
+    font-weight: 800;
+    letter-spacing: .03em;
+    color: var(--white);
+    line-height: 1.15;
+  }
+  header h1 em {
+    font-style: normal;
+    color: var(--rose);
+  }
+  .header-sub {
+    margin-top: 8px;
+    font-size: .68rem;
+    color: var(--dim);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  .accent-line {
+    width: 72px; height: 2px;
+    background: linear-gradient(90deg, var(--maroon), var(--rose));
+    margin: 16px auto 0;
+    border-radius: 2px;
+  }
+
+  /* ── PIPELINE GRID ── */
+  .pipeline {
+    display: grid;
+    grid-template-columns: 210px 1fr;
+    gap: 0;
+    align-items: start;
+  }
+
+  /* ── ENTRY COLUMN ── */
+  .col-entry {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding-right: 28px;
+    position: relative;
+    padding-top: 32px;
+  }
+  /* vertical connector line from entry card */
+  .col-entry::after {
+    content: '';
+    position: absolute;
+    right: 14px; top: 68px; bottom: 20px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--crimson), transparent);
+    border-radius: 2px;
+  }
+
+  /* ── MAIN COLUMN ── */
+  .col-main {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  /* ── ROW ── */
+  .row { display: grid; gap: 14px; align-items: start; }
+  .row-2col { grid-template-columns: 1fr 1fr; }
+  .row-3col { grid-template-columns: 1fr 1fr 1fr; }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 18px 16px 16px;
+    position: relative;
+    transition: border-color .25s, background .25s;
+  }
+  .card:hover {
+    background: var(--panel2);
+    border-color: var(--border2);
+  }
+
+  .step-tag {
+    position: absolute;
+    top: -10px; left: 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 1px 8px;
+    font-size: .52rem;
+    letter-spacing: .12em;
+    color: var(--dim);
+    text-transform: uppercase;
+    border-radius: 3px;
+  }
+
+  .card-eyebrow {
+    font-size: .56rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 4px;
+  }
+  .card-title {
+    font-family: var(--display);
+    font-size: .92rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 13px;
+    line-height: 1.2;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-wrap: wrap;
+  }
+
+  .method-list { list-style: none; }
+  .method-list li {
+    font-size: .61rem;
+    color: var(--muted);
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(255,150,150,.06);
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .method-list li:last-child { border-bottom: none; }
+  .method-list li .row-fn {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+  }
+  .method-list li .row-fn::before {
+    content: '›';
+    color: var(--crimson);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .fn  { color: #f0b8b8; }
+  .arg { color: var(--gold); font-size: .56rem; padding-left: 12px; }
+
+  /* ── ENTRY CARD specific ── */
+  .card-entry {
+    border-color: var(--crimson);
+    background: linear-gradient(135deg, #2e0a0a, #1e0505);
+  }
+  .source-pill {
+    display: inline-block;
+    background: rgba(192,57,43,.15);
+    border: 1px solid rgba(192,57,43,.35);
+    border-radius: 4px;
+    padding: 2px 9px;
+    font-size: .58rem;
+    color: var(--rose);
+    letter-spacing: .07em;
+    margin-bottom: 12px;
+  }
+
+  /* ── LEFT ACCENT BORDER per class ── */
+  .acc-rose    { border-left: 3px solid var(--rose); }
+  .acc-gold    { border-left: 3px solid var(--gold); }
+  .acc-cream   { border-left: 3px solid var(--cream); }
+  .acc-crimson { border-left: 3px solid var(--crimson); }
+  .acc-blush   { border-left: 3px solid var(--blush); }
+  .acc-amber   { border-left: 3px solid var(--amber); }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-block;
+    font-size: .52rem;
+    padding: 2px 6px;
+    border-radius: 3px;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .b-rose   { background: rgba(224,85,85,.15);  color: var(--rose);   border: 1px solid rgba(224,85,85,.3); }
+  .b-gold   { background: rgba(212,160,84,.15); color: var(--gold);   border: 1px solid rgba(212,160,84,.3); }
+  .b-cream  { background: rgba(240,208,128,.12);color: var(--cream);  border: 1px solid rgba(240,208,128,.25); }
+  .b-muted  { background: rgba(176,112,112,.12);color: var(--light);  border: 1px solid rgba(176,112,112,.25); }
+  .b-amber  { background: rgba(200,134,10,.15); color: var(--amber);  border: 1px solid rgba(200,134,10,.3); }
+  .b-crimson{ background: rgba(163,21,21,.2);   color: var(--blush);  border: 1px solid rgba(163,21,21,.4); }
+
+  /* ── GATE STRIP ── */
+  .gate-strip {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 8px 12px;
+    background: rgba(100,10,10,.3);
+    border: 1px dashed var(--border);
+    border-radius: 5px;
+  }
+  .gate-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: .59rem;
+    color: var(--muted);
+  }
+  .gate-pill .dot {
+    width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+  }
+  .dot-yes { background: #5dba8a; }
+  .dot-no  { background: var(--rose); }
+  .gate-pill strong { color: var(--light); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+  }
+
+  /* ── ARROW connector from entry card ── */
+  .arrow-right {
+    position: absolute;
+    right: -28px; top: 50%;
+    transform: translateY(-50%);
+    width: 28px; height: 2px;
+    background: var(--crimson);
+  }
+  .arrow-right::after {
+    content: '';
+    position: absolute;
+    right: -1px; top: -3.5px;
+    border: 5px solid transparent;
+    border-left-color: var(--crimson);
+  }
+
+  /* ── NOTE ── */
+  .note {
+    margin-top: 10px;
+    font-size: .56rem;
+    color: var(--dim);
+    line-height: 1.5;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,150,150,.07);
+  }
+  .note .hi { color: #5dba8a; }
+  .note .warn { color: var(--rose); }
+
+  /* ── FOOTER ── */
+  footer {
+    margin-top: 48px;
+    text-align: center;
+    font-size: .58rem;
+    color: var(--dim);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  footer span { color: var(--crimson); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 750px) {
+    .pipeline { grid-template-columns: 1fr; }
+    .col-entry { padding-right: 0; padding-top: 0; margin-bottom: 20px; }
+    .col-entry::after { display: none; }
+    .row-2col, .row-3col { grid-template-columns: 1fr; }
+    .arrow-right { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-eyebrow">Trabalho de Conclusão de Curso &nbsp;·&nbsp; Economia &nbsp;·&nbsp; Ibmec-DF</div>
+    <h1>Pipeline de Modelagem e Previsão de<br><em>Volatilidade Financeira</em></h1>
+    <div class="header-sub">GARCH &nbsp;/&nbsp; EGARCH &nbsp;vs&nbsp; Machine Learning</div>
+    <div class="accent-line"></div>
+  </header>
+
+  <!-- PIPELINE -->
+  <div class="pipeline">
+
+    <!-- ── ENTRY ── -->
+    <div class="col-entry">
+      <div class="card card-entry" style="position:relative;">
+        <div class="step-tag">Etapa 1 · Entrada</div>
+        <div class="card-eyebrow">Coleta de Dados</div>
+        <div class="card-title">DataIngestion</div>
+        <div class="source-pill">yfinance · Yahoo Finance</div>
+        <ul class="method-list">
+          <li><div class="row-fn"><span class="fn">puxar_dados()</span></div></li>
+          <li><div class="row-fn"><span class="fn">calcular_log_retornos()</span></div></li>
+          <li><div class="row-fn"><span class="fn">limpar_na()</span></div></li>
+        </ul>
+        <div class="note">
+          Ativo: <strong style="color:var(--light)">A definir</strong><br>
+          Retornos log diários
+        </div>
+        <div class="arrow-right"></div>
+      </div>
+    </div>
+
+    <!-- ── MAIN ── -->
+    <div class="col-main">
+
+      <!-- ROW 1: EDA + Diagnóstico -->
+      <div class="row row-2col">
+        <div class="card acc-rose">
+          <div class="step-tag">Etapa 2a · Análise</div>
+          <div class="card-eyebrow">Estatísticas Descritivas</div>
+          <div class="card-title">DescriptiveStats <span class="badge b-rose">EDA</span></div>
+          <ul class="method-list">
+            <li>
+              <div class="row-fn"><span class="fn">calcular_momentos_estatisticos()</span></div>
+              <span class="arg">→ média, variância, assimetria, curtose</span>
+            </li>
+            <li>
+              <div class="row-fn"><span class="fn">testar_raiz_unitaria()</span></div>
+              <span class="arg">→ teste ADF</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card acc-gold">
+          <div class="step-tag">Etapa 2b · Filtro</div>
+          <div class="card-eyebrow">Testes Diagnósticos</div>
+          <div class="card-title">DiagnosticTests <span class="badge b-gold">O Filtro</span></div>
+          <ul class="method-list">
+            <li>
+              <div class="row-fn"><span class="fn">teste_heterocedasticidade()</span></div>
+              <span class="arg">→ ARCH-LM</span>
+            </li>
+            <li>
+              <div class="row-fn"><span class="fn">teste_normalidade()</span></div>
+              <span class="arg">→ Jarque-Bera</span>
+            </li>
+            <li>
+              <div class="row-fn"><span class="fn">autocorrelacoes()</span></div>
+              <span class="arg">→ ACF / PACF</span>
+            </li>
+            <li>
+              <div class="row-fn"><span class="fn">retornar_booleano_arch()</span></div>
+              <span class="arg">→ True / False</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- GATE -->
+      <div class="gate-strip">
+        <div class="gate-pill">
+          <div class="dot dot-yes"></div>
+          ARCH-LM significativo → <strong>VolatilityModels executado</strong>
+        </div>
+        <div class="gate-pill">
+          <div class="dot dot-no"></div>
+          ARCH-LM não significativo → <strong>GARCH não é ajustado</strong>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- ROW 2: ML + GARCH -->
+      <div class="row row-2col">
+        <div class="card acc-crimson">
+          <div class="step-tag">Etapa 3a · ML</div>
+          <div class="card-eyebrow">Modelos de Machine Learning</div>
+          <div class="card-title">MLPredictor <span class="badge b-crimson">ML</span></div>
+          <ul class="method-list">
+            <li><div class="row-fn"><span class="fn">treinar_random_forest()</span></div></li>
+            <li><div class="row-fn"><span class="fn">treinar_xgboost()</span></div></li>
+            <li>
+              <div class="row-fn"><span class="fn">treinar_lstm()</span></div>
+              <span class="arg">→ redes neurais recorrentes</span>
+            </li>
+            <li><div class="row-fn"><span class="fn">prever_volatilidade()</span></div></li>
+          </ul>
+        </div>
+
+        <div class="card acc-rose">
+          <div class="step-tag">Etapa 3b · Econométrico</div>
+          <div class="card-eyebrow">Modelos de Volatilidade</div>
+          <div class="card-title">VolatilityModels <span class="badge b-rose">GARCH</span></div>
+          <ul class="method-list">
+            <li>
+              <div class="row-fn"><span class="fn">otimizar_garch()</span></div>
+              <span class="arg">→ BIC Grid Search</span>
+            </li>
+            <li>
+              <div class="row-fn"><span class="fn">ajustar_egarch()</span></div>
+              <span class="arg">→ captura assimetria</span>
+            </li>
+            <li><div class="row-fn"><span class="fn">extrair_residuos_padronizados()</span></div></li>
+            <li><div class="row-fn"><span class="fn">volatilizar_varidos()</span></div></li>
+          </ul>
+          <div class="note">
+            ⚠ Executado <em>somente se</em> ARCH-LM → <span class="hi">True</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- ROW 3: Backtesting + Evaluator + Visualizer -->
+      <div class="row row-3col">
+
+        <div class="card acc-amber">
+          <div class="step-tag">Etapa 4a · Backtesting</div>
+          <div class="card-eyebrow">Validação Histórica</div>
+          <div class="card-title">Backtesting <span class="badge b-amber">BT</span></div>
+          <ul class="method-list">
+            <li>
+              <div class="row-fn"><span class="fn">dividir_janelas()</span></div>
+              <span class="arg">→ walk-forward / rolling window</span>
+            </li>
+            <li>
+              <div class="row-fn"><span class="fn">reajustar_modelos()</span></div>
+              <span class="arg">→ retreino a cada janela</span>
+            </li>
+            <li>
+              <div class="row-fn"><span class="fn">calcular_var()</span></div>
+              <span class="arg">→ Value at Risk 95% / 99%</span>
+            </li>
+            <li>
+              <div class="row-fn"><span class="fn">testar_cobertura()</span></div>
+              <span class="arg">→ Kupiec / Christoffersen</span>
+            </li>
+            <li><div class="row-fn"><span class="fn">retornar_resultados()</span></div></li>
+          </ul>
+        </div>
+
+        <div class="card acc-cream">
+          <div class="step-tag">Etapa 4b · Avaliação</div>
+          <div class="card-eyebrow">Comparação de Modelos</div>
+          <div class="card-title">ModelEvaluator <span class="badge b-cream">O Juiz</span></div>
+          <ul class="method-list">
+            <li>
+              <div class="row-fn"><span class="fn">calcular_rmse()</span></div>
+              <span class="arg">→ Root Mean Squared Error</span>
+            </li>
+            <li>
+              <div class="row-fn"><span class="fn">calcular_mae()</span></div>
+              <span class="arg">→ Mean Absolute Error</span>
+            </li>
+            <li>
+              <div class="row-fn"><span class="fn">comparar_erros()</span></div>
+              <span class="arg">→ ranking entre modelos</span>
+            </li>
+            <li>
+              <div class="row-fn"><span class="fn">integrar_backtesting()</span></div>
+              <span class="arg">→ consolida resultados BT</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card acc-blush">
+          <div class="step-tag">Etapa 5 · Saída</div>
+          <div class="card-eyebrow">Visualização</div>
+          <div class="card-title">Visualizer <span class="badge b-muted">Output</span></div>
+          <ul class="method-list">
+            <li><div class="row-fn"><span class="fn">gerar_grafico_comparativo()</span></div></li>
+            <li><div class="row-fn"><span class="fn">plotar_volatilidade_prevista()</span></div></li>
+            <li><div class="row-fn"><span class="fn">plotar_residuos()</span></div></li>
+            <li>
+              <div class="row-fn"><span class="fn">plotar_var_backtesting()</span></div>
+              <span class="arg">→ violações VaR por modelo</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+    </div><!-- /col-main -->
+  </div><!-- /pipeline -->
+
+  <footer>
+    <span>Camila Sabino Ribeiro</span> &nbsp;·&nbsp; TCC Economia &nbsp;·&nbsp; Ibmec-DF &nbsp;·&nbsp; 2025
+  </footer>
+
+</div>
+</body>
+</html>
