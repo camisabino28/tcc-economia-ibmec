@@ -1,4 +1,4 @@
-\chapter{Introducao}
+\chapter{Introdução}
 
 Este capitulo deve apresentar o tema, a pergunta de pesquisa, a relevancia do estudo e a organizacao do trabalho.
 
@@ -13,7 +13,7 @@ precisas da volatilidade. Da mesma forma, a precificação de opções e demais 
 fundamentada no modelo pioneiro de Black e Scholes (1973), e as estratégias de alocação de portfólio 
 baseadas em controle de risco (volatility targeting) são diretamente sensíveis à qualidade dessas 
 estimativas. No âmbito regulatório, o Acordo de Basileia III, estabelecido pelo Bank for International 
-Settlements (BIS, 2011), vigente internacionalmente, exige que instituições financeiras utilizem 
+Settlements (BIS, 2019), vigente internacionalmente, exige que instituições financeiras utilizem 
 o Expected Shortfall como métrica de risco de mercado, reforçando a importância de modelos de previsão de
 volatilidade robustos.
 
@@ -59,7 +59,7 @@ em que condições cada abordagem apresenta maior acurácia.
 \subsection{Objetivos Específicos}
 Para alcançar o objetivo geral, definem-se os seguintes passos:
 \begin{itemize}
-    \item Estimar modelos GARCH(1,1) e EGARCH para a série de retornos do ativo
+    \item Estimar modelos GARCH(p,q) e EGARCH para a série de retornos do ativo
 selecionado e obter previsões de volatilidade fora da amostra;
     \item Treinar e calibrar modelos de machine learning (Random Forest, XGBoost e LSTM)
 para a previsão da volatilidade, com engenharia de features baseada em retornos passados e

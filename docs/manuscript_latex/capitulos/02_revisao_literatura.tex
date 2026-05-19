@@ -1,11 +1,30 @@
-\chapter{Revisao de Literatura}
+\chapter{Revisão de Literatura}
 
 Este capitulo deve organizar os principais autores, conceitos e evidencias empiricas relacionados ao tema.
 
-\section{Base teorica}
+\section{Base teórica}
 
-Sistematizar os conceitos centrais que sustentam a analise.
+    O desenvolvimento teórico da modelagem financeira se fundamentou, inicialmente, na busca por leis estatísticas que pudessem descrever o comportamento dos ativos. Este paradigma, conhecido como model-based, baseia-se em pressupostos 
+teóricos sobre a eficiência dos mercados e a distribuição dos retornos. Fama (1965) consolidou um dos marcos fundamentais da hipótese de eficiência de mercado, sugerindo que os preços refletem todas as informações disponíveis e seguem 
+um "passeio aleatório", o que implicaria na imprevisibilidade sistemática dos retornos futuros e independente do passado. Sob essa premissa de estabilidade, Black e Scholes (1973) desenvolveram seu modelo clássico de precificação de opções, 
+que embora revolucionário, tratava a volatilidade como um parâmetro constante, uma limitação que a realidade dos mercados logo contestaria.
 
-\section{Evidencia empirica}
+    A percepção de que a incerteza é dinâmica levou ao surgimento dos modelos de heterocedasticidade condicional. O modelo ARCH, proposto por Engle (1982), permitiu que a variância condicional fosse modelada em função de choques passados,
+ reconhecendo que períodos de incerteza tendem a ser persistentes. Bollerslev (1986) refinou essa mecânica ao introduzir o componente autorregressivo no GARCH, possibilitando que a volatilidade dependesse não apenas de choques, mas de 
+ seu próprio histórico, conferindo maior parcimônia ao modelo.
 
-Reunir estudos anteriores, resultados relevantes e lacunas da literatura.
+    Um avanço teórico crítico para esta comparação é o reconhecimento das assimetrias. Nelson (1991), ao propor o EGARCH, introduziu a função de valor logarítmico para garantir a positividade da variância e, fundamentalmente, permitir que o 
+modelo reagisse de forma distinta a retornos negativos e positivos. Desse modo, teoricamente, esses modelos representam o esforço de impor uma estrutura paramétrica interpretável à dinâmica da volatilidade, permitindo que gestores cumpram 
+exigências regulatórias, como as de Basileia III, por meio de fórmulas fechadas e robustas.
+
+
+\section{Evidência empírica}
+
+A literatura empírica, ao testar a robustez dos modelos teóricos em cenários reais, evidenciou a necessidade de maior flexibilidade. Estudos pioneiros, como o de Akgiray (1989), já apontavam que modelos baseados em séries temporais superavam métodos de variância histórica simples. Contudo, a aplicação prática em mercados de alta frequência, como discutido por Moreira e Lemgruber (2004), revelou que a precisão dos modelos model-based é altamente sensível à qualidade do tratamento dos dados, como a filtragem de sazonalidade intradiária.
+
+Nesse contexto, as abordagens data-driven surgiram como uma resposta às limitações dos modelos clássicos na captura de quebras estruturais e relações não lineares. Chung, Espinoza e Quispe (2025) destacam que, em períodos de crises agudas, a rigidez dos modelos GARCH pode levar a redução significativa da capacidade preditiva. Além disso, Donaldson e Kamstra (1996) apresentaram evidências de que Redes Neurais podem capturar efeitos não lineares que escapam às equações tradicionais. Essa superioridade foi reforçada por Kristjanpoller e Minutolo (2015), cujos testes em mercados de commodities evidenciaram que modelos híbridos reduzem significativamente o erro de previsão ao permitirem que o algoritmo aprenda padrões complexos diretamente dos dados.
+
+No Brasil, o estudo de Ferreira, Machado e Silva (2020) destaca que fatores idiossincráticos, como o sentimento do investidor, impactam a volatilidade de forma que o GARCH clássico tem dificuldade em mapear. Em contrapartida, modelos híbridos, como os propostos por Kristjanpoller e Minutolo (2015) e Kim e Won (2018), sugerem que a melhor performance preditiva é alcançada quando se utiliza o GARCH para extrair a estrutura serial e o Machine Learning para processar os resíduos não lineares.
+
+Ao contrário da abordagem model-based, que prioriza a interpretação dos parâmetros, a abordagem data-driven foca na adaptação contínua e na precisão, utilizando grandes volumes de dados para identificar padrões e relações não lineares difíceis de serem capturados por estruturas paramétricas tradicionais. Assim, a literatura recente sugere que enquanto os modelos teóricos oferecem a base estrutural, a flexibilidade dos dados é essencial para navegar na complexidade dos mercados contemporâneos.
+
