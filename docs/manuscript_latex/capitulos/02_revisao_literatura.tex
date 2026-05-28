@@ -1,30 +1,168 @@
 \chapter{Revisão de Literatura}
+Este capítulo apresenta a base teórica e as evidências empíricas que fundamentam a estratégia metodológica adotada neste trabalho. A revisão está organizada em três partes. A primeira parte, composta pelas seções 2.1.1 a 2.1.3, percorre o paradigma model-based, apresentando os modelos em ordem crescente de complexidade, dos benchmarks ingênuos (Média Histórica e EWMA) ao modelo linear de séries temporais (ARIMA) e, por fim, aos modelos de heterocedasticidade condicional (GARCH e EGARCH). A segunda parte, composta pelas seções 2.2.1 e 2.2.2, apresenta o paradigma data-driven, descrevendo os fundamentos teóricos dos algoritmos Random Forest e XGBoost. A terceira parte, na seção 2.3, reúne as evidências empíricas relevantes, com foco nas aplicações ao mercado cambial brasileiro e nas comparações diretas entre os dois paradigmas. Essa estrutura reflete a hierarquia de modelos que será operacionalizada no capítulo de metodologia e permite ao leitor acompanhar a progressão conceitual que justifica cada escolha analítica deste trabalho.
 
-Este capitulo deve organizar os principais autores, conceitos e evidencias empiricas relacionados ao tema.
-
-\section{Base teórica}
-
-    O desenvolvimento teórico da modelagem financeira se fundamentou, inicialmente, na busca por leis estatísticas que pudessem descrever o comportamento dos ativos. Este paradigma, conhecido como model-based, baseia-se em pressupostos 
+\section{Base teórica - Paradigma Model-Based}
+    O desenvolvimento teórico da modelagem financeira se fundamentou, inicialmente, na busca por leis estatísticas que pudessem descrever o comportamento dos ativos. Este paradigma, conhecido como model-based, se baseia em pressupostos 
 teóricos sobre a eficiência dos mercados e a distribuição dos retornos. Fama (1965) consolidou um dos marcos fundamentais da hipótese de eficiência de mercado, sugerindo que os preços refletem todas as informações disponíveis e seguem 
 um "passeio aleatório", o que implicaria na imprevisibilidade sistemática dos retornos futuros e independente do passado. Sob essa premissa de estabilidade, Black e Scholes (1973) desenvolveram seu modelo clássico de precificação de opções, 
 que embora revolucionário, tratava a volatilidade como um parâmetro constante, uma limitação que a realidade dos mercados logo contestaria.
+
+\subsection{Benchmarks ingênuos: Média Histórica e EWMA}
+ Em sua abrangente revisão de literatura sobre modelos de previsão de volatilidade, Poon e Granger (2003) classificam os métodos tradicionais dentro da família de modelos de séries temporais. Nessa revisçao, o estimador mais elementar é a 
+ Média Histórica. Em seu estudo empírico, Akgiray (1989) define a Média Histórica como um benchmark inicial (uma média simples das variâncias passadas), o qual seria a melhor previsão caso a série de retornos fosse um "ruído branco" estrito, 
+ mas que apresenta falhas por atribuir pesos iguais a todas as observações e não refletir mudanças de curto prazo no mercado.
+
+ Para corrigir essa limitação de ponderação, a literatura adotou o modelo de Média Móvel Exponencialmente Ponderada (EWMA). Poon e Granger (2003) classificam o método de Média Móvel Exponencialmente Ponderada (EWMA) na categoria de previsões baseadas em desvios padrões passados. 
+Diferentemente de uma média móvel simples, o EWMA atribui pesos que decrescem exponencialmente às observações mais antigas. Isso garante que os choques e os dados mais recentes tenham um impacto maior na previsão da volatilidade, tornando o modelo altamente responsivo para capturar 
+mudanças de curto prazo no mercado, embora apresente dificuldades em mapear características de longo prazo. A especificação do EWMA se tornou um padrão de mercado e é a base metodológica utilizada pelo sistema RiskMetrics. A equação que define a previsão da variância condicional pelo 
+modelo EWMA é formulada como:
+
+\begin{equation}
+    \hat{\sigma}_{t}^{2} = (1 - \lambda)r_{t-1}^{2} + \lambda\hat{\sigma}_{t-1}^{2}
+\end{equation}
+em que $\lambda$ é o fator de decaimento (ou constante de suavização), o qual é frequentemente fixado em $0,94$ para dados diários (JPMorgan, 2016), e $r_{t-1}$ representa o retorno defasado. Uma contribuição teórica crítica destacada por Poon e Granger (2003) é que o EWMA consiste, estruturalmente,
+ em uma versão não estacionária (ou modelo integrado) do modelo GARCH(1,1). Nessa configuração, os parâmetros de persistência somam exatamente $1$ e o modelo não possui um quarto momento finito. Embora essa restrição o torne menos convincente do ponto de vista teórico como um processo 
+ puro de geração de volatilidade, a sua formulação integrada confere ao EWMA um grande poder de predição em horizontes muito curtos. Como o modelo não está ancorado a um nível médio de reversão da volatilidade, ele consegue se ajustar com extrema rapidez às mudanças de regime e quebras na 
+ volatilidade incondicional do mercado.
+
+\subsection{Modelos lineares: ARIMA aplicado à volatilidade}
+Avançando na tentativa de capturar a estrutura de autocorrelação temporal, o modelo ARIMA (Autoregressive Integrated Moving Average) é como uma estrutura de filtro linear clássica e fundamental, amplamente desenvolvida e formalizada no trabalho de Box et al. (2016). O modelo atua 
+transformando uma série altamente dependente e possivelmente não estacionária em uma sequência de variáveis aleatórias descorrelacionadas (ruído branco). Matematicamente, a especificação geral de um processo ARIMA(p,d,q) é formulada utilizando o operador de defasagem (backward shift operator) 
+B, sendo dada pela equação:
+
+\begin{equation}
+    \phi(B)(1 - B)^d z_t = \theta(B)a_t
+\end{equation}
+onde $\phi(B)$ representa o operador autorregressivo (AR) estacionário, $\theta(B)$ é o operador de médias móveis (MA) invertível, $(1 - B)^d$ denota o operador de diferença de ordem $d$ para garantir a estacionariedade, e $a_t$ é o termo de erro ou ruído branco.
+
+    No contexto específico da previsão de risco financeiro, Poon e Granger (2003) revisam a aplicação desses modelos em séries temporais de volatilidade. Segundo os autores, ao projetar a volatilidade como uma função de seus valores defasados e incorporar os erros passados de previsão 
+de volatilidade, se obtém um modelo ARMA, com a introdução da ordem de diferenciação d, formula-se o modelo ARIMA. Dessa forma, seguindo o embasamento de Poon e Granger (2003), o ARIMA será utilizado neste trabalho não para prever o preço do ativo, mas sim como um modelo de referência 
+linear para a dinâmica da variância condicional. Ao ser aplicado sobre uma proxy de volatilidade (como os retornos ao quadrado), o ARIMA busca a melhor predição linear baseada no histórico de variâncias. 
+    
+    No entanto, o uso isolado de premissas lineares apresenta restrições para séries financeiras. Conforme ressalta o estudo de Amoanu (2025), os processos do mundo real (especialmente os retornos financeiros) são marcados por agrupamento de volatilidade e caudas pesadas, violando a 
+premissa de variância constante intrínseca aos modelos lineares. Embora atue como um excelente benchmark linear de persistência, essa insuficiência em lidar com a heterocedasticidade condicional do mercado motiva a progressão hierárquica para os modelos não lineares de variância condicional descritos a seguir.
+
+\subsection{Modelos de heterocedasticidade condicional: GARCH e EGARCH}
 
     A percepção de que a incerteza é dinâmica levou ao surgimento dos modelos de heterocedasticidade condicional. O modelo ARCH, proposto por Engle (1982), permitiu que a variância condicional fosse modelada em função de choques passados,
  reconhecendo que períodos de incerteza tendem a ser persistentes. Bollerslev (1986) refinou essa mecânica ao introduzir o componente autorregressivo no GARCH, possibilitando que a volatilidade dependesse não apenas de choques, mas de 
  seu próprio histórico, conferindo maior parcimônia ao modelo.
 
+ A especificação geral de um processo GARCH(p,q) modela a variância condicional não apenas em função de q inovações quadradas passadas (termos ARCH), mas também de p variâncias condicionais defasadas (termos GARCH). A formulação matemática geral é dada por:
+
+\begin{equation}
+    \sigma_t^2 = \omega + \sum_{i=1}^{q} \alpha_i \varepsilon_{t-i}^2 + \sum_{j=1}^{p} \beta_j \sigma_{t-j}^2
+\end{equation}
+onde se impõe que $\omega > 0$, $\alpha_i \geq 0$ e $\beta_j \geq 0$ para garantir que a variância gerada seja estritamente positiva. Adicionalmente, se exige que a soma $\sum \alpha_i + \sum \beta_j < 1$ para assegurar a estacionariedade da 
+covariância do processo. O estudo empírico clássico de Akgiray (1989) comprovou que as previsões da família GARCH superam notavelmente os métodos tradicionais (como Média Histórica e EWMA) ao modelarem com precisão o \textit{clustering} (agrupamento) da volatilidade.
+
     Um avanço teórico crítico para esta comparação é o reconhecimento das assimetrias. Nelson (1991), ao propor o EGARCH, introduziu a função de valor logarítmico para garantir a positividade da variância e, fundamentalmente, permitir que o 
-modelo reagisse de forma distinta a retornos negativos e positivos. Desse modo, teoricamente, esses modelos representam o esforço de impor uma estrutura paramétrica interpretável à dinâmica da volatilidade, permitindo que gestores cumpram 
-exigências regulatórias, como as de Basileia III, por meio de fórmulas fechadas e robustas.
+modelo reagisse de forma distinta a retornos negativos e positivos. A generalização do modelo EGARCH(p,q), conforme detalhado na representação de Nelson (1991), utiliza a especificação da variância condicional no formato logarítmico, o que dispensa as restrições 
+rígidas de positividade aos parâmetros e permite modelar respostas assimétricas:
 
+\begin{equation}
+    \ln(\sigma_t^2) = \omega + \sum_{i=1}^{q} \left( \alpha_i \left| \frac{\varepsilon_{t-i}}{\sigma_{t-i}} \right| + \gamma_i \frac{\varepsilon_{t-i}}{\sigma_{t-i}} \right) + \sum_{j=1}^{p} \beta_j \ln(\sigma_{t-j}^2)
+\end{equation}
+em que o termo direcional $\frac{\varepsilon_{t-i}}{\sigma_{t-i}}$ (frequentemente tratado como o resíduo padronizado) juntamente com o coeficiente $\gamma_i$, capturam diretamente a magnitude e a assimetria do choque no mercado.
 
+Desse modo, teoricamente, esses modelos representam o esforço de impor uma estrutura paramétrica interpretável à dinâmica da volatilidade, permitindo que gestores cumpram 
+exigências regulatórias, como as de Basileia III, por meio de fórmulas fechadas e robustas. Entretanto, embora sejam a principal referência na modelagem paramétrica de volatilidade (model-based) ao lidar com os fatos estilizados, o GARCH(p,q) e o EGARCH(p,q) 
+ainda impõem uma estrutura funcional pré-definida. Conforme a hierarquia metodológica deste estudo avança, se nota que as limitações paramétricas dessas equações falham ao tentar capturar mudanças de regime severas e não linearidades complexas originadas por 
+quebras estruturais no mercado. Essa constatação justifica o salto para o topo da hierarquia modelar abordado a seguir, as técnicas data-driven baseadas em Machine Learning.
+
+\section{Base teórica - Paradigma Data-Driven}
+Como visto anteriormente, embora os modelos da família GARCH sejam a principal referência na modelagem paramétrica de volatilidade, eles impõem pressupostos distribucionais estritos e dependem da premissa de que os parâmetros são estáveis. Tais restrições 
+frequentemente falham ao tentar capturar dinâmicas não lineares complexas e quebras estruturais repentinas no mercado financeiro. Para superar essa rigidez, a literatura recente passou a adotar algoritmos flexíveis de Machine Learning, que aprendem as relações não 
+lineares diretamente dos dados (abordagem data-driven)
+
+\subsection{Random Forest}
+O \textit{Random Forest}, apresentado por Breiman (2001), é um dos métodos de aprendizado em conjunto (\textit{ensemble}) mais utilizados na literatura. Essa técnica constrói várias árvores de decisão, em que o crescimento de cada uma depende de um sorteio aleatório 
+de dados, mantendo a mesma regra de distribuição para toda a floresta. Para garantir que as árvores sejam diferentes entre si (descorrelacionadas), o modelo usa a amostragem com reposição (\textit{bagging}) junto com a escolha aleatória de variáveis em cada divisão da árvore.
+
+Na teoria, Breiman (2001) usa a Lei dos Grandes Números para mostrar que o algoritmo é muito resistente ao \textit{overfitting} (sobreajuste). Conforme a quantidade de árvores aumenta, o erro de generalização do modelo se estabiliza, impedindo que ele apenas "decore" os dados 
+de treino. Em problemas de regressão (como é o caso de prever a volatilidade contínua), o autor explica que o desempenho da floresta depende de dois fatores principais: o erro médio das árvores individuais ($PE^*(\text{tree})$) e a correlação ponderada entre os seus resíduos 
+($\bar{\rho}$). Essa regra é dada pela seguinte desigualdade:
+
+\begin{equation}
+    PE^*(\text{forest}) \le \bar{\rho} PE^*(\text{tree})
+\end{equation}
+Isso significa que o sucesso do \textit{Random Forest} exige um bom equilíbrio: produzir árvores que errem pouco individualmente, mas que sejam as mais independentes possíveis umas das outras.
+
+Aplicando essa lógica ao mercado financeiro, Amoanu (2025) explica como o \textit{Random Forest} é operacionalizado para prever séries temporais. Diferente dos modelos ARIMA e GARCH, que exigem 
+regras matemáticas rígidas sobre a distribuição dos erros, o \textit{Random Forest} funciona de forma mais livre (não paramétrica). Ele trata a previsão como um problema de aprendizado supervisionado, 
+usando os valores passados da série (as defasagens, ou \textit{lags}) como variáveis explicativas (\textit{inputs}).
+
+A previsão final do modelo para variáveis contínuas é simplesmente a média dos resultados fornecidos por cada árvore:
+
+\begin{equation}
+    \hat{f}_{\text{RF}}(x) = \frac{1}{B} \sum_{b=1}^{B} T_b(x)
+\end{equation}
+em que $B$ é o número total de árvores e $T_b(x)$ é a previsão da $b$-ésima árvore. Como Amoanu (2025) destaca, uma árvore sozinha tem pouco viés (erro sistemático), mas varia muito com qualquer mudança 
+na amostra (alta variância). O \textit{Random Forest} resolve exatamente esse problema ao tirar a média de várias árvores descorrelacionadas, ele derruba a variância da estimativa sem aumentar o viés. 
+É por isso que o modelo se torna tão competitivo para capturar a complexidade e as não linearidades das séries financeiras.
+
+\subsection{XGBoost}
+Como o modelo de \textit{Machine Learning} mais avançado deste trabalho, o algoritmo \textit{XGBoost} (\textit{Extreme Gradient Boosting}) é como um mecanismo de aprendizagem 
+em árvore que se destaca pela sua elevada escalabilidade e eficiência, com origem no desenvolvimento de Chen e Guestrin (2016). Em contraste com o método \textit{Random Forest}, que elabora diversas 
+árvores de decisão de forma paralela e independente com vista à redução da variância, o \textit{XGBoost} se baseia na arquitetura de \textit{gradient boosting}. Esta arquitetura implica um processo
+ de treino sequencial e aditivo, no qual cada nova árvore é incorporada com o intuito estrito de retificar os erros residuais gerados pelo agrupamento de árvores das fases precedentes.
+
+Do ponto de vista matemático, Chen e Guestrin (2016) estabelecem que, na iteração $t$, a função objetivo regularizada, sujeita a minimização, é expressa por:
+
+\begin{equation}
+    \mathcal{L}^{(t)} = \sum_{i=1}^{n} l(y_i, \hat{y}_i^{(t-1)} + f_t(x_i)) + \Omega(f_t)
+\end{equation}
+em que $l$ é uma função de perda convexa responsável por quantificar o desvio entre a volatilidade observada ($y_i$) e a estimativa do modelo obtida na iteração antecedente ($\hat{y}_i^{(t-1)}$), 
+ao passo que $f_t(x_i)$ corresponde à nova árvore integrada para otimizar o ajustamento global.
+
+Um avanço teórico fundamental do \textit{XGBoost} em relação às metodologias clássicas de \textit{boosting} está na inclusão explícita do termo de regularização $\Omega(f_t)$. Este parâmetro foi 
+incluido para restringir a complexidade estrutural da nova árvore, mitigando o risco de \textit{overfitting} (sobreajustamento) e promovendo assim uma maior capacidade de generalização das previsões. 
+A função de regularização assume a seguinte forma matemática:
+
+\begin{equation}
+    \Omega(f_k) = \gamma T + \frac{1}{2}\lambda\|w\|^2
+\end{equation}
+onde $T$ reflete o número de folhas (\textit{leaves}) que compõem a árvore, $w$ designa os pesos (valores contínuos) atribuídos a cada folha terminal, $\gamma$ aplica uma penalização à formação de 
+ramificações adicionais, e $\lambda$ modula a regularização do tipo $L_2$ incidente sobre os pesos.
+
+Na busca por resolver esse problema de minimização de maneira eficiente, Chen e Guestrin (2016) recorrem a uma expansão de Taylor de segunda ordem. Tal mecanismo confere ao algoritmo a capacidade 
+de orientar a formulação das árvores através não apenas do gradiente dos erros (a primeira derivada, $g_i$), mas também da matriz Hessiana (a segunda derivada, $h_i$). Consequentemente, a função objetivo 
+adaptada para a estimação do ganho de cada estrutura é reescrita como:
+
+\begin{equation}
+    \tilde{\mathcal{L}}^{(t)} = \sum_{i=1}^{n} \left[ g_i f_t(x_i) + \frac{1}{2}h_i f_t^2(x_i) \right] + \Omega(f_t)
+\end{equation}
+
+O uso desse método na econometria financeira tem forte base nos estudos de previsão de volatilidade. Conforme sublinham 
+Olsen et al. (2025), os modelos econométricos convencionais de séries temporais revelam limitações estruturais na captação das dinâmicas não lineares subjacentes aos dados, impulsionando a adoção de 
+metodologias de \textit{Machine Learning}. Nesse cenário, os algoritmos de (\textit{gradient-boosted trees}) se destacam pela capacidade de mapear relações não lineares complexas do mercado, muitas vezes superando o desempenho de redes neurais profundas.
+
+De forma complementar, Chung, Espinoza e Quispe (2025) sustentam que a grande vantagem destas técnicas orientadas a dados em relação aos modelos de heterocedasticidade condicional (tais como os das famílias 
+GARCH e EGARCH) é a supressão de pressupostos rígidos sobre a estabilidade paramétrica. Como não exigem restrições distribucionais rígidas, modelos como o \textit{XGBoost} conseguem se ajustar naturalmente 
+aos clusters de volatilidade, mantendo seu poder preditivo mesmo em fortes quebras estruturais A aplicação desse tipo de modelo na econometria financeira é bem justificada pela literatura recente de previsão de volatilidade.
+
+ 
 \section{Evidência empírica}
+
+\subsection{Aplicações ao mercado cambial brasileiro}
+Prever a volatilidade no mercado de câmbio brasileiro é um desafio bastante complexo. Segundo o Banco Central do Brasil (2021), diferente do que ocorre com a taxa de câmbio em si, não existe um modelo estrutural 
+definitivo para explicar as suas variações. Por isso, a prática comum é recorrer aos modelos econométricos da família GARCH. O problema, como alerta a própria instituição, é que nesses modelos o histórico da série 
+(os termos autorregressivos) acaba absorvendo a maior parte da variação explicada no ajuste matemático, o que reduz o espaço para incluir outras variáveis importantes que também afetam o mercado.
+
+Ao investigar a explosão na volatilidade do par BRL/USD após o choque da pandemia em 2020, o Banco Central do Brasil (2021) mostrou que o câmbio reage a uma mistura de turbulências internacionais (como o índice VIX
+ e a instabilidade de outros países emergentes) e questões locais. O estudo apontou, por exemplo, que a entrada forte de pessoas físicas fazendo operações de curtíssimo prazo no mercado de minicontratos de dólar futuro 
+ teve um peso considerável no aumento da volatilidade durante aquele período.
+
+Além da dinâmica de negociação do próprio mercado, o câmbio no Brasil é muito sensível à política. Moreira (2022) avaliou esse efeito utilizando o índice de incerteza política do país (EPUBR). Por meio de estimações econométricas (2SLS e GMM), o autor comprovou que o aumento da incerteza política gera uma elevação real e estatisticamente válida na volatilidade do dólar. Ele também confirmou que riscos geopolíticos e incertezas globais pioram esse cenário, deixando claro que a trajetória do câmbio sofre quebras frequentes causadas por fatores externos.
+
+Falando especificamente de projeções matemáticas, Campani e Durães (2018) testaram a eficácia de modelos tradicionais na previsão da volatilidade do USD/BRL. Eles constataram que métodos clássicos, como o Desvio Padrão Histórico, o EWMA e o GARCH(1,1) simples, têm um desempenho muito parecido e limitado quando olham apenas para os retornos diários de fechamento. No entanto, quando os autores estenderam o modelo EGARCH com informações extras do mercado (a volatilidade intradiária de alta frequência e a volatilidade implícita do índice FXVol da B3), a capacidade de acerto superou os métodos tradicionais de forma significativa.
+
+Juntando os resultados de Campani e Durães (2018) com as análises do Banco Central do Brasil (2021) e de Moreira (2022), fica evidente que a dinâmica da taxa de câmbio do dólar no Brasil envolve muito mais do que apenas o seu histórico linear de preços. Esses estudos confirmam a necessidade de utilizar ferramentas que consigam ler essas relações complexas, o que abre caminho e justifica perfeitamente a adoção de modelos de \textit{Machine Learning} para prever a volatilidade cambial.
+
+\subsection{Comparações entre paradigmas model-based e data-driven}
 
 A literatura empírica, ao testar a robustez dos modelos teóricos em cenários reais, evidenciou a necessidade de maior flexibilidade. Estudos pioneiros, como o de Akgiray (1989), já apontavam que modelos baseados em séries temporais superavam métodos de variância histórica simples. Contudo, a aplicação prática em mercados de alta frequência, como discutido por Moreira e Lemgruber (2004), revelou que a precisão dos modelos model-based é altamente sensível à qualidade do tratamento dos dados, como a filtragem de sazonalidade intradiária.
 
-Nesse contexto, as abordagens data-driven surgiram como uma resposta às limitações dos modelos clássicos na captura de quebras estruturais e relações não lineares. Chung, Espinoza e Quispe (2025) destacam que, em períodos de crises agudas, a rigidez dos modelos GARCH pode levar a redução significativa da capacidade preditiva. Além disso, Donaldson e Kamstra (1996) apresentaram evidências de que Redes Neurais podem capturar efeitos não lineares que escapam às equações tradicionais. Essa superioridade foi reforçada por Kristjanpoller e Minutolo (2015), cujos testes em mercados de commodities evidenciaram que modelos híbridos reduzem significativamente o erro de previsão ao permitirem que o algoritmo aprenda padrões complexos diretamente dos dados.
+Nesse contexto, as abordagens data-driven surgiram como uma resposta às limitações dos modelos clássicos na captura de quebras estruturais e relações não lineares. Chung, Espinoza e Quispe (2025) destacam que, em períodos de crises agudas, a rigidez dos modelos GARCH pode levar a redução significativa da capacidade preditiva.Olsen et al. (2025) reforçam esse argumento ao demonstrar que algoritmos baseados em árvores de decisão com otimização de gradiente, como Random Forest e XGBoost, se mostram particularmente eficazes para mapear dependências não lineares e estruturais do mercado, alcançando resultados que frequentemente superam os de modelos econométricos convencionais.
 
-No Brasil, o estudo de Ferreira, Machado e Silva (2020) destaca que fatores idiossincráticos, como o sentimento do investidor, impactam a volatilidade de forma que o GARCH clássico tem dificuldade em mapear. Em contrapartida, modelos híbridos, como os propostos por Kristjanpoller e Minutolo (2015) e Kim e Won (2018), sugerem que a melhor performance preditiva é alcançada quando se utiliza o GARCH para extrair a estrutura serial e o Machine Learning para processar os resíduos não lineares.
-
-Ao contrário da abordagem model-based, que prioriza a interpretação dos parâmetros, a abordagem data-driven foca na adaptação contínua e na precisão, utilizando grandes volumes de dados para identificar padrões e relações não lineares difíceis de serem capturados por estruturas paramétricas tradicionais. Assim, a literatura recente sugere que enquanto os modelos teóricos oferecem a base estrutural, a flexibilidade dos dados é essencial para navegar na complexidade dos mercados contemporâneos.
-
+Amoanu (2025) aprofunda essa comparação ao avaliar diretamente o desempenho preditivo de modelos ARIMA, GARCH, Random Forest e XGBoost em séries financeiras, concluindo que os métodos data-driven baseados em árvores apresentam vantagem consistente na captura de padrões não lineares fora da amostra. Ao contrário da abordagem model-based, que prioriza a interpretação dos parâmetros e a robustez estatística sob pressupostos distribicionais, a abordagem data-driven foca na adaptação contínua às relações empíricas dos dados. Assim, a literatura recente sugere que, enquanto os modelos teóricos oferecem base estrutural e interpretabilidade, a flexibilidade dos algoritmos de machine learning é essencial para navegar na complexidade dos mercados contemporâneos, justificativa central para a hierarquia metodológica adotada neste trabalho.

@@ -13,7 +13,7 @@ from statsmodels.stats.diagnostic import het_arch
 def obter_serie_cambio():
     df = yf.download(
         "BRL=X",
-        start="2021-01-01",
+        start="2006-01-01",
         interval="1d",
         auto_adjust=False
     )
@@ -27,7 +27,7 @@ def obter_serie_cambio():
 if __name__ == "__main__":
     df = yf.download(
         "BRL=X",
-        start="2021-01-01",
+        start="2006-01-01",
         interval="1d",
         auto_adjust=False
     )
@@ -37,13 +37,14 @@ if __name__ == "__main__":
     print(df[df.isnull().any(axis=1)])
 
     serie_cambio = df.loc[:, ["Adj Close"]]
-
+    serie_cambio["log_return"] = np.log(serie_cambio["Adj Close"] / serie_cambio["Adj Close"].shift(1))
+    
     # Plota gráfico da série original
     plt.title("Câmbio", fontsize=25, family="Arial", fontweight="bold")
     plt.xlabel("Data", fontsize=10, family="Arial", fontweight="bold")
     plt.ylabel("Valor", fontsize=10, family="Arial", fontweight="bold")
     plt.tick_params(axis="both", colors="#242121")
-    plt.plot(serie_cambio, color="darkred", linewidth=1)
+    plt.plot(serie_cambio["Adj Close"], color="darkred", linewidth=1)
     plt.show()
 
     # Decompondo a série
@@ -111,7 +112,7 @@ if __name__ == "__main__":
     plt.figure(figsize=(10, 5))
     plt.plot(x, kde(x), label="KDE empírica", color="steelblue", linewidth=2)
     plt.plot(x, normal, label="Normal teórica", color="red", linewidth=2, linestyle="--")
-    plt.hist(retornos, bins=80, density=True, alpha=0.3, color="steelblue")
+    plt.hist(retornos, bins=80, density=True, alpha=0.3, color="darkred")
     plt.legend()
     plt.title("Densidade dos Retornos Log — USD/BRL")
     plt.xlabel("Retorno log diário")
@@ -128,7 +129,7 @@ if __name__ == "__main__":
     lb_ret = acorr_ljungbox(retornos, lags=[10, 20], return_df=True)
     print("Ljung-Box (retornos):")
     print(lb_ret)
-    # os retornos logarítmicos não apresentam autocorrelação linear significativa
+    # os retornos logarítmicos apresentam autocorrelação linear significativa
 
     lb_sq = acorr_ljungbox(retornos**2, lags=[10, 20], return_df=True)
     print("\nLjung-Box (retornos²):")
@@ -137,10 +138,10 @@ if __name__ == "__main__":
 
     # Plot gráficos ACF PACF
     fig, axes = plt.subplots(2, 2, figsize=(14, 8))
-    plot_acf(retornos, lags=20, ax=axes[0, 0], title="ACF — Retornos")
-    plot_pacf(retornos, lags=20, ax=axes[0, 1], title="PACF — Retornos")
-    plot_acf(retornos**2, lags=20, ax=axes[1, 0], title="ACF — Retornos²")
-    plot_pacf(retornos**2, lags=20, ax=axes[1, 1], title="PACF — Retornos²")
+    plot_acf(retornos, lags=20, ax=axes[0, 0], title="ACF — Retornos", color = "darkred")
+    plot_pacf(retornos, lags=20, ax=axes[0, 1], title="PACF — Retornos", color = "darkred")
+    plot_acf(retornos**2, lags=20, ax=axes[1, 0], title="ACF — Retornos²", color = "darkred")
+    plot_pacf(retornos**2, lags=20, ax=axes[1, 1], title="PACF — Retornos²", color = "darkred")
     plt.tight_layout()
     plt.show()
 

@@ -1,19 +1,172 @@
 \chapter{Metodologia}
-
-Este capitulo deve explicar a abordagem metodologica e justificar as escolhas analiticas.
+Este capítulo descreve a estratégia metodológica adotada para comparar o desempenho preditivo dos modelos de previsão de volatilidade da taxa de câmbio USD/BRL. O capítulo está organizado em quatro seções. A seção 3.1 apresenta o desenho da pesquisa, definindo o tipo de estudo, o período amostral e os procedimentos de análise descritiva que precedem a estimação dos modelos. A seção 3.2 detalha a hierarquia de modelos proposta, descrevendo as especificações de cada nível (dos benchmarks ingênuos aos modelos data-driven) e as decisões de implementação adotadas em cada caso. A seção 3.3 apresenta a estratégia de avaliação fora da amostra, especificando o procedimento de walk-forward com janela expansiva, as métricas de erro utilizadas e o teste de Diebold-Mariano. Por fim, a seção 3.4 registra as principais limitações da estratégia empírica adotada.
 
 \section{Desenho da pesquisa}
+Este estudo caracteriza-se como uma pesquisa quantitativa de natureza explicativa. O objetivo é comparar o desempenho preditivo 
+de diferentes classes de modelos de previsão de volatilidade aplicados à taxa de câmbio USD/BRL, avaliando em que condições cada 
+abordagem (model-based ou data-driven) apresenta maior acurácia fora da amostra. A unidade de análise é o retorno diário da taxa 
+de câmbio USD/BRL, retirado do Yahoo Finance, e o período estudado compreende janeiro de 2000 até x de 2026. O recorte temporal inicia após a 
+consolidação do regime de câmbio flutuante, implementado em janeiro de 1999, de forma a excluir o período de transição cambial e 
+garantir homogeneidade institucional da série. O período cobre episódios relevantes de estresse cambial, incluindo a crise de 
+confiança de 2002, a crise financeira global de 2008, a recessão brasileira de 2015–2016, o choque da pandemia de COVID-19 em 2020
+ e o ciclo de incerteza fiscal de 2021–2024, o que permite avaliar o desempenho dos modelos em diferentes regimes de volatilidade.
 
-Explicar a natureza da pesquisa, a unidade de analise e o periodo estudado.
+O método de análise é econométrico e estatístico, combinando modelagem de séries temporais (por meio de modelos ARIMA e da família
+ GARCH) com aprendizado de máquina supervisionado, representado pelos algoritmos Random Forest e XGBoost. A comparação entre os 
+ modelos é realizada fora da amostra de estimação, com avaliação por métricas de erro quadrático e pelo teste de hipótese de 
+ Diebold e Mariano (1995), que permite verificar se as diferenças de desempenho preditivo entre os modelos são estatisticamente 
+ significativas.
 
-\section{Modelo econometrico}
+Para fundamentar a modelagem econométrica e de aprendizado de máquina, a série de retornos log-diários da taxa de câmbio USD/BRL será submetida a um conjunto de testes de hipóteses estatísticas e análises diagnósticas preliminares. Essa etapa busca caracterizar as propriedades estatísticas dos dados e validar o comportamento empírico (fatos estilizados) que justifica a hierarquia de modelos adotada.
 
-Apresentar a especificacao inicial do modelo e as hipoteses a serem testadas.
+O procedimento de análise diagnóstica seguirá a seguinte estrutura metodológica:
+
+\begin{enumerate}
+    \item \textbf{Estatísticas Descritivas e Testes de Normalidade e Média}: 
+    Serão calculados os momentos centrais da série (média, variância, assimetria e excesso de curtose). O afastamento da distribuição normal será avaliado por meio do teste de Jarque-Bera (JB), cujas hipóteses são formalizadas por:
+    \begin{itemize}
+        \item[] $H_0$: Os retornos seguem uma distribuição normal (assimetria nula e curtose igual a 3).
+        \item[] $H_1$: Os retornos não seguem uma distribuição normal.
+    \end{itemize}
+    Adicionalmente, aplica-se o teste $t$ de Student para avaliar a significância estatística do intercepto da série, sob a hipótese nula de que a média dos retornos é estatisticamente igual a zero ($H_0: \mu = 0$) contra a hipótese alternativa de que é diferente de zero ($H_1: \mu \neq 0$).
+
+    \item \textbf{Teste de Raiz Unitária (Estacionaridade)}:
+    A fim de determinar a ordem de integração da série temporal e evitar o problema de regressão espúria, será utilizado o teste \textit{Augmented Dickey-Fuller} (ADF). O teste avalia a presença de raiz unitária na série em nível (preços) e em primeiras diferenças (retornos), testando:
+    \begin{itemize}
+        \item[] $H_0$: A série possui raiz unitária (é não estacionária).
+        \item[] $H_1$: A série não possui raiz unitária (é estacionária).
+    \end{itemize}
+    Espera-se confirmar que a série de taxas de câmbio é integrada de ordem um, $I(1)$, e que sua primeira diferença é estacionária, $I(0)$.
+
+    \item \textbf{Teste de Autocorrelação Linear}:
+    Para testar a dependência temporal nos retornos e na variância, aplica-se o teste de Ljung-Box ($Q$) sobre os retornos diários e sobre os retornos ao quadrado, respectivamente. O teste avalia a hipótese conjunta de ausência de autocorrelação até uma defasagem $m$:
+    \begin{itemize}
+        \item[] $H_0$: Não há autocorrelação na série até a defasagem $m$.
+        \item[] $H_1$: Existe autocorrelação em pelo menos uma defasagem até $m$.
+    \end{itemize}
+    A rejeição de $H_0$ para os retornos ao quadrado fornece evidência estatística de dependência não linear na variância, confirmando o fenômeno de agrupamento de volatilidade (\textit{volatility clustering}).
+
+    \item \textbf{Teste de Efeitos ARCH}:
+    A validação da heterocedasticidade condicional, requisito indispensável para a especificação de modelos da família GARCH, será realizada via teste de Multiplicador de Lagrange para efeitos ARCH (ARCH-LM). O teste verifica a existência de estrutura autorregressiva nos quadrados dos resíduos da regressão linear inicial, sob as seguintes hipóteses:
+    \begin{itemize}
+        \item[] $H_0$: Ausência de efeitos ARCH (a variância condicional é constante).
+        \item[] $H_1$: Presença de efeitos ARCH (a variância condicional depende do quadrado dos choques passados).
+    \end{itemize}
+
+    \item \textbf{Análise de Correlogramas}:
+    Por fim, a avaliação visual das Funções de Autocorrelação (ACF) e Autocorrelação Parcial (PACF) dos retornos e de seus retornos ao quadrado será adotada como critério complementar de identificação. Essa análise provê o suporte empírico necessário para a determinação inicial das ordens dos polinômios autorregressivos ($p$) e de médias móveis ($q$) no ajuste do modelo ARIMA de referência.
+\end{enumerate}
+
+\section{Hierarquia de modelos}
+
+A estratégia metodológica deste trabalho organiza os modelos em uma hierarquia crescente de complexidade, estruturada em torno da 
+dicotomia entre os paradigmas model-based e data-driven. Os modelos model-based impõem ao processo gerador de dados uma estrutura 
+funcional previamente especificada, garantindo interpretabilidade e robustez estatística sob pressupostos distribicionais. Os 
+modelos data-driven operam sem pressupostos funcionais rígidos, aprendendo as relações diretamente da amostra. A hierarquia é 
+composta por quatro níveis, descritos a seguir.
+
+\subsection{Nível 1 - Benchmarks ingênuos: Média Histórica e EWMA}
+
+Os modelos de referência ingênuos constituem o piso de comparação da hierarquia. A Média Histórica estima a variância condicional 
+como a média simples dos retornos ao quadrado em uma janela fixa de K observações:
 
 \begin{equation}
-    y_{it} = \beta_0 + \beta_1 x_{it} + \gamma Z_{it} + \varepsilon_{it}
+    \hat{\sigma}_t^2 = \frac{1}{K} \sum r_{t-k}^2, \quad k = 1, \dots, K
+\end{equation}
+com K = 22 dias úteis, equivalente a aproximadamente um mês de negociação. Esse modelo não possui qualquer estrutura dinâmica e 
+serve como referência mínima: qualquer modelo que não supere a Média Histórica não apresenta poder preditivo relevante.
+
+O modelo EWMA (Exponentially Weighted Moving Average), padronizado pelo sistema RiskMetrics, atribui pesos exponencialmente 
+decrescentes às observações passadas, conferindo maior reatividade a variações recentes:
+
+\begin{equation}
+    \hat{\sigma}_{t}^{2} = (1 - \lambda)r_{t-1}^{2} + \lambda\hat{\sigma}_{t-1}^{2}
+\end{equation}
+em que $\lambda = 0,94$, valor padrão para dados diários estabelecido pelo RiskMetrics (J.P. Morgan, 1996). O EWMA não possui parâmetros 
+estimados por máxima verossimilhança e não reverte à média incondicional, o que o torna mais responsivo a mudanças de regime em 
+curto prazo, mas menos adequado para horizontes mais longos.
+
+\subsection{Nível 2 - Modelo linear: ARIMA aplicado à volatilidade}
+O segundo nível da hierarquia introduz estrutura de autocorrelação linear por meio de um modelo ARMA(p,q) aplicado diretamente sobre 
+a série de retornos ao quadrado ($r_{t}^{2}$), utilizada como proxy observável de volatilidade. Seguindo Poon e Granger (2003), essa 
+abordagem trata a variância como uma série temporal observável e busca a melhor previsão linear baseada em seu histórico, 
+sem modelar explicitamente a variância condicional. A especificação geral é:
+
+\begin{equation}
+    \phi(B)(1 - B)^d z_t = \theta(B)a_t
 \end{equation}
 
-\section{Limitacoes}
+em que  $\phi(B)$  e $\theta(B)$  são os operadores autorregressivo e de médias móveis, respectivamente, e $a_t$ é o termo de erro. A ordem (p,q) será 
+selecionada pelo critério de informação de Akaike (AIC), com diagnóstico dos resíduos pelo teste de Ljung-Box. O ARIMA opera como benchmark de estrutura 
+linear: captura persistência na volatilidade, mas não modela a heterocedasticidade condicional, o que justifica a progressão ao próximo nível.
 
-Registrar as principais limitacoes da estrategia empirica.
+\subsection{Nível 3 - Modelos de heterocedasticidade condicional: GARCH e EGARCH}
+O terceiro nível introduz modelagem explícita da variância condicional por meio dos modelos GARCH(1,1) e EGARCH(1,1), estimados diretamente sobre a série 
+de retornos log-diários do USD\slash BRL. A ordem (1,1) é adotada diretamente, sem busca de defasagens via critério de informação, seguindo Hansen e Lunde (2005), 
+cujos testes sobre séries cambiais diárias demonstram que especificações mais complexas não produzem ganhos preditivos consistentes em relação ao GARCH(1,1).
+A especificação do GARCH(1,1), conforme Bollerslev (1986), é:
+
+\begin{equation}
+    \sigma_t^2 = \omega + \alpha \varepsilon_{t - 1}^2 +  \beta \sigma_{t-1}^2
+\end{equation}
+com as restrições $\omega > 0$, $\alpha \geq 0$ e $\beta \geq 0$ e $\alpha + \beta < 1$ para garantir positividade e estacionariedade da variância condicional. 
+A soma $\alpha + \beta$ mede a persistência da volatilidade: valores próximos a 1 indicam que choques têm efeitos duradouros sobre a variância, característica 
+tipicamente observada em séries cambiais.
+
+O EGARCH(1,1), proposto por Nelson (1991), especifica a variância condicional em escala logarítmica, dispensando as restrições de positividade dos parâmetros e 
+permitindo capturar assimetria na resposta da volatilidade a choques positivos e negativos:
+
+\begin{equation}
+    \ln(\sigma_t^2) = \omega + \alpha \left| \frac{\varepsilon_{t-1}}{\sigma_{t-1}} \right| + \gamma \frac{\varepsilon_{t-1}}{\sigma_{t-1}} + \beta \ln(\sigma_{t-1}^2)
+\end{equation}
+em que $\frac{\varepsilon_{t-1}}{\sigma_{t-1}}$ é o resíduo padronizado e $\gamma$ é o parâmetro de assimetria. Um valor $\gamma < 0$ estatisticamente significativo indica 
+que depreciações do real elevam a volatilidade de forma mais intensa do que apreciações de mesma magnitude, hipótese relevante para o mercado cambial brasileiro. Ambos os 
+modelos serão estimados por máxima verossimilhança com distribuição t de Student, para acomodar as caudas pesadas dos retornos cambiais. A seleção entre GARCH e EGARCH será 
+feita com base no critério BIC e no teste da razão de verossimilhança.
+
+\subsection{Nível 4 - Modelos data-driven: Random Forest e XGBoost}
+O quarto nível da hierarquia compreende os modelos \textit{data-driven}, que não impõem estrutura funcional ao processo gerador de dados. Diferentemente dos modelos anteriores,
+o \textit{Random Forest} e o \textit{XGBoost} operam como problemas de aprendizado supervisionado: a variável dependente é a \textit{proxy} de volatilidade ($r_t^2$) e as variáveis 
+independentes são um vetor de \textit{features} construídas a partir do histórico da série.
+
+O vetor de \textit{features} será composto pelas seguintes variáveis:
+\begin{itemize}
+    \item Retornos log-diários defasados: $r_{t-1}, r_{t-2}, \dots, r_{t-5}$ e $r_{t-22}$;
+    \item \textit{Proxies} de volatilidade defasadas: $r_{t-1}^2, r_{t-2}^2, \dots, r_{t-5}^2$;
+    \item Volatilidade condicional estimada pelo GARCH(1,1): $\sigma_{t-1}^2$ (\textit{feature} derivada do nível 3);
+    \item Indicadores de calendário: dia da semana e mês (efeitos sazonais documentados em séries cambiais).
+\end{itemize}
+
+O \textit{Random Forest} será treinado com $B = 500$ árvores, com o número de variáveis sorteadas em cada divisão fixado em $\lfloor \sqrt{p} \rfloor$, seguindo a recomendação de 
+Breiman (2001). O \textit{XGBoost} será estimado com regularização $L_2$ (parâmetro $\lambda$) e penalização sobre o número de folhas (parâmetro $\gamma$), com os hiperparâmetros, 
+taxa de aprendizado, profundidade máxima das árvores e número de estimadores, selecionados por validação cruzada temporal com $k = 5$ \textit{folds}, respeitando a ordem cronológica 
+das observações para evitar vazamento de informação futura (\textit{data leakage}).
+
+\section{Estratégia de avaliação fora da amostra}
+A avaliação do desempenho preditivo de todos os modelos será realizada fora da amostra de estimação, por meio de uma janela expansiva (expanding window). Nessa abordagem, o modelo é 
+estimado com todas as observações disponíveis até o período t e produz previsão para t + 1; em seguida, a janela de estimação é expandida com a nova observação e o processo se repete. 
+A janela expansiva é preferida à janela rolante no contexto deste trabalho porque preserva toda a informação histórica, relevante em séries com múltiplos regimes de volatilidade como o 
+câmbio brasileiro.
+
+A amostra será dividida em dois subperíodos: janeiro de 2000 a dezembro de 2019 como janela de estimação inicial (aproximadamente 75\% das observações) e janeiro de 2020 a maio de 2026 
+como janela de avaliação fora da amostra (aproximadamente 25\% das observações). Essa divisão é deliberada: o subperíodo de avaliação concentra os episódios de maior estresse cambial recente, 
+o choque da pandemia de COVID-19, o ciclo de alta do dólar de 2021-2022, a incerteza fiscal de 2023-2024 e os desdobramentos macroeconômicos até 2026, permitindo avaliar o desempenho preditivo 
+dos modelos precisamente sob sucessivas quebras estruturais e condições adversas de mercado.
+
+O desempenho preditivo será avaliado pelas seguintes métricas:
+\begin{itemize}
+    \item Raiz do Erro Quadrático Médio (RMSE): penaliza erros grandes de forma proporcional ao quadrado do desvio, sendo mais sensível a episódios de alta volatilidade;
+    \item Erro Absoluto Médio (MAE): medida de erro mais robusta a outliers, complementar ao RMSE;
+    \item Teste de Diebold-Mariano (DM): teste de hipótese que avalia se a diferença entre as funções de perda de dois modelos é estatisticamente significativa, com $H_0$ de que os erros de previsão dos dois modelos comparados são iguais em média (Diebold e Mariano, 1995).
+\end{itemize}
+
+Adicionalmente, o desempenho será analisado em subperíodos de alta volatilidade, identificados como os percentis superiores da distribuição da volatilidade realizada na janela de avaliação. Essa análise permite verificar se a eventual vantagem dos modelos data-driven se concentra em períodos de estresse ou se é uniforme ao longo do tempo.
+
+\section{Limitações}
+
+Este estudo apresenta algumas limitações que devem ser registradas. Primeiro, a proxy de volatilidade adotada, o retorno ao quadrado ($r_t^2$), é uma medida ruidosa da volatilidade latente, pois combina variância condicional e o quadrado da inovação. Em estudos com dados intradiários, seria possível calcular a volatilidade realizada de forma mais precisa, no entanto, a disponibilidade de dados diários de fechamento é suficiente para o escopo deste trabalho e é o padrão adotado na literatura comparativa com modelos GARCH.
+
+Segundo, os modelos data-driven utilizados, Random Forest e XGBoost, não possuem estrutura de memória temporal interna, dependendo inteiramente da engenharia de features para capturar a dinâmica serial da volatilidade. A escolha das defasagens e variáveis incluídas no vetor de features introduz um grau de subjetividade que modelos econométricos tradicionais evitam por construção.
+
+Terceiro, a análise é restrita à previsão de um passo à frente (one-step-ahead), não abrangendo horizontes mais longos. A extensão para múltiplos horizontes, bem como a incorporação de variáveis exógenas, como o índice VIX, o diferencial de juros Brasil-EUA e o CDS soberano brasileiro, constituem agenda para pesquisas futuras.
+

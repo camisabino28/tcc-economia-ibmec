@@ -7,7 +7,7 @@ from teste_cambio import obter_serie_cambio
 from tqdm import tqdm # Mostra o progresso do codigo 
 
 df_cambio = obter_serie_cambio()
-
+ 
 # Engenharia de features
 def build_features(df, lags=5, vol_lags=5, ma_windows=[5, 21]):
     # df deve ter coluna log_return.
@@ -107,4 +107,5 @@ results_rf = pd.DataFrame({
 importances = pd.Series(rf.feature_importances_, index=feature_cols)
 print("\n=== Top 10 features ===")
 print(importances.sort_values(ascending=False).head(10))
+
 
