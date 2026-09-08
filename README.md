@@ -28,7 +28,7 @@
 </tr>
 <tr>
 <td><b>Curso</b></td>
-<td>Ciências Econômicas — 7º Semestre</td>
+<td>Ciências Econômicas — 8º Semestre</td>
 </tr>
 <tr>
 <td><b>Área</b></td>
@@ -36,29 +36,27 @@
 </tr>
 <tr>
 <td><b>Status</b></td>
-<td>🏃 Definição de recorte temático</td>
+<td>🏃 Avançado </td>
 </tr>
 </table>
 
----
-
 ## 🔬 Escopo Metodológico
 
-Esta pesquisa se insere na interseção entre **métodos quantitativos**, **finanças** e **microeconomia aplicada**. A abordagem empírica se baseia em modelagem econométrica com dados secundários de fontes institucionais.
+Esta pesquisa aborda a **previsão de volatilidade de ativos financeiros** na interseção entre **econometria de séries temporais** e **machine learning**. A abordagem empírica utiliza dados cambiais de alta frequência obtidos de fontes oficiais globais para modelar e comparar o desempenho preditivo de abordagens tradicionais e computacionais.
 
-### Ferramental Econométrico Previsto
+### Ferramental Analítico e Econométrico
 
-| Método | Aplicação |
+| Método / Técnica | Aplicação no Projeto |
 | :--- | :--- |
-| **Estatística Descritiva** | Caracterização da amostra e análise exploratória inicial |
-| **Regressão OLS / MQO** | Estimação de relações lineares entre variáveis de interesse |
-| **Dados em Painel** | Controle de heterogeneidade não observada (FE/RE) |
-| **Testes de Hipótese** | Verificação de significância estatística dos coeficientes |
-| **Visualização de Dados** | Gráficos analíticos para suporte às conclusões |
+| **Estatística Descritiva e Momentos** | Análise de distribuição, assimetria, curtose e momentos estatísticos dos retornos |
+| **Testes de Raiz Unitária (ADF)** | Verificação de estacionariedade da série em nível e em retornos logarítmicos |
+| **Testes de Autocorrelação e ARCH** | Diagnóstico de dependência linear (Ljung-Box) e detecção de efeitos ARCH nos resíduos |
+| **Modelos GARCH / Volatilidade Condicional** | Estimação paramétrica da volatilidade com distribuições condicionais (ex.: Student-t) |
+| **Random Forest & Walk-Forward** | Abordagem de aprendizado de máquina com validação temporal cruzada (*walk-forward*) |
 
-### Fontes de Dados Previstas
+### Fontes de Dados
 
-`BCB` · `CVM` · `IBGE` · `B3` · `SECEX/MDIC` · `IPEA Data`
+`FRED (Federal Reserve Economic Data)` 
 
 ---
 
@@ -116,12 +114,12 @@ Esta pesquisa se insere na interseção entre **métodos quantitativos**, **fina
 | :--- | :--- | :---: |
 | **01 · Estruturação** | Criação do repositório e organização de pastas | ✅ |
 | **02 · Definição do Tema** | Escolha do recorte e alinhamento com orientador | 🏃 |
-| **03 · Revisão Bibliográfica** | Levantamento teórico e estado da arte | ⏳ |
-| **04 · Coleta de Dados** | Obtenção das bases brutas nas fontes primárias | ⏳ |
-| **05 · Tratamento de Dados** | Limpeza, merge e construção das variáveis | ⏳ |
-| **06 · Análise Exploratória** | Estatísticas descritivas e visualizações iniciais | ⏳ |
-| **07 · Modelagem** | Estimação e validação dos modelos econométricos | ⏳ |
-| **08 · Redação Final** | Escrita da monografia e revisão | ⏳ |
+| **03 · Revisão Bibliográfica** | Levantamento teórico e estado da arte | ✅ |
+| **04 · Coleta de Dados** | Obtenção das bases brutas nas fontes primárias | ✅ |
+| **05 · Tratamento de Dados** | Limpeza, merge e construção das variáveis | 🏃 |
+| **06 · Análise Exploratória** | Estatísticas descritivas e visualizações iniciais | 🏃 |
+| **07 · Modelagem** | Estimação e validação dos modelos econométricos | 🏃 |
+| **08 · Redação Final** | Escrita da monografia e revisão | 🏃 |
 
 `✅ Concluído` · `🏃 Em progresso` · `⏳ Pendente`
 
