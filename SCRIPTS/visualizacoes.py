@@ -1,4 +1,4 @@
-from data import obter_serie_cambio
+from SCRIPTS.data import obter_serie_cambio
 import os
 import numpy as np
 import matplotlib.pyplot as plt
