@@ -2,6 +2,7 @@ from pathlib import Path
 import pandas as pd
 import numpy as np
 import sys
+from SCRIPTS.Backtesting.diebold_mariano import teste_diebold_mariano
 
 BASE_DIR = Path.cwd().resolve()
 
@@ -9,11 +10,6 @@ BASE_DIR = Path.cwd().resolve()
 BASE_DIR = BASE_DIR.parent.parent
 
 sys.path.insert(0, str(BASE_DIR))
-
-from SCRIPTS.Backtesting.mincer_zarnowitz import teste_mincer_zarnowitz
-from SCRIPTS.Backtesting.diebold_mariano import teste_diebold_mariano
-from SCRIPTS.Backtesting.model_confidence_set import executar_mcs
-
 
 def carregar_resultados():
     BASE_DIR = Path(__file__).resolve().parents[2]
@@ -25,7 +21,6 @@ def carregar_resultados():
         )
     resultados = {
         "RF": pd.read_parquet(RESULTS_DIR / "pred_rf.parquet"),
-        "XGBoost": pd.read_parquet(RESULTS_DIR / "pred_xgb.parquet"),
         "GARCH": pd.read_parquet(RESULTS_DIR / "pred_garch.parquet"),
         "EGARCH": pd.read_parquet(RESULTS_DIR / "pred_egarch.parquet"),
     }
@@ -72,58 +67,64 @@ def calcular_metricas(resultados):
             "QLIKE": qlike,
             "Previsões <= 0": int(np.sum(pred <= 0))
         })
-
-    return (
-        pd.DataFrame(linhas)
-        .set_index("Modelo")
-        .sort_values("RMSE")
+        
+    df_metricas = pd.DataFrame(linhas).set_index("Modelo").sort_values("RMSE")
+    
+    # Salva a tabela geral de métricas em CSV
+    BASE_DIR = Path(__file__).resolve().parents[2]
+    RESULTS_DIR = BASE_DIR / "results"
+    caminho_metricas = RESULTS_DIR / "metricas_desempenho.csv"
+    df_metricas.to_csv(caminho_metricas)
+    print(f"\nTabela de métricas salva em: {caminho_metricas}")
+    
+    # Registra e salva as datas exatas onde ocorreram previsões <= 0 (negativo ou nulo)
+    casos_neg_nulo = []
+    for nome, df in resultados.items():
+        pred_col = [c for c in df.columns if c.startswith("pred_")][0]
+        anomalias = df[df[pred_col] <= 0]
+        for data_anomalia, row in anomalias.iterrows():
+            casos_neg_nulo.append({
+                "Modelo": nome,
+                "Data": data_anomalia,
+                "Valor_Previsto": row[pred_col],
+            })
+            
+    if casos_neg_nulo:
+        df_neg_nulo = pd.DataFrame(casos_neg_nulo)
+        caminho_neg_nulo = RESULTS_DIR / "datas_previsoes_neg_nulo.csv"
+        df_neg_nulo.to_csv(caminho_neg_nulo, index=False)
+        print(
+            f"Foram encontradas {len(df_neg_nulo)} previsões <= 0. "
+            f"Detalhes salvos em: {caminho_neg_nulo}"
     )
+    else:
+        print(
+            "\nNenhuma previsão <= 0 foi encontrada. Todas foram estritamente"
+            " positivas!"
+        )
 
+    return df_metricas
 
 
 
 # Função para fazer os backtestings
 def executar_testes_backtesting(resultados):
-    # 1. Mincer-Zarnowitz
-    mz = teste_mincer_zarnowitz(resultados)
-
-    # 2. Diebold-Mariano
+    # 1. Diebold-Mariano
     dm_mse = teste_diebold_mariano(
         resultados, perda="MSE"
     )
     dm_qlike = teste_diebold_mariano(
         resultados, perda="QLIKE"
     )
-
-    # 3. Model Confidence Set
-    mcs_mse = executar_mcs(
-        resultados, perda="MSE"
-    )
-    mcs_qlike = executar_mcs(
-        resultados, perda="QLIKE"
-    )
-
-    print("\n=== MINCER-ZARNOWITZ ===")
-    print(mz)
-
     print("\n=== DIEBOLD-MARIANO: MSE ===")
     print(dm_mse)
 
     print("\n=== DIEBOLD-MARIANO: QLIKE ===")
     print(dm_qlike)
 
-    print("\n=== MCS: MSE ===")
-    print(mcs_mse)
-
-    print("\n=== MCS: QLIKE ===")
-    print(mcs_qlike)
-
     return {
-        "mincer_zarnowitz": mz,
         "dm_mse": dm_mse,
-        "dm_qlike": dm_qlike,
-        "mcs_mse": mcs_mse,
-        "mcs_qlike": mcs_qlike,
+        "dm_qlike": dm_qlike
     }
 
 

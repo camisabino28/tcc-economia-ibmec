@@ -17,16 +17,14 @@ if not (BASE_DIR / "results").is_dir():
 
 RESULTS_DIR = BASE_DIR / "results"
 
-#Carrega os quatro arquivos
+#Carrega os três arquivos
 
 results_rf = pd.read_parquet(RESULTS_DIR / "pred_rf.parquet")
-results_xgb = pd.read_parquet(RESULTS_DIR / "pred_xgb.parquet")
 results_garch = pd.read_parquet(RESULTS_DIR / "pred_garch.parquet")
 results_egarch = pd.read_parquet(RESULTS_DIR / "pred_egarch.parquet")
 
 resultados = {
 "RF": results_rf,
-"XGBoost": results_xgb,
 "GARCH": results_garch,
 "EGARCH": results_egarch,
 }
@@ -89,3 +87,22 @@ print(
         atol=1e-12
     )
 )
+
+# Verifica se tem previsões negativas ou nulas
+print("\n=== INVESTIGAÇÃO DE PREVISÕES NEGATIVAS OU NULAS ===")
+for nome, df in resultados.items():
+  pred_col = [c for c in df.columns if c.startswith("pred_")][0]
+  preds = df[pred_col]
+
+  n_negativos = (preds < 0).sum()
+  n_zeros = (preds == 0).sum()
+
+  print(f"Modelo {nome}:")
+  print(f"  - Previsões negativas: {n_negativos}")
+  print(f"  - Previsões nulas: {n_zeros}")
+
+  if n_negativos > 0:
+    print(
+        f" O modelo {nome} gerou {n_negativos} valores negativos!"
+        " Investigar origem."
+    )

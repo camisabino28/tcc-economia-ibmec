@@ -6,12 +6,18 @@ from SCRIPTS.data import obter_serie_cambio
 from tqdm import tqdm
 from SCRIPTS.features import build_features
 
-def rf_walk_forward(df_cambio, min_train=252, refit_every=1):
+def rf_walk_forward(df_cambio, data_inicio_prev="2020-01-01", refit_every=1):
     df_feat = build_features(df_cambio)
     feature_cols = [c for c in df_feat.columns if c not in ["log_return", "vol_realizada", "Adj Close"]]
     X = df_feat[feature_cols].values
     y = df_feat["vol_realizada"].values
     dates = df_feat.index
+    
+    min_train = np.where(dates >= pd.to_datetime(data_inicio_prev))[0][0]
+    print(
+        f"Treinando com dados até: {dates[min_train - 1].date()} | "
+        f"Iniciando previsões em: {dates[min_train].date()}"
+    )
 
     rf = RandomForestRegressor(
         n_estimators=500,

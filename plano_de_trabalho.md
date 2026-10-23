@@ -10,23 +10,23 @@
 
 ## 1. Dados
 
-- Baixar as cotações do FRED e salvar o arquivo original em `data/raw/cambio_usdbrl.csv`, preservando os valores ausentes.
-- Registrar a fonte, a série e a data do download.
-- Retirar a interpolação linear de `SCRIPTS/data.py`.
-- Identificar e registrar as observações ausentes, incluindo dias sem cotação, como feriados.
-- Excluir as datas sem cotação válida e calcular os retornos entre observações consecutivas disponíveis.
-- Registrar que esses retornos representam intervalos entre observações disponíveis, que nem sempre correspondem a um único dia calendário.
-- Conferir a ordem das datas e possíveis duplicidades antes de calcular os retornos.
-- Fixar a data final da amostra em maio de 2026 e registrar a última observação disponível.
-- Salvar a versão tratada em `data/processed/cambio_usdbrl.csv`, sem sobrescrever o arquivo original.
-- Fazer os modelos lerem o CSV tratado, sem baixar novamente as cotações a cada execução, para repetir a análise com os mesmos dados.
+- Baixar as cotações do FRED e salvar o arquivo original em `data/raw/cambio_usdbrl.csv`, preservando os valores ausentes. Feito
+- Registrar a fonte, a série e a data do download. Feito
+- Retirar a interpolação linear de `SCRIPTS/data.py`. Feito
+- Identificar e registrar as observações ausentes, incluindo dias sem cotação, como feriados. Feito
+- Excluir as datas sem cotação válida e calcular os retornos entre observações consecutivas disponíveis. Feito
+- Registrar que esses retornos representam intervalos entre observações disponíveis, que nem sempre correspondem a um único dia calendário. Feito
+- Conferir a ordem das datas e possíveis duplicidades antes de calcular os retornos. Feito
+- Fixar a data final da amostra em maio de 2026 e registrar a última observação disponível. Feito
+- Salvar a versão tratada em `data/processed/cambio_usdbrl.csv`, sem sobrescrever o arquivo original. Feito
+- Fazer os modelos lerem o CSV tratado, sem baixar novamente as cotações a cada execução, para repetir a análise com os mesmos dados. Feito
 
 
 ## 2. Modelos e previsões
 
-- Retirar o XGBoost.
-- Manter apenas GARCH, EGARCH e RF no pipeline principal.
-- Iniciar as previsões em janeiro de 2020, usando somente os dados anteriores para treinamento.
+- Retirar o XGBoost. Feito
+- Manter apenas GARCH, EGARCH e RF no pipeline principal. Feito
+- Iniciar as previsões em janeiro de 2020, usando somente os dados anteriores para treinamento. Feito
 
   Isso significa separar os dados usados para aprender dos dados usados para avaliar as previsões. Os dados de 2000 a 2019 servem para o treinamento inicial. A partir de janeiro de 2020, as previsões são comparadas com os valores realmente observados.
 
@@ -37,22 +37,22 @@
 
 ## 3. Avaliação e saídas
 
-- Verificar se as previsões de variância dos três modelos são estritamente positivas, como exige o QLIKE.
-- Se houver previsões iguais a zero, aplicar o mesmo piso positivo aos três modelos no cálculo do QLIKE e registrar os casos. Previsões negativas devem ser investigadas e corrigidas.
-- Calcular MSE e QLIKE com os mesmos critérios para GARCH, EGARCH e RF.
+- Verificar se as previsões de variância dos três modelos são estritamente positivas, como exige o QLIKE. Feito
+- Se houver previsões iguais a zero, aplicar o mesmo piso positivo aos três modelos no cálculo do QLIKE e registrar os casos. Previsões negativas devem ser investigadas e corrigidas. Feito
+- Calcular MSE e QLIKE com os mesmos critérios para GARCH, EGARCH e RF. Feito
 
   1. **MSE:** mede o erro e penaliza mais os erros grandes.
   2. **QLIKE:** complementa a avaliação por ser uma função de perda específica para previsões de variância.
 
-- Executar o teste Diebold–Mariano para avaliar se as diferenças de desempenho entre os modelos são estatisticamente significativas.
-- Priorizar MSE, QLIKE e Diebold–Mariano na comparação principal.
+- Executar o teste Diebold–Mariano para avaliar se as diferenças de desempenho entre os modelos são estatisticamente significativas. Feito
+- Priorizar MSE, QLIKE e Diebold–Mariano na comparação principal. Feito
 
 ## 4. Resultados finais
 
-- Produzir uma tabela comparativa de GARCH, EGARCH e RF com MSE e QLIKE.
-- Apresentar os resultados do teste Diebold–Mariano, com os p-valores.
-- Elaborar um gráfico simples comparando o retorno ao quadrado (proxy da variância) e as previsões dos três modelos.
-- Escrever um parágrafo interpretando qual modelo apresentou melhor desempenho e se as diferenças foram estatisticamente significativas, sem presumir um vencedor.
+- Produzir uma tabela comparativa de GARCH, EGARCH e RF com MSE e QLIKE. Pendente
+- Apresentar os resultados do teste Diebold–Mariano, com os p-valores. Pendente
+- Elaborar um gráfico simples comparando o retorno ao quadrado (proxy da variância) e as previsões dos três modelos. Pendente
+- Escrever um parágrafo interpretando qual modelo apresentou melhor desempenho e se as diferenças foram estatisticamente significativas, sem presumir um vencedor. Pendente
 
 
 ## Referências de apoio

@@ -36,7 +36,13 @@ def garch_walk_forward(retornos_series, vol_type='Garch', min_train=252, start_d
     dates = retornos_series.index
 
     if start_date is not None:
-        min_train = max(min_train, dates.get_loc(start_date))
+        idx_start = np.where(dates >= pd.to_datetime(start_date))[0][0]
+        min_train = max(min_train, idx_start)
+        print(
+            f"[{vol_type.upper()}] Treinando até:"
+            f" {dates[min_train - 1].date()} | Iniciando previsões em:"
+            f" {dates[min_train].date()}"
+    )
 
     preds, actuals, pred_dates = [], [], []
 
@@ -81,5 +87,5 @@ if __name__ == "__main__":
         metrics = evaluate_model(retornos, vol_type)
         print(metrics)
 
-    results_garch = garch_walk_forward(retornos, 'Garch')
-    results_egarch = garch_walk_forward(retornos, 'EGARCH')
+    results_garch = garch_walk_forward(retornos, 'Garch', start_date="2020-01-01")
+    results_egarch = garch_walk_forward(retornos, 'EGARCH', start_date="2020-01-01")

@@ -1,5 +1,3 @@
-#https://github.com/8g9g5fc65t-max/Comparative-Analysis-of-Econometric-and-Machine-Learning-Models-with-a-Hybrid-Extension
-
 from SCRIPTS.data import obter_serie_cambio
 from SCRIPTS.testes_estatisticos import (
     teste_adf, teste_jarque_bera, teste_arch,
@@ -11,7 +9,6 @@ from SCRIPTS.visualizacoes import (
 )
 from SCRIPTS.garch_model import ajustar_modelo, evaluate_model, garch_walk_forward
 from SCRIPTS.random_forest import rf_walk_forward
-from SCRIPTS.xgboost_model import xgb_walk_forward
 import os
 os.makedirs("results", exist_ok=True)
 from SCRIPTS.Backtesting.backtesting import (
@@ -57,13 +54,8 @@ if __name__ == "__main__":
     plot_volatilidade_movel(retornos)
     
     # RF primeiro para a data de início dele para alinhar o GARCH e EGARCH
-    results_rf, importances = rf_walk_forward(serie_cambio, refit_every=5)
-    #XGBoost
-    results_xgb, importances_xgb = xgb_walk_forward(serie_cambio, refit_every=5)
-    
-    #Confere se as datas do RF e XGB estão alinhadas
-    assert results_rf.index[0] == results_xgb.index[0], "RF e XGBoost começam em datas diferentes"
-    
+    results_rf, importances = rf_walk_forward(serie_cambio, refit_every=5, data_inicio_prev="2020-01-01")
+
     # GARCH e EGARCH, alinhados a partir da mesma data que o RF
     retornos_pct = retornos * 100
     start = results_rf.index[0]
@@ -83,7 +75,6 @@ if __name__ == "__main__":
 
     # Salva os resultados
     results_rf.to_parquet("results/pred_rf.parquet")
-    results_xgb.to_parquet("results/pred_xgb.parquet")
     results_garch.to_parquet("results/pred_garch.parquet")
     results_egarch.to_parquet("results/pred_egarch.parquet")
     
