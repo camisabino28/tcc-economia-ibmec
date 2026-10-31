@@ -1,15 +1,309 @@
 \chapter{Resultados}
 
-Este capitulo deve apresentar a analise descritiva, os resultados econometricos e a interpretacao substantiva.
+Este capítulo apresenta os resultados obtidos na análise empírica, iniciando pela caracterização 
+das propriedades estatísticas da série de retornos cambiais e de sua volatilidade. Em seguida, 
+são apresentados e discutidos os resultados das previsões realizadas pelos modelos Random Forest, 
+GARCH e EGARCH, considerando as métricas de desempenho e os testes de comparação preditiva. Por fim, 
+é realizada uma análise de robustez por meio da substituição da janela expansiva por uma janela rolante 
+de cinco anos, com o objetivo de avaliar a sensibilidade dos resultados a essa alteração na estratégia de estimação.
 
-\section{Analise descritiva}
+\section{Análise descritiva}
 
-Inserir tabelas e graficos produzidos em `outputs/tables` e `outputs/figures`.
+Esta seção apresenta a análise descritiva da série de retornos log-diários da taxa de câmbio
+USD/BRL, cobrindo o período de janeiro de 2000 a maio de 2026. O objetivo é caracterizar
+empiricamente as propriedades estatísticas da série e validar os chamados fatos estilizados das
+finanças, que fundamentam a escolha de modelos adotados.
+
+O gráfico da série de câmbio USD/BRL em nível mostra uma trajetória ascendente ao longo do
+período amostral, como mostra a figura 5.1:
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[
+    width=0.65\textwidth,
+    height=0.4\textheight,
+    keepaspectratio
+]{../../../OUTPUTS/figures/serie_cambio.png}
+    \caption{Série do càmbio}
+    \label{fig:previsoes}
+\end{figure}
+
+Partindo de valores próximos a \text{R\$ 1,80/US\$} no início do ano de 2000, a taxa atingiu níveis
+superiores a \text{R\$ 6,00/US\$} nos anos recentes, evidenciando uma tendência estocástica de longo
+prazo. A decomposição sazonal da série, apresentada na Figura A.1 do Apêndice A, confirma visualmente a
+presença de tendência crescente e componente sazonal, com o resíduo concentrando os
+movimentos abruptos associados a eventos de estresse. Esses elementos são consistentes com a
+hipótese de que a série de câmbio é não estacionária em nível, o que é verificado formalmente pelo
+teste ADF na tabela 5.1.
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{../../../OUTPUTS/figures/volatilidade_movel_21d.png}
+    \caption{Volatilidade móvel de 21 dias}
+    \label{fig:previsoes}
+\end{figure}
+
+A série de retornos log-diários (Figura A.3 do Apêndice A) apresenta comportamento distinto do nível da taxa de câmbio, 
+com oscilações em torno de zero e variância que se altera ao longo do tempo. Esse comportamento também pode ser observado 
+na volatilidade histórica móvel de 21 dias (Figura 5.2), que evidencia episódios de maior volatilidade, especialmente em 2002, 
+2008, 2015–2016 e 2020, intercalados por períodos de relativa calmaria. Essa alternância, denominada clustering de volatilidade, 
+é um dos fatos estilizados das séries financeiras e constitui uma das principais motivações para a adoção de modelos da família GARCH.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Testes de estacionariedade e heterocedasticidade}
+    \label{tab:testes_principais}
+    \begin{tabular}{lrr}
+        \toprule
+        Teste & Estatística & $p$-valor \\
+        \midrule
+        ADF (câmbio em nível) & -0,760 & 0,8305 \\
+        ADF (retornos) & -14,025 & $<0,001$ \\
+        Ljung--Box (retornos ao quadrado, lag 10) & 4685,152 & $<0,001$ \\
+        ARCH & 1669,466 & $<0,001$ \\
+        \bottomrule
+    \end{tabular}
+
+    \vspace{0.2cm}
+    \begin{minipage}{0.85\textwidth}
+        \footnotesize
+        \textit{Nota:} O teste ADF tem como hipótese nula a presença de raiz unitária. O teste Ljung--Box testa a ausência de autocorrelação até a defasagem considerada, enquanto o teste ARCH testa a ausência de efeitos ARCH.
+    \end{minipage}
+\end{table}
+
+Os testes de estacionariedade indicam que não se rejeita a hipótese nula de raiz unitária para a taxa de câmbio em nível (p-valor = 0,831), 
+enquanto essa hipótese é rejeitada para os retornos log-diários (p-valor < 0,001). Esses resultados são compatíveis com a não estacionariedade 
+da série em nível e a estacionariedade dos retornos, que são utilizados nas etapas seguintes da análise.
+
+Conforme apresentado na Tabela A.2 do Apêndice A, a distribuição dos retornostem média próxima de zero (0,000156) e baixa assimetria (0,026), mas curtose de 7,994, indicando uma distribuição 
+com caudas mais pesadas diferentes de uma distribuição normal. O teste de Jarque-Bera rejeita a hipótese de normalidade (p-valor < 0,001), resultado 
+também ilustrado pela comparação entre a densidade empírica e a normal teórica na Figura A.5 do Apêndice A. Além disso, o teste t não rejeita a hipótese 
+de média igual a zero (p-valor = 0,205). Em conjunto, esses resultados mostram como funciona a distribuição dos retornos e são relevantes para a especificação dos modelos de volatilidade.
+
+Por fim, o teste de Ljung-Box aplicado aos retornos ao quadrado rejeita a hipótese de ausência de autocorrelação tanto para 10 quanto para 20 defasagens 
+(p-valores < 0,001). O teste ARCH também rejeita a hipótese nula de ausência de efeitos ARCH (p-valor < 0,001). Essas evidências apontam para dependência temporal na volatilidade 
+e sustentam o uso de modelos da família GARCH. Os correlogramas dos retornos e dos retornos ao quadrado, apresentados na Figura A.2 do Apêndice A, complementam essa análise. 
+Os resultados completos dos testes estatísticos são apresentados na Tabela A.1 do Apêndice A.
 
 \section{Resultados principais}
 
-Discutir sinais, magnitudes e significancia estatistica dos coeficientes.
+\begin{table}[htbp]
+    \centering
+    \caption{Desempenho preditivo dos modelos}
+    \label{tab:metricas}
+    \begin{tabular}{lrrrr}
+        \toprule
+        Modelo & MSE & RMSE & MAE & QLIKE \\
+        \midrule
+        RF     & $2{,}604 \times 10^{-8}$ & 0,000161 & 0,000093 & $-8{,}457$ \\
+        EGARCH & $2{,}643 \times 10^{-8}$ & 0,000163 & 0,000092 & $-8{,}451$ \\
+        GARCH  & $2{,}664 \times 10^{-8}$ & 0,000163 & 0,000094 & $-8{,}448$ \\
+        \bottomrule
+    \end{tabular}
 
+    \vspace{0.2cm}
+    \footnotesize Fonte: Elaboração própria.
+\end{table}
+
+A Tabela 5.2 apresenta as métricas de desempenho preditivo dos modelos estimados. De maneira geral, o Random Forest apresentou os melhores resultados em termos de MSE, 
+RMSE e QLIKE, enquanto o EGARCH obteve o menor MAE. Embora as diferenças entre os valores sejam relativamente pequenas, o desempenho do Random Forest indica uma vantagem 
+numérica na previsão da variância cambial, especialmente considerando as métricas que penalizam erros de previsão de forma mais sensível como o MSE.
+
+Em relação aos modelos da família GARCH, o EGARCH apresentou resultados ligeiramente superiores ao GARCH nas quatro métricas consideradas, com exceção do MAE, no qual 
+também obteve o melhor resultado entre os três modelos. Esse resultado sugere que a especificação assimétrica do EGARCH pode oferecer alguma vantagem na representação da 
+dinâmica da volatilidade cambial, embora essa diferença seja pequena.
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[
+        width=0.9\textwidth,
+        keepaspectratio
+    ]{../../../OUTPUTS/figures/actual_vs_pred_garch_expansiva.png}
+    \caption{Variância observada e prevista pelo modelo GARCH(1,1) — janela expansiva}
+    \label{fig:previsoes_garch}
+\end{figure}
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[
+        width=0.9\textwidth,
+        keepaspectratio
+    ]{../../../OUTPUTS/figures/actual_vs_pred_egarch_expansiva.png}
+    \caption{Variância observada e prevista pelo modelo EGARCH(1,1) — janela expansiva}
+    \label{fig:previsoes_garch}
+\end{figure}
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[
+        width=0.9\textwidth,
+        keepaspectratio
+    ]{../../../OUTPUTS/figures/actual_vs_pred_rf_expansiva.png}
+    \caption{Variância observada e prevista pelo modelo Random Forest — janela expansiva}
+    \label{fig:previsoes_garch}
+\end{figure}
+
+A análise gráfica das variâncias observadas e previstas, apresentada nas Figuras 5.3 a 5.5, permite complementar a comparação. É possível notar que os três 
+modelos conseguem acompanhar parcialmente a dinâmica da volatilidade ao longo do período analisado, identificando momentos de maior instabilidade. Entretanto, 
+é possível identificar, também, que o Random Forest apresenta uma capacidade relativamente maior de acompanhar alguns dos picos de volatilidade, especialmente 
+nos períodos de maior instabilidade. Apesar disso, as previsões dos três modelos apresentam um comportamento mais suavizado em comparação com a variância observada, 
+evidenciando dificuldades em representar integralmente os movimentos extremos. Assim, embora o Random Forest apresente uma resposta visualmente mais próxima da variância 
+observada em determinados momentos, essa característica não se traduz em uma superioridade estatisticamente significativa, conforme indicado pelos testes de Diebold-Mariano.
+
+Além das métricas de desempenho, a tabela B.3 no Apêndice B mostra a importância das variáveis utilizadas pelo modelo Random Forest, com o objetivo de identificar quais atributos contribuíram 
+mais para suas previsões. Na janela expansiva, a média móvel dos retornos absolutos em cinco dias apresentou a maior importância (0,163), seguida pelo retorno defasado em um 
+período (0,118) e pela volatilidade defasada em um período (0,105). Também se destacaram a média móvel dos retornos absolutos em 21 dias e a volatilidade histórica de 21 dias. 
+Esses resultados indicam a relevância das informações recentes de retorno e das medidas de volatilidade passada para as previsões do modelo.
+
+\begin{table}[!htbp]
+    \centering
+    \caption{Teste Diebold--Mariano para a função de perda MSE}
+    \label{tab:dm_mse}
+    \begin{tabular}{lrrr}
+        \toprule
+        Modelo A & Modelo B & DM-HLN & $p$-valor \\
+        \midrule
+        RF    & GARCH  & -1,128 & 0,259 \\
+        RF    & EGARCH & -0,700 & 0,484 \\
+        GARCH & EGARCH &  0,932 & 0,351 \\
+        \bottomrule
+    \end{tabular}
+    \begin{center}
+        \footnotesize Fonte: Elaboração própria.
+    \end{center}
+\end{table}
+
+\begin{table}[!htbp]
+    \centering
+    \caption{Teste Diebold--Mariano para a função de perda QLIKE}
+    \label{tab:dm_qlike}
+    \begin{tabular}{lrrr}
+        \toprule
+        Modelo A & Modelo B & DM-HLN & $p$-valor \\
+        \midrule
+        RF    & GARCH  & -0,827 & 0,408 \\
+        RF    & EGARCH & -0,525 & 0,600 \\
+        GARCH & EGARCH &  0,440 & 0,660 \\
+        \bottomrule
+    \end{tabular}
+    \begin{center}
+        \footnotesize Fonte: Elaboração própria.
+    \end{center}
+\end{table}
+
+Por fim, os resultados dos testes de Diebold-Mariano com a correção de Harvey, Leybourne e Newbold, apresentados nas Tabelas 5.3 e 5.4, não apontaram diferenças 
+estatisticamente significativas entre os modelos, tanto para a função de perda MSE quanto para a QLIKE. Em todas as comparações, os p-valores foram superiores a 0,05, 
+ou seja, não foi possível rejeitar a hipótese nula de igualdade de desempenho preditivo. Dessa forma, apesar da vantagem numérica observada para o Random Forest em 
+algumas métricas, não há evidências estatísticas suficientes para afirmar que seu desempenho preditivo seja superior ao dos modelos GARCH e EGARCH.
+
+Em conjunto, os resultados indicam que tanto os modelos econométricos da família GARCH quanto o Random Forest foram capazes de produzir previsões competitivas para 
+a volatilidade cambial. A ausência de diferenças estatisticamente significativas sugere que a maior flexibilidade do Random Forest não se traduziu, nessa análise, 
+em uma superioridade preditiva estatisticamente comprovada.
+
+Resultados complementares das estimações dos modelos GARCH e EGARCH, incluindo os coeficientes estimados e suas respectivas estatísticas, são apresentados nas 
+Seções B.1 e B.2 do Apêndice B. O apêndice também apresenta a importância das variáveis utilizadas pelo Random Forest (Seção B.3), permitindo identificar aquelas 
+que mais contribuíram para as previsões, bem como os resultados completos dos testes Diebold-Mariano para as funções de perda MSE e QLIKE (Seção B.4).
+
+
+\FloatBarrier
 \section{Testes de robustez}
 
-Registrar especificacoes alternativas e verificacoes adicionais.
+Para avaliar a robustez dos resultados obtidos na análise principal, foi realizada uma análise complementar utilizando uma janela rolante de cinco anos, em 
+substituição à janela expansiva. Essa especificação permite verificar se o desempenho relativo dos modelos se mantém quando as estimações consideram apenas 
+as observações mais recentes, atribuindo maior relevância às condições de mercado próximas ao período de previsão. A comparação foi realizada entre os modelos 
+Random Forest e GARCH, conforme os resultados apresentados a seguir.
+
+Na análise de robustez com janela rolante de cinco anos, o modelo EGARCH foi excluído devido à instabilidade observada no seu processo de estimação. Foram 
+identificados episódios de não convergência do algoritmo de otimização e, mesmo em estimações com convergência reportada, ocorreram previsões de variância 
+excessivamente elevadas. Esses problemas comprometeram a confiabilidade das previsões e motivaram a exclusão do modelo dessa especificação. Os diagnósticos 
+das estimações são apresentados nas Tabelas B.6 e B.7 do Apêndice B.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Desempenho preditivo dos modelos — janela rolante}
+    \label{tab:metricas_rolante}
+    \begin{tabular}{lrrrr}
+        \toprule
+        Modelo & MSE & RMSE & MAE & QLIKE \\
+        \midrule
+        GARCH & $2{,}614 \times 10^{-8}$ & 0,000162 & 0,000091 & $-8{,}458$ \\
+        RF    & $2{,}700 \times 10^{-8}$ & 0,000164 & 0,000095 & $-8{,}435$ \\
+        \bottomrule
+    \end{tabular}
+
+    \vspace{0.2cm}
+    \footnotesize Fonte: Elaboração própria.
+\end{table}
+
+A Tabela 5.5 apresenta as métricas de desempenho preditivo dos modelos estimados com janela rolante de cinco anos. De maneira geral, o GARCH apresentou 
+os melhores resultados nas quatro métricas consideradas, obtendo menores valores de MSE, RMSE e MAE, além de um QLIKE mais negativo. Embora as diferenças entre 
+os valores sejam relativamente pequenas, os resultados indicam uma vantagem numérica do GARCH em relação ao Random Forest na previsão da variância cambial.
+Dessa forma, diferentemente do observado na janela expansiva, em que o Random Forest apresentou os melhores resultados em algumas métricas, a especificação 
+com janela rolante favoreceu o modelo GARCH.
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[
+        width=0.9\textwidth,
+        keepaspectratio
+    ]{../../../OUTPUTS/figures/actual_vs_pred_garch_rolante.png}
+    \caption{Variância observada e prevista pelo modelo GARCH(1,1) — janela rolante}
+    \label{fig:previsoes_garch}
+\end{figure}
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[
+        width=0.9\textwidth,
+        keepaspectratio
+    ]{../../../OUTPUTS/figures/actual_vs_pred_rf_rolante.png}
+    \caption{Variância observada e prevista pelo modelo Random Forest — janela rolante}
+    \label{fig:previsoes_garch}
+\end{figure}
+
+As Figuras 5.6 e 5.7 apresentam as variâncias observadas e previstas pelos modelos GARCH e Random Forest, respectivamente, considerando a janela rolante de 
+cinco anos. De maneira geral, ambos os modelos conseguem acompanhar parte da dinâmica da volatilidade cambial, identificando períodos de maior instabilidade 
+e apresentando previsões mais elevadas nos momentos de maior volatilidade observada.
+
+Entretanto, é possível notar que as previsões dos dois modelos apresentam dificuldades em acompanhar a magnitude dos picos mais acentuados da variância observada. 
+O GARCH apresenta uma trajetória de previsão relativamente mais suave, enquanto o Random Forest demonstra uma maior oscilação nas previsões, reagindo de maneira 
+mais pronunciada a algumas variações da série. Apesar dessas diferenças visuais, ambos apresentam limitações na antecipação de movimentos extremos.
+
+Além disso, a tabela B.8 do Apêndice B, mostra importância das variáveis utilizadas pelo modelo Random Forest, com o objetivo de identificar quais atributos 
+contribuíram mais as previsões considerando a janela rolante. Conforme apresentado na tabela, os retornos defasados e as medidas de volatilidade passada tiveram 
+destaque entre as dez variáveis mais importantes. Em particular, o retorno defasado em cinco períodos apresentou a maior importância (0,109), seguido pela volatilidade 
+defasada em cinco períodos (0,100) e pelo retorno defasado em um período (0,100). Também se destacaram a volatilidade histórica de 21 dias e a média móvel dos retornos 
+absolutos em 21 dias. Diferentemente da janela expansiva, em que as médias móveis dos retornos absolutos ocuparam posições de maior destaque, na janela rolante as variáveis 
+de retorno e volatilidade defasados apresentaram maior importância relativa.
+
+\begin{table}[!htbp]
+    \centering
+    \caption{Teste Diebold-Mariano para a janela rolante}
+    \label{tab:dm_rolante}
+    \begin{tabular}{lrrrr}
+        \toprule
+        Modelo A & Modelo B & Perda & DM-HLN & $p$-valor \\
+        \midrule
+        RF & GARCH & MSE   & 2,547 & 0,011 \\
+        RF & GARCH & QLIKE & 2,376 & 0,018 \\
+        \bottomrule
+    \end{tabular}
+    \begin{center}
+        \footnotesize Nota: Ambas as comparações utilizam 1.602 observações.
+
+        \footnotesize Fonte: Elaboração própria.
+    \end{center}
+\end{table}
+
+Os resultados do teste Diebold-Mariano, apresentados na Tabela 5.6, indicam diferenças estatisticamente significativas entre os modelos para ambas as 
+funções de perda. Para o MSE, a estatística DM-HLN foi de 2,547, com p-valor de 0,011, enquanto para o QLIKE foi de 2,376, com p-valor de 0,018. Em 
+ambos os casos, a hipótese nula de igualdade de desempenho preditivo é rejeitada ao nível de significância de 5\%. Considerando que as diferenças médias 
+de perda foram calculadas como RF menos GARCH, os resultados favorecem o modelo GARCH, corroborando sua superioridade observada nas métricas de desempenho.
+
+Por fim, a análise de robustez mostra que a escolha da janela de estimação influencia o desempenho relativo dos modelos. Enquanto na especificação com janela 
+expansiva o Random Forest apresentou os menores valores de MSE e QLIKE, embora sem diferenças estatisticamente significativas em relação aos demais modelos, 
+na janela rolante de cinco anos o GARCH apresentou desempenho superior ao Random Forest nas duas funções de perda consideradas. Uma possível explicação é que 
+a janela expansiva, ao incorporar um histórico mais amplo de observações, oferece ao Random Forest uma base maior para identificar padrões na série, enquanto 
+a janela rolante restringe a estimação às informações mais recentes. Dessa forma, os resultados sugerem que a relação entre o desempenho preditivo e a estratégia 
+de estimação merece atenção na escolha dos modelos de previsão da volatilidade cambial.

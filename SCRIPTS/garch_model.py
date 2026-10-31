@@ -30,7 +30,7 @@ def evaluate_model(retornos_series, vol_type='Garch', dist='t'):
     return {"aic": res.aic, "bic": res.bic}
 
 
-def garch_walk_forward(retornos_series, vol_type='Garch', min_train=252, start_date=None):
+def garch_walk_forward(retornos_series, vol_type='Garch', min_train=252, start_date=None, window_years=None):
     """retornos_series: log-retornos em % (já multiplicados por 100)."""
     retornos = retornos_series.values
     dates = retornos_series.index
@@ -47,7 +47,13 @@ def garch_walk_forward(retornos_series, vol_type='Garch', min_train=252, start_d
     preds, actuals, pred_dates = [], [], []
 
     for t in tqdm(range(min_train, len(retornos))):
-        train = retornos_series.iloc[:t]
+        if window_years is None:
+            inicio_treino = 0 # Janela expansiva
+        else:
+            data_limite = dates[t] - pd.DateOffset(years=window_years)
+            inicio_treino = np.searchsorted(dates, data_limite)
+        train = retornos_series.iloc[inicio_treino:t]
+        
         res = ajustar_modelo(train, vol_type, 't')
         fc = res.forecast(horizon=1)
         pred_var = fc.residual_variance.iloc[-1, 0]
@@ -87,5 +93,10 @@ if __name__ == "__main__":
         metrics = evaluate_model(retornos, vol_type)
         print(metrics)
 
-    results_garch = garch_walk_forward(retornos, 'Garch', start_date="2020-01-01")
-    results_egarch = garch_walk_forward(retornos, 'EGARCH', start_date="2020-01-01")
+# Janela Expansiva
+    results_garch_exp = garch_walk_forward(retornos, 'Garch', start_date="2020-01-01")
+    results_egarch_exp = garch_walk_forward(retornos, 'EGARCH', start_date="2020-01-01")
+
+# Robustez: Janela rolante de 5 anos
+    results_garch_5 = garch_walk_forward(retornos, vol_type='Garch', start_date="2020-01-01", window_years=5)
+    results_egarch_5 = garch_walk_forward(retornos, vol_type='EGARCH', start_date="2020-01-01", window_years=5)

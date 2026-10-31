@@ -1,15 +1,39 @@
 \chapter{Base de Dados e Estrategia Empirica}
 
-Este capitulo deve descrever as bases utilizadas, as variaveis construidas e o tratamento dos dados.
+Este capítulo apresenta os dados utilizados na análise e os procedimentos adotados para sua preparação. Inicialmente, são descritas a fonte e as características da série histórica 
+da taxa de câmbio USD/BRL, assim como a delimitação do período de estudo. Em seguida, são apresentadas a construção da variável dependente e das variáveis explicativas utilizadas 
+nos modelos, considerando cada abordagem. Por fim, são detalhados os procedimentos de tratamento dos dados, incluindo a identificação de observações ausentes, a organização cronológica 
+da série e os critérios adotados para a definição da amostra utilizada nas estimações.
 
 \section{Fontes de dados}
 
-Indicar as instituicoes, os arquivos utilizados e o periodo coberto.
+A unidade de análise é o retorno diário da taxa de câmbio USD/BRL, calculado a partir da série DEXBZUS (Brazil / U.S. Foreign Exchange Rate), obtida junto ao Federal Reserve 
+Bank of St. Louis (FRED) em 23 de outubro de 2026, e o período estudado compreende janeiro de 2000 até maio de 2026 
+(última observação disponível: 29 de maio de 2026). O recorte temporal inicia após a 
+consolidação do regime de câmbio flutuante, implementado em janeiro de 1999, de forma a excluir o período de transição cambial e 
+garantir homogeneidade institucional da série. O período cobre episódios relevantes de estresse cambial, incluindo a crise de 
+confiança de 2002, a crise financeira global de 2008, a recessão brasileira de 2015-2016, o choque da pandemia de COVID-19 em 2020
+ e o ciclo de incerteza fiscal de 2021-2024.
 
 \section{Construcao das variaveis}
 
-Detalhar variavel dependente, explicativas principais e controles.
+A variável dependente é a proxy de volatilidade, o retorno ao quadrado ($r_t^2$), em que $r_t = \ln\left(\frac{P_t}{P_{t-1}}\right)$ é o log-retorno diário e $P_t$ é 
+a taxa de câmbio USD/BRL. Para a estimação do GARCH e do EGARCH, os retornos são multiplicados por 100 (pontos percentuais), e as previsões são convertidas de volta à 
+escala de $r_t^2$, antes da comparação entre modelos.
+
+As variáveis explicativas do \textit{Random Forest} são construídas exclusivamente a partir do histórico da própria série, e todas utilizam apenas informação disponível até $t-1$. O vetor de \textit{features}, com $K = 14$ variáveis, é composto por:
+\begin{itemize}
+    \item Retornos log-diários defasados: $r_{t-1}, r_{t-2}, \ldots, r_{t-5}$;
+    \item \textit{Proxies} de volatilidade defasadas: $r_{t-1}^2, r_{t-2}^2, \ldots, r_{t-5}^2$;
+    \item Médias móveis do retorno absoluto em janelas de $w \in \{5, 21\}$ dias: $\frac{1}{w}\sum_{j=1}^{w}|r_{t-j}|$;
+    \item Volatilidade histórica de 21 dias: desvio-padrão amostral de $r_{t-1}, \ldots, r_{t-21}$;
+    \item Índice de Força Relativa (RSI) de 14 dias, calculado sobre os retornos log-diários com médias simples de ganhos e perdas (sem a suavização de Wilder) e defasado em um período.
+\end{itemize}
+
+Os modelos da família GARCH utilizam apenas os retornos passados. Não são incluídas variáveis de controle exógenas.
 
 \section{Tratamento dos dados}
 
-Explicar limpeza, filtros, agregacoes e criterios de exclusao.
+A série bruta foi preservada sem alterações, com as observações ausentes mantidas, e as datas sem cotação foram registradas em arquivo separado (269 datas). Essas datas foram excluídas da amostra, sem interpolação, 
+e o retorno foi calculado entre observações consecutivas disponíveis. Assim, um retorno que atravessa um fim de semana ou feriado cobre mais de um dia corrido. Foi verificado, também, a ausência de datas duplicadas 
+e a ordenação cronológica, e a amostra foi truncada em 31 de maio de 2026, com última observação em 29 de maio. Não foram aplicados filtros de exclusão de outliers.

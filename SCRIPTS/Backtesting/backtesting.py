@@ -11,7 +11,7 @@ BASE_DIR = BASE_DIR.parent.parent
 
 sys.path.insert(0, str(BASE_DIR))
 
-def carregar_resultados():
+def carregar_resultados(tipo_janela="expansiva"):
     BASE_DIR = Path(__file__).resolve().parents[2]
     RESULTS_DIR = BASE_DIR / "results"
 
@@ -19,17 +19,33 @@ def carregar_resultados():
         raise FileNotFoundError(
             f"Não encontrei a pasta results em {BASE_DIR}"
         )
+
+    if tipo_janela == "expansiva":
+        arquivos = {
+            "RF": "pred_rf.parquet",
+            "GARCH": "pred_garch.parquet",
+            "EGARCH": "pred_egarch.parquet",
+        }
+
+    elif tipo_janela == "rolante":
+        arquivos = {
+            "RF": "pred_rf_rolling.parquet",
+            "GARCH": "pred_garch_rolling.parquet",
+        }
+
+    else:
+        raise ValueError("tipo_janela deve ser 'expansiva' ou 'rolante'")
+
     resultados = {
-        "RF": pd.read_parquet(RESULTS_DIR / "pred_rf.parquet"),
-        "GARCH": pd.read_parquet(RESULTS_DIR / "pred_garch.parquet"),
-        "EGARCH": pd.read_parquet(RESULTS_DIR / "pred_egarch.parquet"),
+        nome: pd.read_parquet(RESULTS_DIR / arquivo)
+        for nome, arquivo in arquivos.items()
     }
 
     return resultados
 
 # Métricas de avaliação das previsões
 
-def calcular_metricas(resultados):
+def calcular_metricas(resultados, tipo_janela):
     linhas = []
 
     for nome, df in resultados.items():
@@ -70,11 +86,17 @@ def calcular_metricas(resultados):
         
     df_metricas = pd.DataFrame(linhas).set_index("Modelo").sort_values("RMSE")
     
-    # Salva a tabela geral de métricas em CSV
+    # Diretórios
     BASE_DIR = Path(__file__).resolve().parents[2]
+    OUTPUTS_DIR = BASE_DIR / "OUTPUTS" / "tables"
     RESULTS_DIR = BASE_DIR / "results"
-    caminho_metricas = RESULTS_DIR / "metricas_desempenho.csv"
+
+    OUTPUTS_DIR.mkdir(parents=True, exist_ok=True)
+
+    # Salva a tabela de métricas
+    caminho_metricas = OUTPUTS_DIR / f"metricas_{tipo_janela}.csv"
     df_metricas.to_csv(caminho_metricas)
+
     print(f"\nTabela de métricas salva em: {caminho_metricas}")
     
     # Registra e salva as datas exatas onde ocorreram previsões <= 0 (negativo ou nulo)
@@ -91,7 +113,7 @@ def calcular_metricas(resultados):
             
     if casos_neg_nulo:
         df_neg_nulo = pd.DataFrame(casos_neg_nulo)
-        caminho_neg_nulo = RESULTS_DIR / "datas_previsoes_neg_nulo.csv"
+        caminho_neg_nulo = RESULTS_DIR / f"datas_previsoes_neg_nulo_{tipo_janela}.csv"
         df_neg_nulo.to_csv(caminho_neg_nulo, index=False)
         print(
             f"Foram encontradas {len(df_neg_nulo)} previsões <= 0. "
@@ -108,7 +130,7 @@ def calcular_metricas(resultados):
 
 
 # Função para fazer os backtestings
-def executar_testes_backtesting(resultados):
+def executar_testes_backtesting(resultados, tipo_janela):
     # 1. Diebold-Mariano
     dm_mse = teste_diebold_mariano(
         resultados, perda="MSE"
@@ -121,6 +143,14 @@ def executar_testes_backtesting(resultados):
 
     print("\n=== DIEBOLD-MARIANO: QLIKE ===")
     print(dm_qlike)
+    
+    # Salva os resultados
+    BASE_DIR = Path(__file__).resolve().parents[2]
+    OUTPUTS_DIR = BASE_DIR / "OUTPUTS" / "tables"
+    OUTPUTS_DIR.mkdir(parents=True, exist_ok=True)
+
+    dm_mse.to_csv(OUTPUTS_DIR / f"diebold_mariano_mse_{tipo_janela}.csv")
+    dm_qlike.to_csv(OUTPUTS_DIR / f"diebold_mariano_qlike_{tipo_janela}.csv")
 
     return {
         "dm_mse": dm_mse,

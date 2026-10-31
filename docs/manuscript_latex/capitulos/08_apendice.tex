@@ -1,0 +1,315 @@
+\chapter{Resultados complementares}
+
+\section{Gráficos complementares}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{../../../OUTPUTS/figures/decomposicao.png}
+    \caption{Decomposição da série cambial USD/BRL}
+    \label{fig:decomposicao}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{../../../OUTPUTS/figures/acf_pacf.png}
+    \caption{Funções de autocorrelação (ACF e PACF) dos retornos e dos retornos ao quadrado}
+    \label{fig:acf_pacf}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{../../../OUTPUTS/figures/retornos.png}
+    \caption{Retornos logarítmicos diários da taxa de câmbio USD/BRL}
+    \label{fig:retornos}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{../../../OUTPUTS/figures/densidade_retornos.png}
+    \caption{Distribuição dos retornos logarítmicos diários do USD/BRL}
+    \label{fig:densidade_retornos}
+\end{figure}
+
+\FloatBarrier
+\section{Resultados dos testes estatísticos}
+
+\begin{table}[!htbp]
+    \centering
+    \caption{Resultados dos testes estatísticos e momentos dos retornos}
+    \label{tab:testes_completos}
+    \small
+    \begin{tabular}{lrr}
+        \toprule
+        Teste ou medida & Estatística / Valor & $p$-valor \\
+        \midrule
+        ADF (câmbio em nível) & -0,7603 & 0,8305 \\
+        ADF (retornos) & -14,0249 & $<0,001$ \\
+        Teste $t$ (média = 0) & 1,2680 & 0,2048 \\
+        Jarque--Bera & 17596,8174 & $<0,001$ \\
+        Ljung--Box (retornos, lag 10) & 22,1757 & 0,0142 \\
+        Ljung--Box (retornos, lag 20) & 50,6874 & 0,0002 \\
+        Ljung--Box (retornos ao quadrado, lag 10) & 4685,1518 & $<0,001$ \\
+        Ljung--Box (retornos ao quadrado, lag 20) & 5889,8042 & $<0,001$ \\
+        ARCH & 1669,4662 & $<0,001$ \\
+        \midrule
+        Média & 0,000156 & --- \\
+        Variância & 0,0000998 & --- \\
+        Desvio-padrão & 0,009989 & --- \\
+        Assimetria & 0,026453 & --- \\
+        Curtose & 7,993952 & --- \\
+        \bottomrule
+    \end{tabular}
+
+    \vspace{0.2cm}
+    \begin{minipage}{0.9\textwidth}
+        \footnotesize
+        \textit{Nota:} A hipótese nula do teste ADF é a presença de raiz unitária. Para o teste $t$, a hipótese nula é de média igual a zero. O teste de Jarque--Bera avalia a normalidade dos retornos. O teste Ljung--Box avalia a ausência de autocorrelação até a defasagem indicada, e o teste ARCH avalia a ausência de efeitos ARCH. Os momentos descritivos foram calculados para a série de retornos.
+    \end{minipage}
+\end{table}
+
+
+\chapter{Resultados complementares dos modelos}
+
+\section{Estimação dos modelos GARCH}
+
+\begin{table}[!htbp]
+    \centering
+    \caption{Resultados da estimação do modelo GARCH(1,1)}
+    \label{tab:garch_coeficientes}
+    \begin{tabular}{lrrrr}
+        \toprule
+        Parâmetro & Coeficiente & Erro-padrão & Estatística $t$ & $p$-valor \\
+        \midrule
+        $\omega$ & 0,0113 & 0,002652 & 4,275 & $<0,001$ \\
+        $\alpha_1$ & 0,1102 & 0,01128 & 9,766 & $<0,001$ \\
+        $\beta_1$ & 0,8830 & 0,01143 & 77,283 & $<0,001$ \\
+        $\nu$ & 7,8309 & 0,790 & 9,909 & $<0,001$ \\
+        \bottomrule
+    \end{tabular}
+    \begin{center}
+        \footnotesize Fonte: Elaboração própria.
+    \end{center}
+\end{table}
+
+\section{Estimação dos modelos EGARCH}
+
+\begin{table}[!htbp]
+    \centering
+    \caption{Resultados da estimação do modelo EGARCH(1,1)}
+    \label{tab:egarch_coeficientes}
+    \begin{tabular}{lrrrr}
+        \toprule
+        Parâmetro & Coeficiente & Erro-padrão & Estatística $t$ & $p$-valor \\
+        \midrule
+        $\omega$ & -0,001817 & 0,002462 & -0,738 & 0,461 \\
+        $\alpha_1$ & 0,1894 & 0,01774 & 10,673 & $<0,001$ \\
+        $\gamma_1$ & 0,0571 & 0,008105 & 7,042 & $<0,001$ \\
+        $\beta_1$ & 0,9802 & 0,003881 & 252,559 & $<0,001$ \\
+        $\nu$ & 8,3171 & 0,881 & 9,436 & $<0,001$ \\
+        \bottomrule
+    \end{tabular}
+    \begin{center}
+        \footnotesize Fonte: Elaboração própria.
+    \end{center}
+\end{table}
+
+\section{Importância das variáveis do Random Forest}
+
+\begin{table}[!htbp]
+    \centering
+    \caption{Importância das variáveis no modelo Random Forest}
+    \label{tab:importancia_rf}
+    \begin{tabular}{lr}
+        \toprule
+        Variável & Importância \\
+        \midrule
+        \texttt{ma\_abs\_5}    & 0,163 \\
+        \texttt{ret\_lag1}     & 0,118 \\
+        \texttt{vol\_lag1}     & 0,105 \\
+        \texttt{ma\_abs\_21}   & 0,089 \\
+        \texttt{vol\_hist\_21} & 0,088 \\
+        \texttt{vol\_lag3}     & 0,082 \\
+        \texttt{vol\_lag2}     & 0,070 \\
+        \texttt{ret\_lag2}     & 0,066 \\
+        \texttt{rsi\_14}       & 0,061 \\
+        \texttt{ret\_lag3}     & 0,052 \\
+        \bottomrule
+    \end{tabular}
+    \begin{center}
+        \footnotesize Fonte: Elaboração própria.
+    \end{center}
+\end{table}
+
+\section{Resultados completos do teste Diebold-Mariano}
+
+\begin{table}[!htbp]
+    \centering
+    \caption{Resultados completos do teste Diebold--Mariano para MSE}
+    \label{tab:dm_mse_completo}
+    \small
+    \begin{tabular}{llrrrrr}
+        \toprule
+        Modelo A & Modelo B & Perda média A & Perda média B &
+        Diferença média & DM-HLN & $p$-valor \\
+        \midrule
+        RF    & GARCH  & $2,6044 \times 10^{-8}$ & $2,6638 \times 10^{-8}$ & $-5,9409 \times 10^{-10}$ & -1,128 & 0,259 \\
+        RF    & EGARCH & $2,6044 \times 10^{-8}$ & $2,6429 \times 10^{-8}$ & $-3,8517 \times 10^{-10}$ & -0,700 & 0,484 \\
+        GARCH & EGARCH & $2,6638 \times 10^{-8}$ & $2,6429 \times 10^{-8}$ & $2,0892 \times 10^{-10}$ & 0,932 & 0,351 \\
+        \bottomrule
+    \end{tabular}
+    \begin{center}
+        \footnotesize Nota: Todas as comparações utilizam 1.602 observações.
+
+        \footnotesize Fonte: Elaboração própria.
+    \end{center}
+\end{table}
+
+\begin{table}[!htbp]
+    \centering
+    \caption{Resultados completos do teste Diebold--Mariano para QLIKE}
+    \label{tab:dm_qlike_completo}
+    \small
+    \begin{tabular}{llrrrrr}
+        \toprule
+        Modelo A & Modelo B & Perda média A & Perda média B &
+        Diferença média & DM-HLN & $p$-valor \\
+        \midrule
+        RF    & GARCH  & -8,456588 & -8,448184 & -0,008404 & -0,827 & 0,408 \\
+        RF    & EGARCH & -8,456588 & -8,451241 & -0,005347 & -0,525 & 0,600 \\
+        GARCH & EGARCH & -8,448184 & -8,451241 & 0,003057 & 0,440 & 0,660 \\
+        \bottomrule
+    \end{tabular}
+    \begin{center}
+        \footnotesize Nota: Todas as comparações utilizam 1.602 observações.
+
+        \footnotesize Fonte: Elaboração própria.
+    \end{center}
+\end{table}
+
+\section{Diagnóstico da estimação do modelo EGARCH na janela rolante}
+
+\begin{table}[!htbp]
+    \centering
+    \caption{Diagnóstico da estimação do modelo EGARCH na janela rolante}
+    \label{tab:diagnostico_egarch_rolante}
+    \small
+    \begin{tabular}{lr}
+        \toprule
+        Indicador & Valor \\
+        \midrule
+        Código de convergência & 4 \\
+        $\omega$ & -0,003792 \\
+        $\alpha_1$ & -0,014641 \\
+        $\gamma_1$ & 0,047024 \\
+        $\beta_1$ & 0,998163 \\
+        $\nu$ & 7,260858 \\
+        Log-likelihood & -4.226,815056 \\
+        Variância prevista & 250,410050 \\
+        Variância condicional máxima & 6.732,004133 \\
+        \bottomrule
+    \end{tabular}
+    \begin{center}
+        \footnotesize Nota: O código de convergência 4 corresponde à mensagem
+        ``Inequality constraints incompatible''.
+
+        \footnotesize Fonte: Elaboração própria.
+    \end{center}
+\end{table}
+
+\begin{table}[!htbp]
+    \centering
+    \caption{Diagnóstico de uma estimação adicional do EGARCH na janela rolante}
+    \label{tab:diagnostico_egarch_adicional}
+    \small
+    \begin{tabular}{lr}
+        \toprule
+        Indicador & Valor \\
+        \midrule
+        Código de convergência & 0 \\
+        $\omega$ & -0,686414 \\
+        $\alpha_1$ & -70,018303 \\
+        $\gamma_1$ & -96,683267 \\
+        $\beta_1$ & 0,836858 \\
+        $\nu$ & 2,050000 \\
+        Log-likelihood & -7.488,478200 \\
+        Variância prevista & $4,56 \times 10^{28}$ \\
+        Variância condicional máxima & 5.285.518,608281 \\
+        \bottomrule
+    \end{tabular}
+    \begin{center}
+        \footnotesize Nota: Embora o algoritmo tenha reportado convergência,
+        os valores estimados e a previsão de variância indicam instabilidade numérica.
+
+        \footnotesize Fonte: Elaboração própria.
+    \end{center}
+\end{table}
+
+\section{Importância das variáveis do Random Forest com janela rolante}
+
+\begin{table}[!htbp]
+    \centering
+    \caption{Importância das variáveis no modelo Random Forest}
+    \label{tab:importancia_rf}
+    \begin{tabular}{lr}
+        \toprule
+        Variável & Importância \\
+        \midrule
+        \texttt{ret\_lag5}    & 0,109 \\
+        \texttt{vol\_lag5}    & 0,100 \\
+        \texttt{ret\_lag1}    & 0,100 \\
+        \texttt{vol\_lag1}    & 0,093 \\
+        \texttt{vol\_hist\_21} & 0,092 \\
+        \texttt{ma\_abs\_21}  & 0,089 \\
+        \texttt{ma\_abs\_5}   & 0,078 \\
+        \texttt{vol\_lag4}    & 0,064 \\
+        \texttt{ret\_lag4}    & 0,057 \\
+        \texttt{ret\_lag3}    & 0,050 \\
+        \bottomrule
+    \end{tabular}
+    \begin{center}
+        \footnotesize Fonte: Elaboração própria.
+    \end{center}
+\end{table}
+
+\FloatBarrier
+\section{Resultados completos do teste Diebold-Mariano com janela rolante}
+
+\begin{table}[!htbp]
+    \centering
+    \caption{Resultados completos do teste Diebold-Mariano para MSE — janela rolante}
+    \label{tab:dm_mse_rolante_completo}
+    \small
+    \begin{tabular}{llrrrrr}
+        \toprule
+        Modelo A & Modelo B & Perda média A & Perda média B &
+        Diferença média & DM-HLN & $p$-valor \\
+        \midrule
+        RF & GARCH & $2,6998 \times 10^{-8}$ & $2,6144 \times 10^{-8}$ & $8,5353 \times 10^{-10}$ & 2,547 & 0,011 \\
+        \bottomrule
+    \end{tabular}
+    \begin{center}
+        \footnotesize Nota: A comparação utiliza 1.602 observações.
+
+        \footnotesize Fonte: Elaboração própria.
+    \end{center}
+\end{table}
+
+\begin{table}[!htbp]
+    \centering
+    \caption{Resultados completos do teste Diebold-Mariano para QLIKE — janela rolante}
+    \label{tab:dm_qlike_rolante_completo}
+    \small
+    \begin{tabular}{llrrrrr}
+        \toprule
+        Modelo A & Modelo B & Perda média A & Perda média B &
+        Diferença média & DM-HLN & $p$-valor \\
+        \midrule
+        RF & GARCH & -8,434652 & -8,458051 & 0,023399 & 2,376 & 0,018 \\
+        \bottomrule
+    \end{tabular}
+    \begin{center}
+        \footnotesize Nota: A comparação utiliza 1.602 observações.
+
+        \footnotesize Fonte: Elaboração própria.
+    \end{center}
+\end{table}

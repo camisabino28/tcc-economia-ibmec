@@ -1,15 +1,52 @@
-\chapter{Conclusao}
-
-Este capitulo deve retomar a pergunta de pesquisa, sintetizar os achados e indicar implicacoes.
+\chapter{Conclusão}
 
 \section{Sintese dos resultados}
 
-Resumir os principais achados do trabalho.
+Este trabalho teve como objetivo avaliar o desempenho de diferentes modelos na previsão da volatilidade da taxa de câmbio 
+USD/BRL, comparando uma abordagem de aprendizado de máquina, representada pelo Random Forest, com modelos tradicionais da 
+família GARCH, especificamente GARCH e EGARCH.
 
-\section{Contribuicoes}
+Os resultados da análise empírica evidenciaram a presença de características típicas de séries financeiras nos retornos 
+cambiais, como não normalidade e dependência temporal nos retornos ao quadrado, reforçando a relevância da modelagem da 
+volatilidade. Na comparação dos modelos, considerando a janela expansiva, o Random Forest apresentou os menores valores 
+de MSE e QLIKE, enquanto o EGARCH obteve o menor MAE. Apesar dessas diferenças numéricas, os testes Diebold-Mariano não 
+identificaram diferenças estatisticamente significativas entre os modelos para nenhuma das duas funções de perda consideradas.
+Portanto, não foram encontradas evidências de superioridade preditiva estatística de um modelo em relação aos demais nessa 
+especificação.
 
-Explicar a contribuicao academica e aplicada do estudo.
+Na análise de robustez, a substituição da janela expansiva por uma janela rolante de cinco anos alterou o desempenho relativo 
+dos modelos. Nessa configuração, o GARCH apresentou os melhores resultados em todas as métricas avaliadas, com diferenças 
+estatisticamente significativas em relação ao Random Forest, conforme os testes Diebold-Mariano para MSE e QLIKE. Esse resultado 
+demonstra que o desempenho preditivo dos modelos depende também da estratégia de estimação adotada, não sendo possível 
+estabelecer uma superioridade independente dessa escolha.
+
+\section{Contribuições}
+
+A principal contribuição deste estudo consiste na comparação empírica entre modelos econométricos tradicionais e uma abordagem 
+de aprendizado de máquina na previsão da volatilidade cambial brasileira. Além da avaliação por diferentes métricas de desempenho, 
+foram utilizados testes de comparação preditiva com a correção de Harvey-Leybourne-Newbold (HLN), buscando conferir maior rigor à 
+análise das diferenças entre os modelos.
+
+Do ponto de vista aplicado, o estudo contribui para a discussão sobre a utilização de métodos de aprendizado de máquina em problemas 
+de previsão financeira, especialmente em comparação com modelos econométricos amplamente utilizados na literatura. Os resultados também 
+oferecem subsídios para a escolha de abordagens de previsão em aplicações relacionadas à análise de risco e ao acompanhamento da volatilidade cambial.
 
 \section{Agenda futura}
 
-Indicar extensoes possiveis e limites que podem ser explorados depois.
+As limitações identificadas ao longo deste estudo oferecem oportunidades para o desenvolvimento de pesquisas futuras. Uma primeira 
+possibilidade consiste na utilização de medidas alternativas de volatilidade, especialmente a volatilidade realizada calculada a 
+partir de dados intradiários, permitindo uma aproximação mais precisa da volatilidade latente e uma avaliação da sensibilidade dos 
+resultados à proxy adotada neste trabalho.
+
+Outra extensão seria explorar diferentes configurações do Random Forest, incluindo a seleção de variáveis, a construção de novas 
+features e a frequência de reestimação do modelo. A investigação de outras abordagens de aprendizado de máquina, como o XGBoost, 
+que incorporem mecanismos de dependência temporal também poderia contribuir para a comparação com os modelos econométricos tradicionais.
+
+Além disso, seria interessante ampliar a análise para horizontes de previsão superiores a um dia, verificando se o desempenho 
+relativo dos modelos se mantém em previsões de médio prazo. A incorporação de variáveis exógenas, como o índice VIX, o diferencial de 
+juros entre Brasil e Estados Unidos e o CDS soberano brasileiro, também é uma possibilidade de investigação, permitindo avaliar se informações 
+adicionais contribuem para melhorar a capacidade preditiva dos modelos.
+
+Por fim, a realização de análises em diferentes subperíodos e a investigação de outras estratégias de estimação poderiam aprofundar a 
+compreensão sobre a sensibilidade dos modelos às mudanças nas condições de mercado, especialmente diante de episódios de maior instabilidade 
+cambial.

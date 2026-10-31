@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from scipy import stats
 from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
-
+import pandas as pd
 
 DIRETORIO_SCRIPT = os.path.dirname(os.path.abspath(__file__))
 PASTA_OUTPUTS = os.path.abspath(os.path.join(DIRETORIO_SCRIPT, "..", "OUTPUTS"))
@@ -103,6 +103,41 @@ def plot_volatilidade_movel(retornos, window=21, salvar=True):
     _salvar_figura(f"volatilidade_movel_{window}d", salvar)
     plt.show()
 
+# Gráfico actual vs pred
+    
+def plot_actual_vs_pred(modelo, tipo_janela="expansiva", salvar=True):
+    pasta_results = os.path.abspath(
+        os.path.join(DIRETORIO_SCRIPT, "..", "results")
+    )
+
+    sufixo = "_rolling" if tipo_janela == "rolante" else ""
+    caminho = os.path.join(pasta_results, f"pred_{modelo}{sufixo}.parquet")
+    dados = pd.read_parquet(caminho)
+
+    coluna_pred = f"pred_{modelo}"
+    dados = dados[["actual", coluna_pred]].dropna()
+
+    plt.figure(figsize=(12, 5))
+    plt.plot(
+        dados.index, dados["actual"],
+        label="Variância observada (retorno²)",
+        color="gray", linewidth=0.7, alpha=0.7
+    )
+    plt.plot(
+        dados.index, dados[coluna_pred],
+        label=f"Previsão {modelo.upper()}",
+        color="darkred", linewidth=0.8
+    )
+
+    plt.title(f"Variância observada vs. prevista — {modelo.upper()} ({tipo_janela})")
+    plt.xlabel("Data")
+    plt.ylabel("Variância")
+    plt.legend()
+    plt.tight_layout()
+
+    _salvar_figura(f"actual_vs_pred_{modelo}_{tipo_janela}", salvar)
+    plt.show()
+
 if __name__ == "__main__":
     serie_cambio = obter_serie_cambio()
     retornos = serie_cambio["log_return"].dropna()
@@ -113,3 +148,10 @@ if __name__ == "__main__":
     plot_densidade(retornos)
     plot_acf_pacf(retornos)
     plot_volatilidade_movel(retornos)
+    # Janela expansiva
+    plot_actual_vs_pred("garch", tipo_janela="expansiva")
+    plot_actual_vs_pred("egarch", tipo_janela="expansiva")
+    plot_actual_vs_pred("rf", tipo_janela="expansiva")
+    # Janela rolante
+    plot_actual_vs_pred("garch", tipo_janela="rolante")
+    plot_actual_vs_pred("rf", tipo_janela="rolante")
