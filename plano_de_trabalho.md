@@ -1,62 +1,65 @@
 # Plano de Trabalho do TCC CAMILA
 
-## Escopo
+### 1. Introdução e objetivos — Capítulo 1
 
-- Dados: USD/BRL, série DEXBZUS do FRED, a partir de janeiro de 2000.
-- Modelos principais: GARCH(1,1) e EGARCH.
-- Comparação complementar: Random Forest (RF).
-- Treinamento inicial: janeiro de 2000 a dezembro de 2019.
-- Teste: janeiro de 2020 a maio de 2026.
+- Reduzir afirmações sobre a superioridade do *machine learning*.
 
-## 1. Dados
+### 2. Revisão da literatura — Capítulo 2
 
-- Baixar as cotações do FRED e salvar o arquivo original em `data/raw/cambio_usdbrl.csv`, preservando os valores ausentes. Feito
-- Registrar a fonte, a série e a data do download. Feito
-- Retirar a interpolação linear de `SCRIPTS/data.py`. Feito
-- Identificar e registrar as observações ausentes, incluindo dias sem cotação, como feriados. Feito
-- Excluir as datas sem cotação válida e calcular os retornos entre observações consecutivas disponíveis. Feito
-- Registrar que esses retornos representam intervalos entre observações disponíveis, que nem sempre correspondem a um único dia calendário. Feito
-- Conferir a ordem das datas e possíveis duplicidades antes de calcular os retornos. Feito
-- Fixar a data final da amostra em maio de 2026 e registrar a última observação disponível. Feito
-- Salvar a versão tratada em `data/processed/cambio_usdbrl.csv`, sem sobrescrever o arquivo original. Feito
-- Fazer os modelos lerem o CSV tratado, sem baixar novamente as cotações a cada execução, para repetir a análise com os mesmos dados. Feito
+Melhorar a conexão entre os estudos anteriores, a pergunta de pesquisa e os resultados encontrados. Organizar a argumentação nesta sequência:
 
+1. Relevância da volatilidade do USD/BRL: Campani e Durães (2018) e Banco Central do Brasil (2021).
+2. Fundamentação dos modelos GARCH e EGARCH: Engle (1982), Bollerslev (1986) e Nelson (1991).
+3. Fundamentação do Random Forest: Breiman (2001).
+4. Comparação entre modelos tradicionais e *machine learning*: Hansen e Lunde (2005).
+5. Avaliação das previsões: Patton (2011) e Diebold e Mariano (1995).
 
-## 2. Modelos e previsões
+### 3. Metodologia — Capítulo 3
 
-- Retirar o XGBoost. Feito
-- Manter apenas GARCH, EGARCH e RF no pipeline principal. Feito
-- Iniciar as previsões em janeiro de 2020, usando somente os dados anteriores para treinamento. Feito
+- OK.
 
-  Isso significa separar os dados usados para aprender dos dados usados para avaliar as previsões. Os dados de 2000 a 2019 servem para o treinamento inicial. A partir de janeiro de 2020, as previsões são comparadas com os valores realmente observados.
+### 4. Base de dados — Capítulo 4
 
-  Por exemplo, para prever a variância do primeiro dia disponível de 2020, o modelo só pode usar informações disponíveis até o fim de 2019. Depois que o valor desse dia for observado, ele pode entrar no histórico das previsões seguintes, conforme a frequência de atualização de cada modelo. Assim, a avaliação simula o uso na prática, sem conhecer antecipadamente o valor que se tenta prever.
+- OK.
 
+### 5. Resultados — Capítulo 5
 
+Os resultados estão bem organizados.
 
+#### 5.1. Comparação dos modelos
 
-## 3. Avaliação e saídas
+- Na janela expansiva, o Random Forest apresentou os menores valores de MSE e QLIKE, enquanto o EGARCH apresentou o menor MAE.
+- O teste Diebold–Mariano não identificou diferenças estatisticamente significativas entre os três modelos.
+- Evitar afirmar que o Random Forest foi estatisticamente superior. O correto é dizer que apresentou vantagem numérica, sem superioridade estatisticamente significativa.
+- Corrigir a frase sobre o EGARCH: ele apresentou desempenho ligeiramente superior ao GARCH em MSE, RMSE, MAE e QLIKE, embora as diferenças sejam pequenas.
 
-- Verificar se as previsões de variância dos três modelos são estritamente positivas, como exige o QLIKE. Feito
-- Se houver previsões iguais a zero, aplicar o mesmo piso positivo aos três modelos no cálculo do QLIKE e registrar os casos. Previsões negativas devem ser investigadas e corrigidas. Feito
-- Calcular MSE e QLIKE com os mesmos critérios para GARCH, EGARCH e RF. Feito
+#### 5.2. Teste de robustez
 
-  1. **MSE:** mede o erro e penaliza mais os erros grandes.
-  2. **QLIKE:** complementa a avaliação por ser uma função de perda específica para previsões de variância.
+- Manter apenas GARCH e Random Forest na análise com janela rolante de cinco anos.
+- Apresentar a exclusão do EGARCH como uma limitação da análise complementar, e não como evidência de inferioridade desse modelo.
+- Manter os diagnósticos de convergência e as estimações problemáticas do EGARCH no apêndice.
+- Destacar que, na janela expansiva, o RF apresentou vantagem numérica, mas sem significância estatística.
+- Na janela rolante de cinco anos, o GARCH apresentou desempenho superior ao Random Forest, com diferenças estatisticamente significativas em MSE e QLIKE.
+- Os resultados sugerem que o desempenho relativo dos modelos é sensível à estratégia de estimação.
 
-- Executar o teste Diebold–Mariano para avaliar se as diferenças de desempenho entre os modelos são estatisticamente significativas. Feito
-- Priorizar MSE, QLIKE e Diebold–Mariano na comparação principal. Feito
+### 6. Conclusão — Capítulo 6
 
-## 4. Resultados finais
+Responder diretamente à pergunta de pesquisa e conectar os resultados com a literatura. Organizar a argumentação destacando:
 
-- Produzir uma tabela comparativa de GARCH, EGARCH e RF com MSE e QLIKE. Pendente
-- Apresentar os resultados do teste Diebold–Mariano, com os p-valores. Pendente
-- Elaborar um gráfico simples comparando o retorno ao quadrado (proxy da variância) e as previsões dos três modelos. Pendente
-- Escrever um parágrafo interpretando qual modelo apresentou melhor desempenho e se as diferenças foram estatisticamente significativas, sem presumir um vencedor. Pendente
+- O Random Forest apresentou os menores valores de MSE e QLIKE na janela expansiva, mas sem diferenças estatisticamente significativas em relação ao GARCH e EGARCH.
+- Na janela rolante de cinco anos, o GARCH apresentou desempenho superior ao Random Forest, com diferenças estatisticamente significativas em MSE e QLIKE.
+- Os resultados mostram que modelos econométricos tradicionais continuam competitivos e que a maior flexibilidade do *machine learning* não garante melhor desempenho preditivo.
+- A análise de robustez ficou restrita ao GARCH e Random Forest, devido aos problemas de estimação do EGARCH, limitando o alcance das conclusões dessa análise complementar.
+- Relacionar essas conclusões principalmente com Hansen e Lunde (2005) e Campani e Durães (2018).
 
+### 7. Tabelas, gráficos e apêndices
 
-## Referências de apoio
+A organização atual está adequada.
 
-- [Patton (2011)](https://public.econ.duke.edu/~ap172/Patton_vol_proxies_JoE_2011.pdf): referência para o uso do retorno diário ao quadrado (`r_t²`) como proxy da variância e para a avaliação com MSE e QLIKE, sob as condições discutidas no artigo. A seção 4 e a Tabela 3 apresentam uma aplicação com essa proxy.
-- [Montali (2026)](https://run.unl.pt/entities/publication/8aca5cab-9de3-4d88-9d7d-53de65b9a8f2): referência metodológica, adaptada aos três modelos.
-- [Campani e Durães (2018)](https://www.scielo.br/j/ee/a/4BHzQbVFTqKjLgQGBGqj49z/?lang=en): referência sobre USD/BRL.
+- **Manter no corpo do trabalho:** tabela comparativa com MSE, RMSE, MAE e QLIKE; resultados principais do teste Diebold–Mariano; gráficos de comparação entre variância observada e prevista; e resultados do teste de robustez.
+- **Manter nos apêndices:** estimativas completas dos parâmetros dos modelos; diagnósticos de convergência do EGARCH; importância das variáveis do Random Forest; e resultados estatísticos complementares.
+
+### 8. Referências e apresentação final
+
+- Conferir se todas as obras citadas estão na lista de referências.
+- Finalizar título, resumo, *abstract* e formatação conforme as normas do IBMEC.
