@@ -1,12 +1,32 @@
-\documentclass[12pt,a4paper]{report}
+%% ======================================================================
+%% TCC - Camila Sabino Ribeiro
+%% Formatação conforme o Manual para Elaboração de Trabalhos Científicos
+%% do Ibmec (4ª ed., 2022), baseado na ABNT NBR 14724.
+%%
+%% Compilar com pdfLaTeX + Biber (biblatex-abnt). A fonte Arial é
+%% substituída por Helvetica (Nimbus Sans).
+%% ======================================================================
+
+% twoside + openright: frente e verso, capítulos começam em página ímpar
+% (o manual recomenda). Se for entregar só em PDF/uma face, troque por:
+% \documentclass[12pt,a4paper,oneside,openany]{report}
+% e, no geometry, use "left=3cm,right=2cm" no lugar de inner/outer.
+\documentclass[12pt,a4paper,twoside,openright]{report}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage[brazilian]{babel}
-\usepackage{lmodern}
+\usepackage[english,brazilian]{babel}
+\usepackage{helvet}                       % Arial-like
+\renewcommand{\familydefault}{\sfdefault}
 \usepackage{microtype}
-\usepackage{geometry}
+
+% Margens: anverso esquerda/superior 3 cm, direita/inferior 2 cm;
+% verso direita/superior 3 cm, esquerda/inferior 2 cm.
+\usepackage[a4paper,twoside,inner=3cm,outer=2cm,top=3cm,bottom=2cm,
+            headheight=14pt,headsep=0.5cm]{geometry}
+
 \usepackage{setspace}
+\usepackage{indentfirst}
 \usepackage{graphicx}
 \usepackage{placeins}
 \usepackage{booktabs}
@@ -14,50 +34,297 @@
 \usepackage{amssymb}
 \usepackage{csquotes}
 \usepackage{import}
+\usepackage{fancyhdr}
+\usepackage[hang,flushmargin]{footmisc}
+\usepackage{titlesec}
+\usepackage[font=footnotesize,labelsep=endash,position=top]{caption}
+\usepackage{newfloat}
+\usepackage{titletoc}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{caption}
+
+% Citações e referências no padrão ABNT (biblatex-abnt + Biber).
+% \cite{chave}       -> (AKGIRAY, 1989)
+% \citeonline{chave} -> Akgiray (1989)   (se der erro, use \textcite{chave})
+\usepackage[backend=biber,style=abnt]{biblatex}
+\addbibresource{referencias.bib}
+
 \usepackage{hyperref}
-\usepackage[round]{natbib}
-
-\geometry{margin=2.5cm}
-\onehalfspacing
-
 \hypersetup{
     colorlinks=true,
     linkcolor=black,
     citecolor=black,
-    urlcolor=blue,
+    urlcolor=black,          % manual: texto em cor preta
     plainpages=false,
     pdftitle={TCC Camila},
     pdfauthor={Camila Sabino Ribeiro}
 }
 
-\title{Titulo Provisorio do TCC}
-\author{Camila Sabino Ribeiro}
-\date{\today}
+%% ----------------------------------------------------------------------
+%% DADOS DO TRABALHO (edite aqui)
+%% ----------------------------------------------------------------------
+\newcommand{\tccinstituicao}{IBMEC BRASÍLIA}
+\newcommand{\tcccurso}{CURSO DE CIÊNCIAS ECONÔMICAS}
+\newcommand{\tccautor}{CAMILA SABINO RIBEIRO}
+\newcommand{\tcctitulo}{Abordagens model-based e data-driven na previsão da volatilidade cambial: evidências para a taxa USD/BRL}
+\newcommand{\tccsubtitulo}{}            % se houver; sai após dois pontos
+\newcommand{\tcclocal}{BRASÍLIA}
+\newcommand{\tccano}{2026}
+\newcommand{\tccorientador}{Prof. [Esp./Ms./Dr.] Laerte Jun Takeuti}
+\newcommand{\tccnatureza}{Trabalho de Conclusão de Curso apresentado ao curso
+de Ciências Econômicas do Ibmec Brasília, como requisito parcial para a
+obtenção do grau de Bacharel em Ciências Econômicas.}
+
+\newcommand{\tcctitulocompleto}{\tcctitulo\ifx\tccsubtitulo\empty\else: \tccsubtitulo\fi}
+
+%% ----------------------------------------------------------------------
+%% FORMATAÇÃO GERAL
+%% ----------------------------------------------------------------------
+\onehalfspacing                              % entrelinhas 1,5
+\setlength{\parindent}{1.25cm}               % recuo de parágrafo
+\setlength{\parskip}{0pt}
+\setcounter{secnumdepth}{4}                  % numeração até a seção quinária
+\setcounter{tocdepth}{4}
+
+% Nomes em português
+\addto\captionsbrazilian{%
+  \renewcommand{\listfigurename}{Lista de figuras}%
+  \renewcommand{\listtablename}{Lista de tabelas}%
+}
+
+% Quadros e gráficos como ilustrações com lista própria
+\DeclareFloatingEnvironment[fileext=loq,listname={Lista de quadros},name=Quadro]{quadro}
+\DeclareFloatingEnvironment[fileext=log,listname={Lista de gráficos},name=Gráfico]{grafico}
+
+% Fonte (obrigatória abaixo de figuras, quadros, gráficos e tabelas,
+% mesmo quando for elaboração própria). Uso: \fonte{Elaborada pela autora.}
+\newcommand{\fonte}[1]{\par\vspace{2pt}{\centering\footnotesize Fonte: #1\par}}
+
+% Citação direta longa (mais de 3 linhas): recuo 4 cm, fonte 10,
+% espaço simples, sem aspas.
+\newenvironment{citacaolonga}
+  {\par\vspace{0.5\baselineskip}\begin{singlespace}\footnotesize
+   \list{}{\setlength{\leftmargin}{4cm}\setlength{\rightmargin}{0pt}%
+           \setlength{\topsep}{0pt}\setlength{\listparindent}{0pt}%
+           \setlength{\itemindent}{0pt}}\item\relax}
+  {\endlist\end{singlespace}\par\vspace{0.5\baselineskip}}
+
+% Nota de rodapé: fonte 10 (footnotesize em 12pt) e filete de 5 cm
+\renewcommand{\footnoterule}{\vspace*{-3pt}\noindent\rule{5cm}{0.4pt}\vspace*{2.6pt}}
+
+%% ----------------------------------------------------------------------
+%% TÍTULOS DE SEÇÃO (NBR 6024)
+%%  primária:    negrito, CAIXA ALTA
+%%  secundária:  sem negrito, CAIXA ALTA
+%%  terciária:   negrito, caixa baixa
+%%  quaternária: itálico, caixa baixa
+%%  quinária:    normal, caixa baixa
+%%  sem número (resumo, sumário, referências...): centralizado, negrito, caixa alta
+%% ----------------------------------------------------------------------
+\titleformat{\chapter}[hang]{\normalfont\normalsize\bfseries}{\thechapter}{0.5em}{\MakeUppercase}
+\titleformat{name=\chapter,numberless}[block]{\normalfont\normalsize\bfseries\centering}{}{0pt}{\MakeUppercase}
+\titleformat{\section}[hang]{\normalfont\normalsize}{\thesection}{0.5em}{\MakeUppercase}
+\titleformat{\subsection}[hang]{\normalfont\normalsize\bfseries}{\thesubsection}{0.5em}{}
+\titleformat{\subsubsection}[hang]{\normalfont\normalsize\itshape}{\thesubsubsection}{0.5em}{}
+\titleformat{\paragraph}[hang]{\normalfont\normalsize}{\theparagraph}{0.5em}{}
+
+\titlespacing*{\chapter}{0pt}{0pt}{1.5\baselineskip}
+\titlespacing*{\section}{0pt}{1.5\baselineskip}{1.5\baselineskip}
+\titlespacing*{\subsection}{0pt}{1.5\baselineskip}{1.5\baselineskip}
+\titlespacing*{\subsubsection}{0pt}{1.5\baselineskip}{1.5\baselineskip}
+\titlespacing*{\paragraph}{0pt}{1.5\baselineskip}{1.5\baselineskip}
+
+%% Sumário com a mesma tipografia dos títulos
+\titlecontents{chapter}[1.8em]{\bfseries\addvspace{6pt}}
+  {\contentslabel{1.8em}\MakeUppercase}{\hspace*{-1.8em}\MakeUppercase}
+  {\titlerule*[0.7pc]{.}\contentspage}
+\titlecontents{section}[2.8em]{}
+  {\contentslabel{2.8em}\MakeUppercase}{\hspace*{-2.8em}\MakeUppercase}
+  {\titlerule*[0.7pc]{.}\contentspage}
+\titlecontents{subsection}[3.8em]{\bfseries}
+  {\contentslabel{3.8em}}{\hspace*{-3.8em}}
+  {\titlerule*[0.7pc]{.}\contentspage}
+\titlecontents{subsubsection}[4.9em]{\itshape}
+  {\contentslabel{4.9em}}{\hspace*{-4.9em}}
+  {\titlerule*[0.7pc]{.}\contentspage}
+\titlecontents{paragraph}[6em]{}
+  {\contentslabel{6em}}{\hspace*{-6em}}
+  {\titlerule*[0.7pc]{.}\contentspage}
+
+%% ----------------------------------------------------------------------
+%% PAGINAÇÃO
+%% Todas as folhas contam a partir da folha de rosto, mas só aparece o número
+%% a partir da Introdução, no canto superior direito (anverso) ou esquerdo
+%% (verso), fonte 10.
+%% ----------------------------------------------------------------------
+\pagestyle{plain}
+\fancypagestyle{plain}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}\renewcommand{\footrulewidth}{0pt}}
+
+\newcommand{\paginacaonumerada}{%
+  \fancypagestyle{plain}{%
+    \fancyhf{}%
+    \fancyhead[RO,LE]{\footnotesize\thepage}%
+    \renewcommand{\headrulewidth}{0pt}\renewcommand{\footrulewidth}{0pt}}%
+  \pagestyle{plain}}
+
+% Páginas em branco inseridas pelo openright ficam sem número
+\makeatletter
+\def\cleardoublepage{\clearpage\if@twoside\ifodd\c@page\else
+  \thispagestyle{empty}\hbox{}\newpage\fi\fi}
+\makeatother
+
+%% Apêndices no formato "APÊNDICE A – TÍTULO" (também no sumário)
+\newcommand{\iniciarapendices}{%
+  \cleardoublepage
+  \appendix
+  \titleformat{\chapter}[hang]{\normalfont\normalsize\bfseries}
+    {APÊNDICE \thechapter\ \textendash\ }{0pt}{\MakeUppercase}%
+  \titlecontents{chapter}[0pt]{\bfseries\addvspace{6pt}}
+    {APÊNDICE \thecontentslabel\ \textendash\ \MakeUppercase}{\MakeUppercase}
+    {\titlerule*[0.7pc]{.}\contentspage}}
 
 \begin{document}
 
-\pagenumbering{gobble}
+%% ======================================================================
+%% ELEMENTOS PRÉ-TEXTUAIS
+%% ======================================================================
 
+%% --- CAPA (não conta página) -----------------------------------------
 \begin{titlepage}
-    \centering
-    {\large Ibmec-DF\par}
-    \vspace{1.5cm}
-    {\Large Camila Sabino Ribeiro\par}
-    \vspace{2cm}
-    {\LARGE \bfseries Titulo Provisorio do TCC\par}
-    \vspace{2cm}
-    {\large Trabalho de Conclusao de Curso apresentado ao curso de Ciencias Economicas.\par}
-    \vfill
-    {\large Brasilia\par}
-    {\large \today\par}
+  \centering\bfseries\singlespacing
+  {\tccinstituicao\par}
+  \vspace{0.5\baselineskip}
+  {\tcccurso\par}
+  \vspace{3cm}
+  {\tccautor\par}
+  \vfill
+  {\tcctitulocompleto\par}
+  \vfill
+  {\tcclocal\par}
+  {\tccano\par}
 \end{titlepage}
 
-\clearpage
-\pagenumbering{roman}
-\tableofcontents
-\clearpage
+%% --- FOLHA DE ROSTO (página 1) ---------------------------------------
+\thispagestyle{empty}
+\begin{center}\bfseries\singlespacing
+  {\tccautor\par}
+  \vspace{4cm}
+  {\tcctitulocompleto\par}
+\end{center}
+\vspace{2cm}
+\hfill\begin{minipage}{0.5\textwidth}% do meio da página para a margem direita
+  \singlespacing\raggedright\normalfont
+  \tccnatureza\par
+  \vspace{\baselineskip}
+  Orientador: \tccorientador.
+\end{minipage}
+\vfill
+\begin{center}\bfseries\singlespacing
+  {\tcclocal\par}
+  {\tccano\par}
+\end{center}
+\newpage
 
-\pagenumbering{arabic}
+%% --- VERSO DA FOLHA DE ROSTO: FICHA CATALOGRÁFICA --------------------
+% Substitua pela ficha gerada pela biblioteca (fonte 10, espaço simples).
+\thispagestyle{empty}
+\vspace*{\fill}
+\begin{center}
+\fbox{\begin{minipage}{12.5cm}\footnotesize\singlespacing\raggedright
+  [Inserir aqui a ficha catalográfica fornecida pela Biblioteca]
+\end{minipage}}
+\end{center}
+\newpage
+
+%% --- FOLHA DE APROVAÇÃO ----------------------------------------------
+\newcommand{\assinatura}[2]{%
+  \vspace{1.2cm}\par
+  \noindent\hfill\begin{minipage}{0.8\textwidth}\centering\singlespacing
+  \rule{\linewidth}{0.4pt}\par #1\par #2\end{minipage}\hfill\null\par}
+
+\thispagestyle{empty}
+\begin{center}\bfseries\singlespacing
+  {\tccautor\par}
+  \vspace{2cm}
+  {\tcctitulocompleto\par}
+\end{center}
+\vspace{1.5cm}
+\hfill\begin{minipage}{0.5\textwidth}
+  \singlespacing\raggedright\normalfont
+  \tccnatureza\par
+  \vspace{\baselineskip}
+  Orientador: \tccorientador.
+\end{minipage}
+\vspace{1.5cm}
+
+\noindent Aprovada em: \underline{\hspace{0.7cm}}/\underline{\hspace{0.7cm}}/\underline{\hspace{1.2cm}}
+
+\vspace{1cm}
+\begin{center}\bfseries BANCA EXAMINADORA\end{center}
+\assinatura{\tccorientador\ (Orientador)}{Ibmec Brasília}
+\assinatura{Prof. [titulação] [Nome do examinador 1]}{[Instituição]}
+\assinatura{Prof. [titulação] [Nome do examinador 2]}{[Instituição]}
+\newpage
+
+%% --- DEDICATÓRIA / AGRADECIMENTOS / EPÍGRAFE (opcionais) --------------
+% \chapter*{Agradecimentos}
+% Texto dos agradecimentos.
+% \newpage
+
+%% --- RESUMO (150 a 500 palavras, parágrafo único, espaço simples) ----
+\cleardoublepage
+\chapter*{Resumo}
+\begin{singlespace}\noindent
+A previsão da volatilidade cambial é relevante para a mensuração de riscos financeiros e a tomada de decisões nos mercados. 
+Nesse contexto, este trabalho compara o desempenho preditivo de abordagens model-based e data-driven na previsão da volatilidade 
+diária da taxa de câmbio USD/BRL. Para isso, são estimados os modelos GARCH(1,1), EGARCH(1,1) e Random Forest, utilizando dados 
+diários da série cambial obtida no Federal Reserve Bank of St. Louis (FRED), referentes ao período de janeiro de 2000 a maio de 2026. 
+A volatilidade é representada pelo quadrado dos retornos logarítmicos diários, e as previsões são avaliadas fora da amostra por meio das 
+métricas MSE, RMSE, MAE e QLIKE e do teste de Diebold-Mariano. Na janela expansiva, o Random Forest apresentou os menores valores de MSE, 
+RMSE e QLIKE, enquanto o EGARCH obteve o menor MAE. Entretanto, não foram identificadas diferenças estatisticamente significativas entre os 
+modelos. Na análise de robustez com janela rolante de cinco anos, o GARCH apresentou os melhores resultados em todas as métricas, com 
+diferenças significativas em relação ao Random Forest para MSE e QLIKE. Os resultados indicam que a flexibilidade dos métodos de aprendizado 
+de máquina não garante ganhos preditivos e que o desempenho relativo das abordagens depende da estratégia de estimação adotada.
+\par\vspace{\baselineskip}
+\noindent Palavras-chave: volatilidade cambial; previsão de volatilidade; GARCH; Random Forest; aprendizado de máquina.
+\end{singlespace}
+
+%% --- ABSTRACT --------------------------------------------------------
+\cleardoublepage
+\begin{otherlanguage}{english}
+\chapter*{Abstract}
+\begin{singlespace}\noindent
+Predicting exchange rate volatility is relevant for financial risk measurement and decision-making. In this context, this study compares the 
+predictive performance of model-based and data-driven approaches in forecasting the daily volatility of the USD/BRL exchange rate. To this end, 
+the GARCH(1,1), EGARCH(1,1), and Random Forest models are estimated using daily exchange rate data obtained from the Federal Reserve Bank of St. 
+Louis (FRED), covering the period from January 2000 to May 2026. Volatility is represented by squared daily log returns, and the forecasts are 
+evaluated out of sample using the MSE, RMSE, MAE, and QLIKE metrics, as well as the Diebold-Mariano test. Under the expanding window, Random Forest 
+achieved the lowest MSE, RMSE, and QLIKE values, while EGARCH yielded the lowest MAE. However, no statistically significant differences were found 
+among the models. In the five-year rolling window robustness analysis, GARCH achieved the best results across all metrics, with statistically 
+significant differences relative to Random Forest for MSE and QLIKE. The results indicate that the flexibility of machine learning methods does not 
+guarantee predictive gains and that the relative performance of the approaches depends on the estimation strategy adopted.
+\par\vspace{\baselineskip}
+\noindent Keywords: exchange rate volatility; volatility forecasting; GARCH; Random Forest; machine learning.
+\end{singlespace}
+\end{otherlanguage}
+
+%% --- LISTAS (obrigatórias quando houver mais de 5 itens) -------------
+\cleardoublepage
+\listoffigures
+\cleardoublepage
+\listoftables
+
+%% --- SUMÁRIO (último elemento pré-textual) ---------------------------
+\cleardoublepage
+\tableofcontents
+
+%% ======================================================================
+%% ELEMENTOS TEXTUAIS (numeração de página começa aqui)
+%% ======================================================================
+\cleardoublepage
+\paginacaonumerada
 
 \subimport{capitulos/}{01_introducao.tex}
 \subimport{capitulos/}{02_revisao_literatura.tex}
@@ -65,10 +332,18 @@
 \subimport{capitulos/}{04_base_dados_estrategia.tex}
 \subimport{capitulos/}{05_resultados.tex}
 \subimport{capitulos/}{06_conclusao.tex}
-\appendix
-\subimport{capitulos/}{08_apendice.tex}
 
-\bibliographystyle{plainnat}
-\bibliography{referencias}
+%% ======================================================================
+%% ELEMENTOS PÓS-TEXTUAIS
+%% ======================================================================
+
+%% --- REFERÊNCIAS -------------------------------------------------------
+\cleardoublepage
+\printbibliography[heading=bibintoc,title={Referências}]
+
+%% --- APÊNDICES ---------------------------------------------------------
+\iniciarapendices
+\subimport{capitulos/}{08_apendice.tex}
+\subimport{capitulos/}{09_declaracao_ia.tex}
 
 \end{document}

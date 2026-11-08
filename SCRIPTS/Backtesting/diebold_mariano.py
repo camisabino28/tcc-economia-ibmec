@@ -249,7 +249,6 @@ if __name__ == "__main__":
     # Carrega as previsões dos quatro modelos.
     resultados = {
         "RF": pd.read_parquet(RESULTS_DIR / "pred_rf.parquet"),
-        "XGBoost": pd.read_parquet(RESULTS_DIR / "pred_xgb.parquet"),
         "GARCH": pd.read_parquet(RESULTS_DIR / "pred_garch.parquet"),
         "EGARCH": pd.read_parquet(RESULTS_DIR / "pred_egarch.parquet"),
     }

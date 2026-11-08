@@ -1,5 +1,5 @@
 \chapter{Metodologia}
-Este capítulo descreve a estratégia metodológica adotada para comparar o desempenho preditivo dos modelos de previsão de volatilidade da taxa de câmbio USD/BRL. O capítulo está organizado em quatro seções. A seção 3.1 apresenta o desenho da pesquisa, definindo o tipo de estudo, o período amostral e os procedimentos de análise descritiva que precedem a estimação dos modelos. A seção 3.2 detalha os modelos propostos, descrevendo as especificações de cada nível (dos modelos de heterocedasticidade condicional ao modelo data-driven) e as decisões de implementação adotadas em cada caso. A seção 3.3 apresenta a estratégia de avaliação fora da amostra, especificando o procedimento de walk-forward com janela expansiva, as métricas de erro utilizadas e o teste de Diebold-Mariano. Por fim, a seção 3.4 registra as principais limitações da estratégia empírica adotada.
+Este capítulo descreve a estratégia metodológica adotada para comparar o desempenho preditivo dos modelos de previsão de volatilidade da taxa de câmbio USD/BRL. O capítulo está organizado em quatro seções. A seção 3.1 apresenta o desenho da pesquisa, definindo o tipo de estudo, o período amostral e os procedimentos de análise descritiva que precedem a estimação dos modelos. A seção 3.2 detalha os modelos propostos, descrevendo as especificações de cada modelo (dos modelos de heterocedasticidade condicional ao modelo data-driven) e as decisões de implementação adotadas em cada caso. A seção 3.3 apresenta a estratégia de avaliação fora da amostra, especificando o procedimento de walk-forward com janela expansiva, as métricas de erro utilizadas e o teste de Diebold-Mariano. Por fim, a seção 3.4 registra as principais limitações da estratégia empírica adotada.
 
 \section{Desenho da pesquisa}
 Este estudo caracteriza-se como uma pesquisa quantitativa de natureza explicativa. O objetivo é comparar o desempenho preditivo 
@@ -9,7 +9,7 @@ abordagem (model-based ou data-driven) apresenta maior acurácia fora da amostra
 O método de análise é econométrico e estatístico, combinando modelagem de séries temporais (por meio da família
  GARCH) com aprendizado de máquina supervisionado, representado pelo algoritmo do Random Forest. A comparação entre os 
  modelos é realizada fora da amostra de estimação, com avaliação por funções de perda (MSE e QLIKE) e pelo teste de hipótese de 
- Diebold e Mariano (1995), que permite verificar se as diferenças de desempenho preditivo entre os modelos são estatisticamente 
+ \textcite{diebold1995comparing}, que permite verificar se as diferenças de desempenho preditivo entre os modelos são estatisticamente 
  significativas.
 
 Para fundamentar a modelagem econométrica e de aprendizado de máquina, a série de retornos log-diários da taxa de câmbio USD/BRL será submetida a um conjunto de testes de hipóteses estatísticas e análises diagnósticas preliminares. Essa etapa busca caracterizar as propriedades estatísticas dos dados e validar o comportamento empírico (fatos estilizados) que justifica a escolha de modelos adotada.
@@ -51,17 +51,18 @@ O procedimento de análise diagnóstica seguirá a seguinte estrutura metodológ
 
 \section{Especificação dos modelos}
 
-A estratégia metodológica deste trabalho organiza os modelos em uma hierarquia crescente de complexidade, estruturada em torno da 
-dicotomia entre os paradigmas model-based e data-driven. Os modelos model-based impõem ao processo gerador de dados uma estrutura 
-funcional previamente especificada, garantindo interpretabilidade e robustez estatística sob pressupostos distribicionais. Os 
-modelos data-driven operam sem pressupostos funcionais rígidos, aprendendo as relações diretamente da amostra. A hierarquia é 
-composta por quatro níveis, descritos a seguir.
+A estratégia metodológica deste trabalho organiza os modelos em duas abordagens, de acordo com a distinção entre os paradigmas model-based e data-driven. A primeira é representada pelos modelos GARCH(1,1) 
+e EGARCH(1,1), que descrevem a dinâmica da volatilidade por meio de estruturas econométricas previamente especificadas. A segunda é representada pelo algoritmo Random Forest, que identifica padrões e 
+relações a partir dos dados, sem exigir a definição prévia de uma estrutura funcional específica. A seguir, são apresentados os modelos utilizados em cada abordagem e os procedimentos adotados para a 
+estimação e previsão da volatilidade.
 
 \subsection{Modelos de heterocedasticidade condicional: GARCH e EGARCH}
 A modelagem explícita da variância condicional é feita por meio dos modelos GARCH(1,1) e EGARCH(1,1), estimados diretamente sobre a série 
-de retornos log-diários do USD\slash BRL. A ordem (1,1) é adotada diretamente, sem busca de defasagens via critério de informação, seguindo Hansen e Lunde (2005), 
-cujos testes sobre séries cambiais diárias demonstram que especificações mais complexas não produzem ganhos preditivos consistentes em relação ao GARCH(1,1).
-A especificação do GARCH(1,1), conforme Bollerslev (1986), é:
+de retornos log-diários do USD\slash BRL. A ordem (1,1) é adotada diretamente, sem busca de defasagens por critérios de informação, considerando os resultados de \textcite{hansen2005forecast}, 
+que, ao comparar diferentes especificações da família ARCH, não encontraram evidências de ganhos preditivos de modelos mais complexos em relação ao GARCH(1,1) para a série cambial DM/USD. 
+Para o EGARCH, a mesma ordem é mantida por parcimônia e para assegurar a comparabilidade entre os modelos.
+
+A especificação do GARCH(1,1), conforme \textcite{bollerslev1986generalized}, é:
 
 \begin{equation}
     \sigma_t^2 = \omega + \alpha \varepsilon_{t - 1}^2 +  \beta \sigma_{t-1}^2
@@ -70,14 +71,15 @@ com as restrições $\omega > 0$, $\alpha \geq 0$ e $\beta \geq 0$ e $\alpha + \
 A soma $\alpha + \beta$ mede a persistência da volatilidade: valores próximos a 1 indicam que choques têm efeitos duradouros sobre a variância, característica 
 tipicamente observada em séries cambiais.
 
-O EGARCH(1,1), proposto por Nelson (1991), especifica a variância condicional em escala logarítmica, dispensando as restrições de positividade dos parâmetros e 
+O EGARCH(1,1), proposto por \textcite{nelson1991conditional}, especifica a variância condicional em escala logarítmica, dispensando as restrições de positividade dos parâmetros e 
 permitindo capturar assimetria na resposta da volatilidade a choques positivos e negativos:
 
 \begin{equation}
     \ln(\sigma_t^2) = \omega + \alpha \left| \frac{\varepsilon_{t-1}}{\sigma_{t-1}} \right| + \gamma \frac{\varepsilon_{t-1}}{\sigma_{t-1}} + \beta \ln(\sigma_{t-1}^2)
 \end{equation}
-em que $\frac{\varepsilon_{t-1}}{\sigma_{t-1}}$ é o resíduo padronizado e $\gamma$ é o parâmetro de assimetria. Um valor $\gamma < 0$ estatisticamente significativo indica 
-que depreciações do real elevam a volatilidade de forma mais intensa do que apreciações de mesma magnitude, hipótese relevante para o mercado cambial brasileiro. 
+em que $\frac{\varepsilon_{t-1}}{\sigma_{t-1}}$ é o resíduo padronizado e $\gamma$ é o parâmetro de assimetria. Um valor $\gamma > 0$ estatisticamente significativo indica 
+que depreciações do real (retornos positivos do USD/BRL) elevam a volatilidade de forma mais intensa do que apreciações de mesma magnitude, hipótese relevante para o mercado cambial brasileiro. 
+Como $r_t$ é o retorno do USD/BRL, o sinal esperado é o inverso daquele usual para retornos de ações, em que o aumento de volatilidade está associado a retornos negativos.
 
 Ambos os modelos são estimados por máxima verossimilhança, com média condicional nula e distribuição t de Student, para acomodar as caudas pesadas dos retornos cambiais. A hipótese de média nula 
 é avaliada pelo teste t da Seção 3.1. Como o GARCH e o EGARCH não são modelos hierárquicos, o teste da razão de verossimilhança não se aplica aqui, a comparação preditiva entre 
@@ -85,19 +87,20 @@ os modelos é feita fora da amostra (Seção 3.3).
 
 \subsection{Modelo data-driven: Random Forest}
 O \textit{Random Forest} não impõe estrutura funcional ao processo gerador de dados. Diferentemente dos modelos anteriores,
-o \textit{Random Forest} opera como problemas de aprendizado supervisionado, em que a variável dependente é a \textit{proxy} de volatilidade ($r_t^2$) e as variáveis 
+o \textit{Random Forest} opera com problemas de aprendizado supervisionado, em que a variável dependente é a \textit{proxy} de volatilidade ($r_t^2$) e as variáveis 
 independentes são um vetor de \textit{features} construídas a partir do histórico da série. As features são descritas na Seção 4.2.
 
-O \textit{Random Forest} será treinado com $B = 500$ árvores, profundidade máxima de 5 níveis e no minimo 5 observações por folha. A cada divisão, um subconjunto de $\lfloor\sqrt{K}\rfloor = 3$ variáveis, 
-será sorteado, esse valor foi popularizado por Breiman (2001) e reduz a correlação entre as árvores. Os hiperparâmetris foram fixados de antemão, de modo que a avaliação fora da amostra não é contaminada por 
-um processo de seleção de moledos. A semente aleatória é fixa (42) para garantir a reprodutibilidade dos resultados.
+O \textit{Random Forest} será treinado com $B = 500$ árvores, profundidade máxima de 5 níveis e no mínimo 5 observações por folha. A cada divisão, um subconjunto de três variáveis é selecionado 
+aleatoriamente entre as 14 features disponíveis, conforme a configuração \texttt{max\_features="sqrt"} do scikit-learn. Esse procedimento introduz aleatoriedade na construção das árvores e contribui 
+para reduzir a correlação entre suas previsões. Os hiperparâmetros foram fixados de antemão, de modo que a avaliação fora da amostra não é contaminada por 
+um processo de seleção de modelos. A semente aleatória é fixa (42) para garantir a reprodutibilidade dos resultados.
 
 \section{Estratégia de avaliação fora da amostra}
 
-A avaliação do desempenho preditivo dos modelos será realizada fora da amostra de estimação, por meio de um esquema de previsão com origem móvel (rolling-origin). Conforme discutido por Tashman (2000), 
+A avaliação do desempenho preditivo dos modelos será realizada fora da amostra de estimação, por meio de um esquema de previsão com origem móvel (rolling-origin). Conforme discutido por \textcite{tashman2000out}, 
 esse procedimento permite avaliar a capacidade preditiva dos modelos em diferentes origens de previsão, aproximando a avaliação das condições enfrentadas em aplicações reais.
 
-Na análise principal, será utlizada uma janela expansiva (expanding window). Nessa abordagem, o modelo é 
+Na análise principal, será utilizada uma janela expansiva (expanding window). Nessa abordagem, o modelo é 
 estimado com todas as observações disponíveis até o período t e produz previsão para t + 1; em seguida, a janela de estimação é expandida com a nova observação e o processo se repete. 
 Essa estratégia permite preservar todo o histórico disponível, possibilitando que os modelos utilizem informações de diferentes regimes de volatilidade ao longo do período analisado.
 
@@ -110,19 +113,19 @@ o choque da pandemia de COVID-19, o ciclo de alta do dólar de 2021-2022, a ince
 dos modelos precisamente sob sucessivas quebras estruturais e condições adversas de mercado.
 
 Adicionalmente, como análise de robustez, será utilizada uma janela rolante (rolling window) de cinco anos, na qual apenas as observações mais recentes são mantidas no conjunto de estimação, 
-enquanto as mais antigas são progressivamente excluídas, conforme o procedimento de janela de tamanho fixo descrito por Tashman (2000). A comparação entre as duas estratégias permite investigar 
-a sensibilidade dos resultados em relação a quantidade e à qualidade das informações recentes utilizadas na estimação, questão particularmente relevante diante da possibilidade de mudanças estruturais nas séries econômicas (Pesaran e Timmermann, 2007).
+enquanto as mais antigas são progressivamente excluídas, conforme o procedimento de janela de tamanho fixo descrito por \textcite{tashman2000out}. A comparação entre as duas estratégias permite investigar 
+a sensibilidade dos resultados em relação a quantidade e à qualidade das informações recentes utilizadas na estimação, questão particularmente relevante diante da possibilidade de mudanças estruturais nas séries econômicas \cite{pesaran2007selection}.
 
 O desempenho preditivo é avaliado sobre a janela de avaliação fora da amostra, com N observações. O $r^2$ é a proxy de variância no dia $t$ e $\hat{h}_t$ a variância prevista pelo modelo para o mesmo dia, calculada com informação disponível até t - 1. A comparação principal utiliza as seguintes medidas:
 \begin{itemize}
     \item Erro Quadrático Médio (MSE): média de $\frac{1}{N}\sum_{t=1}^{N}\left(r_t^2-\hat{h}_t\right)^2$. Penaliza erros grandes de forma quadrática, sendo mais sensível a episódios de alta volatilidade;
     \item QLIKE: média de $\frac{1}{N}\sum_{t=1}^{N}\left(\ln \hat{h}_t+\frac{r_t^2}{\hat{h}_t}\right)$.    É uma função de perda específica para previsões de variância que penaliza de forma assimétrica a subestimação da variância e é menos dominada por poucas observações extremas do que o MSE;
-    \item Teste de Diebold-Mariano (DM): teste de hipótese que avalia se a diferença entre as funções de perda de dois modelos é estatisticamente significativa, com $H_0$ de que as perdas esperadas são iguais (Diebold e Mariano, 1995). Para cada par de modelos, o teste é aplicado à diferença diária entre as perdas, 
-    $d_t = L_{A,t} - L_{B,t}$, separadamente para o MSE e para o QLIKE. Foi utilizado a correção para amostras finitas de Harvey, Leybourne e Newbold (1997), com p-valores baseados na distribuição t de Student com N - 1 graus de liberdade (estatística é chamada de DM-HLN nas tabelas). Além disso, a variância da diferença de perdas 
-    é estimada de forma robusta a heterocedasticidade e autocorrelação (Newey e West, 1987), com o número de defasagens dado por $\left\lfloor 4 \left( N/100 \right)^{2/9} \right\rfloor$ (Newey e West, 1994)
+    \item Teste de Diebold-Mariano (DM): teste de hipótese que avalia se a diferença entre as funções de perda de dois modelos é estatisticamente significativa, com $H_0$ de que as perdas esperadas são iguais \cite{diebold1995comparing}. Para cada par de modelos, o teste é aplicado à diferença diária entre as perdas, 
+    $d_t = L_{A,t} - L_{B,t}$, separadamente para o MSE e para o QLIKE. Foi utilizado a correção para amostras finitas de \textcite{harvey1997testing}, com p-valores baseados na distribuição t de Student com N - 1 graus de liberdade (estatística é chamada de DM-HLN nas tabelas). Além disso, a variância da diferença de perdas 
+    é estimada de forma robusta a heterocedasticidade e autocorrelação \cite{newey1987simple}, com o número de defasagens dado por $\left\lfloor 4 \left( N/100 \right)^{2/9} \right\rfloor$ \cite{newey1994automatic}.
 \end{itemize}
 
-Como a variância real é uma \textit{proxy} calculada a partir do retorno ao quadrado, uma medida ruidosa, foram usados funções de perda (MSE e QLIKE) cujo ranking de modelos não é distorcido por esse ruído (Patton, 2011). RMSE e MAE são reportados apenas como medidas complementares.
+Como a variância real é uma \textit{proxy} calculada a partir do retorno ao quadrado, uma medida ruidosa, foram usados funções de perda (MSE e QLIKE) cujo ranking de modelos não é distorcido por esse ruído \cite{patton2011volatility}. RMSE e MAE são reportados apenas como medidas complementares.
 
 Para as métricas MSE e QLIKE, valores menores indicam melhor desempenho preditivo. No caso do QLIKE, portanto, valores mais negativos representam menores perdas e, consequentemente, previsões relativamente melhores. Já o RMSE e o MAE, também devem ser interpretados de acordo com o critério de minimização.
 

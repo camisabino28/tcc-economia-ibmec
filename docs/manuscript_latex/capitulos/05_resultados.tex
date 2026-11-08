@@ -25,7 +25,8 @@ período amostral, como mostra a figura 5.1:
     keepaspectratio
 ]{../../../OUTPUTS/figures/serie_cambio.png}
     \caption{Série do càmbio}
-    \label{fig:previsoes}
+    \label{fig:serie_cambio}
+    \caption*{\centering Fonte: Elaboração própria.}
 \end{figure}
 
 Partindo de valores próximos a \text{R\$ 1,80/US\$} no início do ano de 2000, a taxa atingiu níveis
@@ -41,7 +42,8 @@ teste ADF na tabela 5.1.
     \centering
     \includegraphics[width=0.9\textwidth]{../../../OUTPUTS/figures/volatilidade_movel_21d.png}
     \caption{Volatilidade móvel de 21 dias}
-    \label{fig:previsoes}
+    \label{fig:vol_movel_21}
+    \caption*{\centering Fonte: Elaboração própria.}
 \end{figure}
 
 A série de retornos log-diários (Figura A.3 do Apêndice A) apresenta comportamento distinto do nível da taxa de câmbio, 
@@ -76,9 +78,9 @@ Os testes de estacionariedade indicam que não se rejeita a hipótese nula de ra
 enquanto essa hipótese é rejeitada para os retornos log-diários (p-valor < 0,001). Esses resultados são compatíveis com a não estacionariedade 
 da série em nível e a estacionariedade dos retornos, que são utilizados nas etapas seguintes da análise.
 
-Conforme apresentado na Tabela A.2 do Apêndice A, a distribuição dos retornostem média próxima de zero (0,000156) e baixa assimetria (0,026), mas curtose de 7,994, indicando uma distribuição 
+Conforme apresentado na Tabela A.1 do Apêndice A, a distribuição dos retornostem média próxima de zero (0,000156) e baixa assimetria (0,026), mas curtose de 7,994, indicando uma distribuição 
 com caudas mais pesadas diferentes de uma distribuição normal. O teste de Jarque-Bera rejeita a hipótese de normalidade (p-valor < 0,001), resultado 
-também ilustrado pela comparação entre a densidade empírica e a normal teórica na Figura A.5 do Apêndice A. Além disso, o teste t não rejeita a hipótese 
+também ilustrado pela comparação entre a densidade empírica e a normal teórica na Figura A.4 do Apêndice A. Além disso, o teste t não rejeita a hipótese 
 de média igual a zero (p-valor = 0,205). Em conjunto, esses resultados mostram como funciona a distribuição dos retornos e são relevantes para a especificação dos modelos de volatilidade.
 
 Por fim, o teste de Ljung-Box aplicado aos retornos ao quadrado rejeita a hipótese de ausência de autocorrelação tanto para 10 quanto para 20 defasagens 
@@ -110,9 +112,14 @@ A Tabela 5.2 apresenta as métricas de desempenho preditivo dos modelos estimado
 RMSE e QLIKE, enquanto o EGARCH obteve o menor MAE. Embora as diferenças entre os valores sejam relativamente pequenas, o desempenho do Random Forest indica uma vantagem 
 numérica na previsão da variância cambial, especialmente considerando as métricas que penalizam erros de previsão de forma mais sensível como o MSE.
 
-Em relação aos modelos da família GARCH, o EGARCH apresentou resultados ligeiramente superiores ao GARCH nas quatro métricas consideradas, com exceção do MAE, no qual 
-também obteve o melhor resultado entre os três modelos. Esse resultado sugere que a especificação assimétrica do EGARCH pode oferecer alguma vantagem na representação da 
-dinâmica da volatilidade cambial, embora essa diferença seja pequena.
+Em relação aos modelos da família GARCH, o EGARCH apresentou resultados numericamente ligeiramente superiores ao GARCH nas quatro métricas consideradas. Entretanto, as 
+diferenças foram pequenas e não estatisticamente significativas, não permitindo afirmar que a especificação assimétrica oferece ganhos preditivos em relação ao GARCH na 
+previsão da volatilidade cambial.
+
+A estimação do EGARCH (Tabela B.2, Apêndice B) indica $\gamma = 0{,}057$, estatisticamente significativo ($p < 0{,}001$), o que é consistente com resposta assimétrica da 
+volatilidade, em que choques de depreciação do real elevam a variância condicional mais do que apreciações de mesma magnitude ($\alpha + \gamma \approx 0{,}25$ contra 
+$\alpha - \gamma \approx 0{,}13$). Entretanto, essa assimetria não se traduziu em ganhos preditivos estatisticamente significativos em relação ao GARCH, conforme os 
+testes de Diebold-Mariano.
 
 \begin{figure}[!htbp]
     \centering
@@ -122,6 +129,7 @@ dinâmica da volatilidade cambial, embora essa diferença seja pequena.
     ]{../../../OUTPUTS/figures/actual_vs_pred_garch_expansiva.png}
     \caption{Variância observada e prevista pelo modelo GARCH(1,1) — janela expansiva}
     \label{fig:previsoes_garch}
+    \caption*{\centering Fonte: Elaboração própria.}
 \end{figure}
 
 \begin{figure}[!htbp]
@@ -131,7 +139,8 @@ dinâmica da volatilidade cambial, embora essa diferença seja pequena.
         keepaspectratio
     ]{../../../OUTPUTS/figures/actual_vs_pred_egarch_expansiva.png}
     \caption{Variância observada e prevista pelo modelo EGARCH(1,1) — janela expansiva}
-    \label{fig:previsoes_garch}
+    \label{fig:previsoes_egarch_exp}
+    \caption*{\centering Fonte: Elaboração própria.}
 \end{figure}
 
 \begin{figure}[!htbp]
@@ -141,7 +150,8 @@ dinâmica da volatilidade cambial, embora essa diferença seja pequena.
         keepaspectratio
     ]{../../../OUTPUTS/figures/actual_vs_pred_rf_expansiva.png}
     \caption{Variância observada e prevista pelo modelo Random Forest — janela expansiva}
-    \label{fig:previsoes_garch}
+    \label{fig:previsoes_rf_exp}
+    \caption*{\centering Fonte: Elaboração própria.}
 \end{figure}
 
 A análise gráfica das variâncias observadas e previstas, apresentada nas Figuras 5.3 a 5.5, permite complementar a comparação. É possível notar que os três 
@@ -249,7 +259,8 @@ com janela rolante favoreceu o modelo GARCH.
         keepaspectratio
     ]{../../../OUTPUTS/figures/actual_vs_pred_garch_rolante.png}
     \caption{Variância observada e prevista pelo modelo GARCH(1,1) — janela rolante}
-    \label{fig:previsoes_garch}
+    \label{fig:previsoes_garch_rol}
+    \caption*{\centering Fonte: Elaboração própria.}
 \end{figure}
 
 \begin{figure}[!htbp]
@@ -259,7 +270,8 @@ com janela rolante favoreceu o modelo GARCH.
         keepaspectratio
     ]{../../../OUTPUTS/figures/actual_vs_pred_rf_rolante.png}
     \caption{Variância observada e prevista pelo modelo Random Forest — janela rolante}
-    \label{fig:previsoes_garch}
+    \label{fig:previsoes_rf_rol}
+    \caption*{\centering Fonte: Elaboração própria.}
 \end{figure}
 
 As Figuras 5.6 e 5.7 apresentam as variâncias observadas e previstas pelos modelos GARCH e Random Forest, respectivamente, considerando a janela rolante de 

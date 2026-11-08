@@ -17,8 +17,26 @@ especificação.
 Na análise de robustez, a substituição da janela expansiva por uma janela rolante de cinco anos alterou o desempenho relativo 
 dos modelos. Nessa configuração, o GARCH apresentou os melhores resultados em todas as métricas avaliadas, com diferenças 
 estatisticamente significativas em relação ao Random Forest, conforme os testes Diebold-Mariano para MSE e QLIKE. Esse resultado 
-demonstra que o desempenho preditivo dos modelos depende também da estratégia de estimação adotada, não sendo possível 
+sugere que o desempenho preditivo dos modelos depende também da estratégia de estimação adotada, não sendo possível 
 estabelecer uma superioridade independente dessa escolha.
+
+Em conjunto, os resultados mostram que a maior flexibilidade do aprendizado de máquina não garante, por si só, ganhos de desempenho 
+preditivo. Embora o Random Forest tenha apresentado resultados numericamente melhores em algumas métricas na janela expansiva, os 
+modelos econométricos tradicionais permaneceram competitivos e o GARCH apresentou desempenho superior na análise com janela rolante. 
+Essa evidência reforça a importância de considerar as características da série e a estratégia de estimação na escolha dos modelos de 
+previsão.
+
+Os resultados também podem ser relacionados aos achados de \textcite{hansen2005forecast}, que não encontraram evidências de que especificações 
+mais complexas da família ARCH superassem consistentemente o GARCH(1,1) na previsão da volatilidade da taxa de câmbio DM/USD. Embora o 
+estudo não envolva métodos de aprendizado de máquina nem a taxa USD/BRL, seus resultados reforçam a relevância de especificações 
+econométricas parcimoniosas na previsão de volatilidade cambial. De forma complementar, \textcite{campani2018forecasting}, ao investigarem o mercado 
+USD/BRL, identificaram ganhos preditivos com a inclusão de variáveis exógenas em modelos GARCH, evidenciando a importância das informações 
+utilizadas na modelagem da volatilidade. Os resultados do presente trabalho ampliam essa discussão ao comparar diretamente modelos 
+econométricos e aprendizado de máquina para a mesma série cambial.
+
+Por fim, cabe destacar que a análise de robustez foi restrita à comparação entre GARCH e Random Forest, uma vez que o EGARCH apresentou 
+problemas de convergência durante as estimações com janela rolante. Essa limitação impede estender os resultados dessa análise complementar 
+ao conjunto completo de modelos e deve ser considerada na interpretação das evidências obtidas.
 
 \section{Contribuições}
 
@@ -28,8 +46,9 @@ foram utilizados testes de comparação preditiva com a correção de Harvey-Ley
 análise das diferenças entre os modelos.
 
 Do ponto de vista aplicado, o estudo contribui para a discussão sobre a utilização de métodos de aprendizado de máquina em problemas 
-de previsão financeira, especialmente em comparação com modelos econométricos amplamente utilizados na literatura. Os resultados também 
-oferecem subsídios para a escolha de abordagens de previsão em aplicações relacionadas à análise de risco e ao acompanhamento da volatilidade cambial.
+de previsão financeira, especialmente em comparação com modelos econométricos amplamente utilizados na literatura. Os resultados mostram 
+que a escolha da abordagem pode depender da estratégia de estimação adotada, oferecendo elementos para a avaliação de modelos destinados à 
+previsão da volatilidade cambial.
 
 \section{Agenda futura}
 
@@ -46,6 +65,9 @@ Além disso, seria interessante ampliar a análise para horizontes de previsão 
 relativo dos modelos se mantém em previsões de médio prazo. A incorporação de variáveis exógenas, como o índice VIX, o diferencial de 
 juros entre Brasil e Estados Unidos e o CDS soberano brasileiro, também é uma possibilidade de investigação, permitindo avaliar se informações 
 adicionais contribuem para melhorar a capacidade preditiva dos modelos.
+
+Outra possibilidade consiste em investigar estratégias alternativas de estimação do EGARCH, buscando contornar os problemas de convergência 
+observados na janela rolante e permitir sua inclusão em análises complementares de robustez.
 
 Por fim, a realização de análises em diferentes subperíodos e a investigação de outras estratégias de estimação poderiam aprofundar a 
 compreensão sobre a sensibilidade dos modelos às mudanças nas condições de mercado, especialmente diante de episódios de maior instabilidade 

@@ -1,0 +1,173 @@
+%% ======================================================================
+%% Declaração de uso de inteligência artificial
+%% Salve em capitulos/09_declaracao_ia.tex
+%%
+%% Como preencher:
+%%  - Troque \caixa por \marcada nas opções que SE APLICAM ao seu trabalho.
+%%  - Escreva o nome da ferramenta na 3ª coluna da linha correspondente.
+%%  - Descreva outros usos no quadro final, se houver.
+%% O formulário é uma declaração de responsabilidade: marque somente o que
+%% realmente aconteceu.
+%% ======================================================================
+
+\newcommand{\caixa}{$\square$}      % caixa vazia
+\newcommand{\marcada}{$\boxtimes$}  % caixa marcada
+\newcommand{\linhaia}[4]{#1 & #2\newline\textit{Exemplos: #3} & #4 \\ \hline}
+\newcommand{\blocoia}[1]{\hline\multicolumn{3}{|c|}{\textbf{#1}} \\ \hline}
+
+\chapter{Declaração de uso de inteligência artificial}
+\label{ap:declaracao_ia}
+
+\begin{singlespace}
+\setlength{\parindent}{0pt}
+\footnotesize
+\renewcommand{\arraystretch}{1.25}
+
+\vspace{0.5\baselineskip}
+\noindent\textbf{PARTE A -- USO DE INTELIGÊNCIA ARTIFICIAL NO TCC}\par
+\vspace{0.4\baselineskip}
+\noindent Informe abaixo se utilizou ou não ferramentas de Inteligência Artificial (IA) na elaboração deste trabalho:\par
+\vspace{0.4\baselineskip}
+
+\noindent\begin{tabular}{|>{\centering\arraybackslash}p{0.6cm}|p{14.3cm}|}
+\hline
+\caixa & NÃO utilizei nenhuma ferramenta de IA na elaboração deste trabalho. \\ \hline
+\marcada & SIM, utilizei ferramenta(s) de IA. Preencha as partes B e C abaixo. \\ \hline
+\end{tabular}
+
+\vspace{1\baselineskip}
+\noindent\textbf{PARTE B -- ETAPAS EM QUE A IA FOI UTILIZADA}\par
+\vspace{0.4\baselineskip}
+\noindent Assinale todas as etapas em que recorreu a ferramentas de IA:\par
+\vspace{0.4\baselineskip}
+
+\noindent\begin{longtable}{|>{\centering\arraybackslash}p{0.6cm}|p{9.0cm}|p{4.6cm}|}
+\hline
+\multicolumn{2}{|c|}{\textbf{PARTES DO TRABALHO}} &
+\multicolumn{1}{c|}{\textbf{FERRAMENTA(S) UTILIZADA(S)}} \\ \hline
+\endfirsthead
+\hline
+\multicolumn{2}{|c|}{\textbf{PARTES DO TRABALHO}} &
+\multicolumn{1}{c|}{\textbf{FERRAMENTA(S) UTILIZADA(S)}} \\ \hline
+\endhead
+
+\blocoia{1. PESQUISA E LEVANTAMENTO DE REFERÊNCIAS}
+\linhaia{\marcada}
+        {Busca e identificação de fontes bibliográficas}
+        {sugestão de artigos, livros ou bases de dados relevantes para o tema}
+        {Claude e ChatGPT}
+\linhaia{\marcada}
+        {Geração de resumos de textos científicos}
+        {síntese de artigos, capítulos ou relatórios}
+        {NotebookLM}
+\linhaia{\caixa}
+        {Tradução de textos e documentos}
+        {tradução de artigos em língua estrangeira para apoio à leitura}
+        {}
+
+\blocoia{2. REDAÇÃO E REVISÃO TEXTUAL}
+\linhaia{\marcada}
+        {Revisão gramatical e ortográfica}
+        {correção de erros de português, pontuação e concordância}
+        {Claude e Gemini}
+\linhaia{\marcada}
+        {Melhoria da clareza e fluidez do texto já redigido pelo autor}
+        {reformulação de frases sem alterar o conteúdo intelectual}
+        {Claude e ChatGPT}
+\linhaia{\marcada}
+        {Estruturação inicial ou esboço de seções do texto}
+        {sugestão de organização de capítulos, introdução ou conclusão}
+        {ChatGPT e Gemini}
+\linhaia{\caixa}
+        {Geração de texto a partir de instruções do autor}
+        {redigir parágrafos a partir de notas ou ideias fornecidas pelo aluno}
+        {}
+
+\blocoia{3. ANÁLISE E TRATAMENTO DE DADOS}
+\linhaia{\caixa}
+        {Suporte à codificação ou categorização de dados qualitativos}
+        {organização de categorias de análise de entrevistas ou documentos}
+        {}
+\linhaia{\caixa}
+        {Interpretação ou explicação de resultados estatísticos}
+        {auxílio na leitura de outputs de software de análise de dados}
+        {}
+\linhaia{\caixa}
+        {Geração ou simulação de dados para fins ilustrativos}
+        {dados fictícios para exemplos didáticos, com declaração explícita no texto}
+        {}
+
+\blocoia{4. FORMATAÇÃO E APRESENTAÇÃO}
+\linhaia{\marcada}
+        {Formatação segundo normas ABNT/APA}
+        {organização de referências, citações e sumário}
+        {Claude}
+\linhaia{\marcada}
+        {Elaboração de tabelas, quadros ou figuras}
+        {construção visual de informações a partir de dados fornecidos pelo autor}
+        {Claude}
+\linhaia{\caixa}
+        {Criação ou edição de apresentações (slides)}
+        {sugestão de estrutura ou design de apresentação para defesa}
+        {}
+
+\blocoia{5. OUTROS USOS}
+\marcada & Outro uso não listado acima (descreva no campo abaixo) & \\ \hline
+\end{longtable}
+
+\vspace{0.5\baselineskip}
+\noindent Descrição de outro uso e/ou scripts (se aplicável):\par
+\vspace{0.4\baselineskip}
+
+% --- Parte 1: texto curto ---
+\noindent Utilizei ferramentas de IA (Claude e ChatGPT) como apoio no
+desenvolvimento dos códigos em Python da análise empírica. Em geral, eu
+tentava escrever o código sozinha e recorria à IA quando encontrava erros ou
+dificuldades. O nível de apoio em cada script está detalhado na tabela
+abaixo. Os resultados foram conferidos por mim.
+\par\vspace{0.5\baselineskip}
+
+% --- Parte 2: legenda dos níveis ---
+\noindent\textbf{Níveis de apoio da IA:} A = escrito por mim, com correções
+pontuais da IA; B = desenvolvido em conjunto; C = escrito majoritariamente
+com a IA a partir das minhas instruções, com revisão e testes meus.
+\par\vspace{0.5\baselineskip}
+
+% --- Parte 3: tabela ---
+\noindent\begin{longtable}{|p{5.4cm}|c|p{8.2cm}|}
+\hline
+\textbf{Script} & \textbf{Nível} & \textbf{Observação} \\ \hline
+\endfirsthead
+\hline
+\textbf{Script} & \textbf{Nível} & \textbf{Observação} \\ \hline
+\endhead
+\texttt{backtesting.py}          & B & A parte de carregar dados, salvar e as flags foram feitas pela IA. \\ \hline
+\texttt{diebold\_mariano.py}     & B & A IA me ajudou com algumas flags e os loops. \\ \hline
+\texttt{avaliar\_resultados.py}  & C & Pedi esse código menor à IA para verificar se os dados estavam coerentes e fazer um pequeno diagnóstico. \\ \hline
+\texttt{data.py}                 & A & Download da série no FRED escrito por mim; criação do diretório de saída (\texttt{mkdir}) sugerida pela IA. \\ \hline
+\texttt{features.py}             & A & Função \texttt{build\_features}: cerca de 90\% escrita por mim; a IA fez ajustes pontuais. \\ \hline
+\texttt{garch\_model.py}         & B & Tive dificuldade no loop de \textit{walk-forward}; a IA me ajudou nisso e a adaptar o código para rodar o EGARCH junto. \\ \hline
+\texttt{random\_forest.py}       & B & Assim como no GARCH, tive dificuldade no loop de \textit{walk-forward} e a IA me ajudou nessa parte. \\ \hline
+\texttt{teste\_egarch.py}        & C & A IA me passou esse código para me ajudar a entender por que o EGARCH não funcionava na janela rolante (Tabelas B.6 e B.7). \\ \hline
+\texttt{testes\_estatisticos.py} & A & Sem apoio da IA. \\ \hline
+\texttt{visualizacoes.py}        & B & Algumas formatações mais específicas que eu costumava esquecer, como as do ACF e PACF, foram feitas com IA. \\ \hline
+\texttt{main.py}                 & A & A IA ajudou apenas com algumas correções nas partes que tinham loop. \\ \hline
+\end{longtable}
+
+\vspace{1.2\baselineskip}
+\noindent\textbf{DECLARAÇÃO DE RESPONSABILIDADE}\par
+\vspace{0.4\baselineskip}
+\noindent\begin{minipage}{\linewidth}\raggedright
+Declaro que as informações prestadas neste formulário são verdadeiras e que
+assumo integral responsabilidade pelo conteúdo intelectual do presente
+trabalho, tendo procedido à revisão e validação crítica de seu conteúdo.
+\end{minipage}
+
+\vspace{2cm}
+\noindent\begin{minipage}[t]{0.45\textwidth}\centering
+  \rule{\linewidth}{0.4pt}\\ Assinatura do(a) discente
+\end{minipage}\hfill
+\begin{minipage}[t]{0.45\textwidth}\centering
+  \rule{\linewidth}{0.4pt}\\ Brasília, \underline{\hspace{0.8cm}} de \underline{\hspace{2cm}} de \underline{\hspace{1cm}}
+\end{minipage}
+\end{singlespace}

@@ -9,7 +9,7 @@ da série e os critérios adotados para a definição da amostra utilizada nas e
 
 A unidade de análise é o retorno diário da taxa de câmbio USD/BRL, calculado a partir da série DEXBZUS (Brazil / U.S. Foreign Exchange Rate), obtida junto ao Federal Reserve 
 Bank of St. Louis (FRED) em 23 de outubro de 2026, e o período estudado compreende janeiro de 2000 até maio de 2026 
-(última observação disponível: 29 de maio de 2026). O recorte temporal inicia após a 
+(última observação utilizada: 29 de maio de 2026). O recorte temporal inicia após a 
 consolidação do regime de câmbio flutuante, implementado em janeiro de 1999, de forma a excluir o período de transição cambial e 
 garantir homogeneidade institucional da série. O período cobre episódios relevantes de estresse cambial, incluindo a crise de 
 confiança de 2002, a crise financeira global de 2008, a recessão brasileira de 2015-2016, o choque da pandemia de COVID-19 em 2020
@@ -37,3 +37,6 @@ Os modelos da família GARCH utilizam apenas os retornos passados. Não são inc
 A série bruta foi preservada sem alterações, com as observações ausentes mantidas, e as datas sem cotação foram registradas em arquivo separado (269 datas). Essas datas foram excluídas da amostra, sem interpolação, 
 e o retorno foi calculado entre observações consecutivas disponíveis. Assim, um retorno que atravessa um fim de semana ou feriado cobre mais de um dia corrido. Foi verificado, também, a ausência de datas duplicadas 
 e a ordenação cronológica, e a amostra foi truncada em 31 de maio de 2026, com última observação em 29 de maio. Não foram aplicados filtros de exclusão de outliers.
+
+Os códigos em Python e os dados utilizados neste trabalho estão disponíveis
+em repositório público no GitHub \cite{ribeiro2026codigo}.

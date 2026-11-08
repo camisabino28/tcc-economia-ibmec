@@ -2,91 +2,80 @@
 
 \section{Contexto}
 
-    A volatilidade dos preços de ativos financeiros é uma das variáveis mais relevantes em
-finanças quantitativas. Ela representa a dispersão dos retornos de um ativo ao longo do tempo
-e serve como insumo central para uma ampla quantidade de aplicações práticas, como o cálculo
-do Value at Risk (VaR) e do Expected Shortfall (ES), medidas utilizadas por bancos e gestoras
-de recursos para dimensionamento de reservas de capital, depende diretamente de estimativas
-precisas da volatilidade. Da mesma forma, a precificação de opções e demais derivativos financeiros, 
-fundamentada no modelo pioneiro de Black e Scholes (1973), e as estratégias de alocação de portfólio 
+A volatilidade dos preços de ativos financeiros é uma das variáveis mais relevantes em
+finanças quantitativas. Ela representa a dispersão dos retornos de um ativo ao longo do tempo e serve como insumo central para diversas aplicações práticas. Entre elas, destacam-se o cálculo do Value at Risk (VaR) e do Expected Shortfall (ES), utilizados por bancos e gestoras de recursos na mensuração do risco e no dimensionamento de capital, cujas estimativas dependem diretamente de medidas adequadas de volatilidade.
+Da mesma forma, a precificação de opções e demais derivativos financeiros, 
+fundamentada no modelo pioneiro de \textcite{black1973pricing}, e as estratégias de alocação de portfólio 
 baseadas em controle de risco (volatility targeting) são diretamente sensíveis à qualidade dessas 
 estimativas. No âmbito regulatório, as reformas de Basileia III, especialmente as relacionadas à revisão 
 da estrutura de risco de mercado, reforçaram a utilização do Expected Shortfall como medida de risco, evidenciando 
-a importância de estimativas adequadas da volatilidade (BIS, 2019).
+a importância de estimativas adequadas da volatilidade \cite{bcbs2019minimum}.
 
-    Entretanto, séries de retornos financeiros apresentam características que dificultam a modelagem
+Entretanto, séries de retornos financeiros apresentam características que dificultam a modelagem
 estatística convencional, incluindo heterocedasticidade condicional, clustering de volatilidade, distribuições com caudas pesadas
-e evidências de assimetria na resposta da volatilidade a choques de mercado (Fama, 1965; Akgiray, 1989). Essas propriedades motivaram 
+e evidências de assimetria na resposta da volatilidade a choques de mercado \cite{fama1965behavior,akgiray1989conditional}. Essas propriedades motivaram 
 o desenvolvimento de duas abordagens distintas para a previsão de volatilidade. A primeira, denominada model-based, fundamenta-se em estruturas 
-paramétricas previamente especificadas que impõem ao processo gerador de dados uma forma funcional interpretável. A segunda, denominada data-driven, 
-opera sem pressupostos distribicionais rígidos e aprende os padrões diretamente da amostra. A comparação entre esses dois paradigmas constitui o 
+paramétricas previamente especificadas, que representam a dinâmica da volatilidade por meio de formas funcionais definidas. A segunda, denominada data-driven, utiliza algoritmos que aprendem padrões e relações diretamente dos dados, sem exigir a especificação prévia de uma estrutura paramétrica para a variável modelada. A comparação entre esses dois paradigmas constitui o 
 objeto central deste trabalho.
 
-    No paradigma model-based, a família de modelos GARCH (Generalized Autoregressive Conditional Heteroskedasticity), introduzida por Engle (1982) e generalizada 
-por Bollerslev (1986), se consolidou como referência acadêmica e prática ao capturar a persistência e o agrupamento da volatilidade por meio de 
-uma equação paramétrica para a variância condicional. Além disso, extensões como o EGARCH (Nelson, 1991) incorporam o efeito alavancagem, em que choques 
-negativos tendem a elevar a volatilidade de forma assimétrica em relação a choques positivos de mesma magnitude. Em comum, esses modelos oferecem estruturas paramétricas 
-interpretáveis para descrever a dinâmica da volatilidade. Entretanto, dependem de formas funcionais previamente especificadas, o que pode limitar sua capacidade de representar 
-relações não lineares mais complexas e mudanças estruturais nos mercados financeiros.
+No paradigma model-based, a família de modelos GARCH (Generalized Autoregressive Conditional Heteroskedasticity), introduzida por \textcite{engle1982autoregressive} e generalizada 
+por \textcite{bollerslev1986generalized}, se consolidou como referência acadêmica e prática ao capturar a persistência e o agrupamento da volatilidade por meio de 
+uma equação paramétrica para a variância condicional. Além disso, extensões como o EGARCH \cite{nelson1991conditional} incorporam efeitos assimétricos, em que choques 
+de sinais opostos e mesma magnitude afetam a volatilidade de forma distinta (em ações, tipicamente choques negativos; no câmbio, depreciações da moeda doméstica). Em comum, esses modelos oferecem estruturas paramétricas 
+interpretáveis para descrever a dinâmica da volatilidade. Entretanto, sua capacidade de representação depende da especificação adotada, o que pode impor limitações diante de dinâmicas mais complexas e mudanças estruturais nos mercados financeiros.
+Em contraposição, o avanço dos algoritmos de machine learning nas últimas décadas, em particular os métodos de ensemble baseados em árvores de decisão, como Random Forest, ampliou as possibilidades de utilização de abordagens orientadas a dados 
+na previsão de volatilidade. Esses modelos permitem identificar padrões e relações não lineares diretamente a partir das observações da amostra de treinamento, sem exigir a especificação prévia de uma estrutura paramétrica para a variável modelada. 
+A questão central que emerge não é simplesmente qual modelo é superior, mas sob quais condições cada paradigma apresenta vantagem preditiva, e quais são os ganhos e limitações associados à troca de uma estrutura econométrica previamente especificada por uma abordagem mais flexível.
 
-    Em contraposição, o avanço dos algoritmos de machine learning nas últimas décadas, em particular os métodos de ensemble baseados em árvores de decisão, como Random Forest, abriu a possibilidade de abordagens orientadas a dados com maior flexibilidade para identificar padrões não lineares. Esses modelos não impõem 
-estrutura funcional ao processo gerador de dados, ajustando-se diretamente às relações empíricas observadas na amostra de treinamento. A questão central que emerge não é 
-simplesmente qual modelo é superior, mas sob quais condições cada paradigma apresenta vantagem preditiva, e quais são os ganhos e perdas associados à troca de interpretabilidade 
-por flexibilidade.
-
-    Nesse contexto, a taxa de câmbio USD/BRL constitui um objeto de análise particularmente relevante. O real brasileiro opera sob regime de câmbio flutuante desde 1999 e está sujeito 
+Nesse contexto, a taxa de câmbio USD/BRL constitui um objeto de análise particularmente relevante. O real brasileiro opera sob regime de câmbio flutuante desde 1999 e está sujeito 
 a uma combinação de fatores externos, como variações na política monetária americana e ciclos de aversão ao risco global, e fatores idiossincráticos domésticos, incluindo incerteza 
-fiscal e instabilidade política (Banco Central do Brasil, 2021). Como resultado, a volatilidade cambial brasileira é um fenômeno de natureza heterogênea e recorrentemente não linear, 
-com episódios de elevada instabilidade que testam os limites de modelos paramétricos tradicionais. Adicionalmente, ao contrário do mercado acionário, não existe na literatura um modelo 
-estrutural consagrado para explicar a volatilidade cambial, o que torna a comparação entre paradigmas de previsão especialmente pertinente e empiricamente aberta 
-(Banco Central do Brasil, 2021; Campani e Durães, 2018).
+fiscal e instabilidade política \cite{bacen2021volatilidade}. Nesse contexto, a volatilidade cambial brasileira está sujeita a diferentes fontes de influência e apresenta episódios de elevada instabilidade, o que torna relevante investigar a capacidade de diferentes abordagens em representar sua dinâmica. Adicionalmente, a ausência de um modelo estrutural amplamente consolidado para explicar as variações cambiais reforça a relevância de investigar empiricamente diferentes abordagens de previsão \cite{bacen2021volatilidade,campani2018forecasting}.
+
 
 \section{Pergunta de pesquisa}
-
-Abordagens data-driven (Random Forest) apresentam desempenho preditivo superior às abordagens model-based (GARCH\slash EGARCH) na previsão da volatilidade diária da taxa de câmbio USD/BRL?
-
+Como se compara o desempenho preditivo das abordagens data-driven (Random Forest) e model-based (GARCH/EGARCH) na previsão da volatilidade diária da taxa de câmbio USD/BRL?
 
 \section{Objetivos}
 
 \subsection{Objetivo Geral}
-O objetivo deste estudo é comparar o desempenho preditivo de abordagens model-based (GARCH/EGARCH) e data-driven (Random Forest) na previsão da volatilidade diária da taxa de câmbio USD\slash BRL, avaliando em que condições cada paradigma apresenta maior acurácia fora da amostra.
+O objetivo deste estudo é comparar o desempenho preditivo de abordagens model-based (GARCH/EGARCH) e data-driven (Random Forest) na previsão da volatilidade diária da taxa de câmbio USD/BRL, considerando a acurácia das previsões fora da amostra e a significância estatística das diferenças de desempenho.
 
 \subsection{Objetivos Específicos}
 Para alcançar o objetivo geral, definem-se os seguintes passos:
 \begin{itemize}
     \item Estimar modelos GARCH(1,1) e EGARCH(1,1) sobre a série de retornos do USD\slash BRL e obter previsões de volatilidade fora da amostra;
-    \item Treinar e calibrar modelo data-driven (Random Forest) com engenharia de features baseada em retornos defasados, proxies de volatilidade e indicadores de mercado;
+    \item Treinar e calibrar modelo data-driven (Random Forest) com engenharia de features baseada em retornos defasados, proxies de volatilidade;
     \item Comparar o desempenho preditivo dos modelos por meio de métricas de erro (MSE e QLIKE) e do teste Diebold-Mariano;
 \end{itemize}
 
 \section{Justificativa}
 
-    A rigidez paramétrica dos modelos tradicionais de volatilidade constitui um desafio relevante na modelagem de séries financeiras, 
-especialmente em contextos caracterizados por elevada instabilidade. No caso da taxa de câmbio USD/BRL, essa limitação se torna particularmente significativa:
-a dinâmica cambial brasileira é influenciada simultaneamente por fundamentos macroeconômicos, fluxos de capital internacional e componentes de incerteza política 
-doméstica, fatores que interagem de forma não linear e cujos efeitos sobre a volatilidade variam ao longo do tempo.
+Os modelos econométricos tradicionais de volatilidade partem de estruturas paramétricas previamente especificadas, cuja capacidade de representação depende das características 
+da série analisada e da especificação adotada. No caso da taxa de câmbio USD/BRL, essa questão merece atenção, uma vez que a dinâmica cambial brasileira é influenciada simultaneamente 
+por fundamentos macroeconômicos, fluxos de capital internacional e componentes de incerteza política doméstica, cujos efeitos sobre a volatilidade podem variar ao longo do tempo.
 
-   Evidências empíricas reforçam essa caracterização. O Banco Central do Brasil (2021) documenta que a volatilidade do câmbio BRL-USD responde a uma combinação 
-de fatores externos e idiossincráticos domésticos, destacando a ausência de um modelo estrutural consagrado para sua explicação. No plano internacional, Chung, 
-Espinoza e Quispe (2025) demonstram que, em períodos de crises agudas, a rigidez dos modelos GARCH pode resultar em redução significativa da capacidade preditiva. 
-Paralelamente, Donaldson e Kamstra (1997) apresentaram evidências de que abordagens não lineares são capazes de capturar efeitos que escapam às equações tradicionais, 
-potencial posteriormente reforçado por Kristjanpoller e Minutolo (2015) em testes com mercados de commodities.
+Evidências empíricas reforçam essa caracterização. O \textcite{bacen2021volatilidade} documenta que a volatilidade cambial responde a uma combinação de fatores externos e idiossincráticos 
+domésticos, destacando a ausência de um modelo estrutural consagrado para sua explicação. No plano internacional, estudos como \textcite{donaldson1997neural} e \textcite{kristjanpoller2015gold} 
+investigam a aplicação de abordagens não lineares à modelagem de séries financeiras, apresentando evidências de que essas técnicas podem contribuir para a representação de relações não capturadas 
+por especificações tradicionais.
 
-    Apesar desses avanços, ainda não há consenso na literatura sobre a superioridade das abordagens data-driven para previsão de volatilidade cambial em mercados emergentes, 
-onde características estruturais e institucionais específicas podem afetar o desempenho relativo dos modelos. Campani e Durães (2018), em estudo sobre o próprio mercado de 
-câmbio USD/BRL, mostram que modelos GARCH estendidos com variáveis exógenas apresentam capacidade preditiva superior aos modelos univariados, sugerindo que a informação contida 
-na estrutura do mercado cambial brasileiro é relevante, mas não necessariamente capturada da mesma forma por abordagens paramétricas e não paramétricas.
+Apesar desses avanços, o desempenho relativo das abordagens econométricas e dos métodos de aprendizado de máquina ainda depende das características das séries analisadas e das especificações adotadas. 
+\textcite{campani2018forecasting}, em estudo sobre o próprio mercado de câmbio USD/BRL, mostram que modelos GARCH estendidos com variáveis exógenas apresentam capacidade preditiva superior aos modelos 
+univariados, indicando a relevância de informações adicionais na previsão da volatilidade cambial brasileira. Entretanto, seus resultados não estabelecem como modelos econométricos se comparam diretamente 
+a métodos de aprendizado de máquina nesse mercado.
 
-Desta forma, este trabalho contribui para a literatura ao comparar o desempenho preditivo de modelos model-based e data-driven na previsão da 
-volatilidade diária da taxa de câmbio USD/BRL, com foco na acurácia fora da amostra, na avaliação estatística por meio do teste Diebold-Mariano,
-buscando avaliar se a flexibilidade do aprendizado de máquina se traduz em ganhos preditivos estatisticamente significativos em relação aos modelos econométricos tradicionais.
+Diante disso, este trabalho contribui para a literatura ao comparar o desempenho preditivo de modelos econométricos da família GARCH e de uma abordagem de aprendizado de máquina, representada pelo Random 
+Forest, na previsão da volatilidade diária da taxa de câmbio USD/BRL. A comparação considera a acurácia das previsões fora da amostra e a significância estatística das diferenças de desempenho, por meio do 
+teste de Diebold-Mariano, buscando avaliar em que medida as abordagens apresentam resultados distintos na previsão da volatilidade cambial brasileira.
 
 \section{Estrutura do trabalho}
 
-    Este trabalho está estruturado em seis capítulos, incluindo esta introdução. No segundo capítulo, apresenta-se a revisão de literatura,
-que abrange a base teórica e as evidências empíricas pertinentes ao tema, fundamentando a evolução dos modelos model-based de volatilidade e as 
-aplicações de machine learning no setor financeiro, com ênfase no mercado cambial. O terceiro capítulo detalha a metodologia, descrevendo a hierarquia 
-de modelos proposta, os critérios de avaliação e as limitações do estudo Em seguida, o quarto capítulo aborda a base de dados e a estratégia empírica, explicitando 
-as fontes, a construção das variáveis e o tratamento de dados. Os resultados são discutidos no quinto capítulo, que compreende a análise descritiva, os resultados principais 
-e testes de robustez, incluindo procedimentos de backtesting para validar a capacidade preditiva e a estabilidade do modelo proposto. Por fim, o 
-sexto capítulo apresenta a conclusão, sintetizando os achados, as contribuições do trabalho e as sugestões para pesquisas futuras. 
+Este trabalho está estruturado em seis capítulos, incluindo esta introdução.
+No segundo capítulo, apresenta-se a revisão de literatura, que aborda a relevância da volatilidade do USD/BRL, os fundamentos dos modelos GARCH e
+EGARCH e do Random Forest, as evidências empíricas sobre a comparação entre modelos econométricos e métodos de aprendizado de máquina e os critérios de
+avaliação de previsões, articulando esses elementos com a pergunta de pesquisa. O terceiro capítulo detalha a metodologia, descrevendo os modelos considerados,
+os critérios de avaliação e as limitações do estudo. Em seguida, o quarto capítulo aborda a base de dados e a estratégia empírica, explicitando as
+fontes, a construção das variáveis e o tratamento dos dados. Os resultados são discutidos no quinto capítulo, que compreende a análise descritiva, os
+resultados principais e o teste de robustez com janela rolante de cinco anos, que avalia a sensibilidade dos resultados à estratégia de estimação. Por fim,
+o sexto capítulo apresenta a conclusão, respondendo à pergunta de pesquisa, sintetizando os achados, as contribuições do trabalho e as sugestões para pesquisas futuras. Ao final, são apresentados os apêndices, que reúnem
+resultados e procedimentos complementares à análise empírica, incluindo a declaração de uso de ferramentas de inteligência artificial.

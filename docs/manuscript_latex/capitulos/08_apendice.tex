@@ -33,7 +33,7 @@
 \FloatBarrier
 \section{Resultados dos testes estatísticos}
 
-\begin{table}[!htbp]
+\begin{table}[H]
     \centering
     \caption{Resultados dos testes estatísticos e momentos dos retornos}
     \label{tab:testes_completos}
@@ -72,7 +72,7 @@
 
 \section{Estimação dos modelos GARCH}
 
-\begin{table}[!htbp]
+\begin{table}[H]
     \centering
     \caption{Resultados da estimação do modelo GARCH(1,1)}
     \label{tab:garch_coeficientes}
@@ -93,7 +93,7 @@
 
 \section{Estimação dos modelos EGARCH}
 
-\begin{table}[!htbp]
+\begin{table}[H]
     \centering
     \caption{Resultados da estimação do modelo EGARCH(1,1)}
     \label{tab:egarch_coeficientes}
@@ -115,7 +115,7 @@
 
 \section{Importância das variáveis do Random Forest}
 
-\begin{table}[!htbp]
+\begin{table}[H]
     \centering
     \caption{Importância das variáveis no modelo Random Forest}
     \label{tab:importancia_rf}
@@ -142,53 +142,53 @@
 
 \section{Resultados completos do teste Diebold-Mariano}
 
-\begin{table}[!htbp]
+\begin{table}[H]
     \centering
     \caption{Resultados completos do teste Diebold--Mariano para MSE}
     \label{tab:dm_mse_completo}
     \small
+    \resizebox{\textwidth}{!}{%
     \begin{tabular}{llrrrrr}
         \toprule
         Modelo A & Modelo B & Perda média A & Perda média B &
         Diferença média & DM-HLN & $p$-valor \\
         \midrule
-        RF    & GARCH  & $2,6044 \times 10^{-8}$ & $2,6638 \times 10^{-8}$ & $-5,9409 \times 10^{-10}$ & -1,128 & 0,259 \\
-        RF    & EGARCH & $2,6044 \times 10^{-8}$ & $2,6429 \times 10^{-8}$ & $-3,8517 \times 10^{-10}$ & -0,700 & 0,484 \\
-        GARCH & EGARCH & $2,6638 \times 10^{-8}$ & $2,6429 \times 10^{-8}$ & $2,0892 \times 10^{-10}$ & 0,932 & 0,351 \\
+        RF    & GARCH  & $2{,}6044 \times 10^{-8}$ & $2{,}6638 \times 10^{-8}$ & $-5{,}9409 \times 10^{-10}$ & $-1{,}128$ & $0{,}259$ \\
+        RF    & EGARCH & $2{,}6044 \times 10^{-8}$ & $2{,}6429 \times 10^{-8}$ & $-3{,}8517 \times 10^{-10}$ & $-0{,}700$ & $0{,}484$ \\
+        GARCH & EGARCH & $2{,}6638 \times 10^{-8}$ & $2{,}6429 \times 10^{-8}$ & $2{,}0892 \times 10^{-10}$ & $0{,}932$ & $0{,}351$ \\
         \bottomrule
-    \end{tabular}
-    \begin{center}
-        \footnotesize Nota: Todas as comparações utilizam 1.602 observações.
-
-        \footnotesize Fonte: Elaboração própria.
-    \end{center}
+    \end{tabular}%
+    }
+    \par\vspace{2pt}
+    {\footnotesize Nota: Todas as comparações utilizam 1.602 observações.\par}
+    \fonte{Elaboração própria.}
 \end{table}
 
-\begin{table}[!htbp]
+\begin{table}[H]
     \centering
     \caption{Resultados completos do teste Diebold--Mariano para QLIKE}
     \label{tab:dm_qlike_completo}
     \small
+    \resizebox{\textwidth}{!}{%
     \begin{tabular}{llrrrrr}
         \toprule
         Modelo A & Modelo B & Perda média A & Perda média B &
         Diferença média & DM-HLN & $p$-valor \\
         \midrule
-        RF    & GARCH  & -8,456588 & -8,448184 & -0,008404 & -0,827 & 0,408 \\
-        RF    & EGARCH & -8,456588 & -8,451241 & -0,005347 & -0,525 & 0,600 \\
-        GARCH & EGARCH & -8,448184 & -8,451241 & 0,003057 & 0,440 & 0,660 \\
+        RF    & GARCH  & $-8{,}456588$ & $-8{,}448184$ & $-0{,}008404$ & $-0{,}827$ & $0{,}408$ \\
+        RF    & EGARCH & $-8{,}456588$ & $-8{,}451241$ & $-0{,}005347$ & $-0{,}525$ & $0{,}600$ \\
+        GARCH & EGARCH & $-8{,}448184$ & $-8{,}451241$ & $0{,}003057$ & $0{,}440$ & $0{,}660$ \\
         \bottomrule
-    \end{tabular}
-    \begin{center}
-        \footnotesize Nota: Todas as comparações utilizam 1.602 observações.
-
-        \footnotesize Fonte: Elaboração própria.
-    \end{center}
+    \end{tabular}%
+    }
+    \par\vspace{2pt}
+    {\footnotesize Nota: Todas as comparações utilizam 1.602 observações.\par}
+    \fonte{Elaboração própria.}
 \end{table}
 
 \section{Diagnóstico da estimação do modelo EGARCH na janela rolante}
 
-\begin{table}[!htbp]
+\begin{table}[H]
     \centering
     \caption{Diagnóstico da estimação do modelo EGARCH na janela rolante}
     \label{tab:diagnostico_egarch_rolante}
@@ -216,7 +216,7 @@
     \end{center}
 \end{table}
 
-\begin{table}[!htbp]
+\begin{table}[H]
     \centering
     \caption{Diagnóstico de uma estimação adicional do EGARCH na janela rolante}
     \label{tab:diagnostico_egarch_adicional}
@@ -246,10 +246,10 @@
 
 \section{Importância das variáveis do Random Forest com janela rolante}
 
-\begin{table}[!htbp]
+\begin{table}[H]
     \centering
-    \caption{Importância das variáveis no modelo Random Forest}
-    \label{tab:importancia_rf}
+    \caption{Importância das variáveis no modelo Random Forest --- janela rolante}
+    \label{tab:importancia_rf_rolante}
     \begin{tabular}{lr}
         \toprule
         Variável & Importância \\
@@ -274,42 +274,42 @@
 \FloatBarrier
 \section{Resultados completos do teste Diebold-Mariano com janela rolante}
 
-\begin{table}[!htbp]
+\begin{table}[H]
     \centering
-    \caption{Resultados completos do teste Diebold-Mariano para MSE — janela rolante}
+    \caption{Resultados completos do teste Diebold--Mariano para MSE --- janela rolante}
     \label{tab:dm_mse_rolante_completo}
     \small
+    \resizebox{\textwidth}{!}{%
     \begin{tabular}{llrrrrr}
         \toprule
         Modelo A & Modelo B & Perda média A & Perda média B &
         Diferença média & DM-HLN & $p$-valor \\
         \midrule
-        RF & GARCH & $2,6998 \times 10^{-8}$ & $2,6144 \times 10^{-8}$ & $8,5353 \times 10^{-10}$ & 2,547 & 0,011 \\
+        RF & GARCH & $2{,}6998 \times 10^{-8}$ & $2{,}6144 \times 10^{-8}$ & $8{,}5353 \times 10^{-10}$ & $2{,}547$ & $0{,}011$ \\
         \bottomrule
-    \end{tabular}
-    \begin{center}
-        \footnotesize Nota: A comparação utiliza 1.602 observações.
-
-        \footnotesize Fonte: Elaboração própria.
-    \end{center}
+    \end{tabular}%
+    }
+    \par\vspace{2pt}
+    {\footnotesize Nota: A comparação utiliza 1.602 observações.\par}
+    \fonte{Elaboração própria.}
 \end{table}
 
-\begin{table}[!htbp]
+\begin{table}[H]
     \centering
-    \caption{Resultados completos do teste Diebold-Mariano para QLIKE — janela rolante}
+    \caption{Resultados completos do teste Diebold-Mariano para QLIKE --- janela rolante}
     \label{tab:dm_qlike_rolante_completo}
     \small
+    \resizebox{\textwidth}{!}{%
     \begin{tabular}{llrrrrr}
         \toprule
         Modelo A & Modelo B & Perda média A & Perda média B &
         Diferença média & DM-HLN & $p$-valor \\
         \midrule
-        RF & GARCH & -8,434652 & -8,458051 & 0,023399 & 2,376 & 0,018 \\
+        RF & GARCH & $-8{,}434652$ & $-8{,}458051$ & $0{,}023399$ & $2{,}376$ & $0{,}018$ \\
         \bottomrule
-    \end{tabular}
-    \begin{center}
-        \footnotesize Nota: A comparação utiliza 1.602 observações.
-
-        \footnotesize Fonte: Elaboração própria.
-    \end{center}
+    \end{tabular}%
+    }
+    \par\vspace{2pt}
+    {\footnotesize Nota: A comparação utiliza 1.602 observações.\par}
+    \fonte{Elaboração própria.}
 \end{table}
