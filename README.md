@@ -11,11 +11,17 @@
 
 <br>
 
-> *Repositório de pesquisa acadêmica para o Trabalho de Conclusão de Curso em Ciências Econômicas — 7º Semestre, Ibmec-DF.*
+> Repositório de pesquisa acadêmica desenvolvido no âmbito do Trabalho de Conclusão de Curso em Ciências Econômicas — Ibmec Brasília.
 
 ---
 
 ## 📌 Sobre a Pesquisa
+
+Este trabalho investiga o desempenho preditivo de diferentes abordagens na previsão da volatilidade cambial, utilizando como objeto de estudo a taxa de câmbio USD/BRL.
+
+A pesquisa compara duas perspectivas metodológicas: modelos econométricos tradicionais, baseados em estruturas paramétricas de volatilidade condicional (*model-based*), e métodos de aprendizado de máquina (*data-driven*).
+
+A análise empírica compara o desempenho preditivo das diferentes abordagens fora da amostra (*out-of-sample*), considerando diferentes procedimentos de estimação e atualização dos modelos, sem pressupor a superioridade de uma classe de modelos sobre a outra.
 
 <table>
 <tr>
@@ -23,40 +29,81 @@
 <td>Camila Sabino Ribeiro</td>
 </tr>
 <tr>
+<td><b>Orientador</b></td>
+<td>Laerte Jun Takeuti</td>
+</tr>
+<tr>
 <td><b>Instituição</b></td>
-<td><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3JRcLjIIgjZMb_mnEyxHUWgT-Zla-HZXgsg&s" height="20px" /> Ibmec-DF</td>
+<td>Ibmec Brasília</td>
 </tr>
 <tr>
 <td><b>Curso</b></td>
-<td>Ciências Econômicas — 8º Semestre</td>
+<td>Ciências Econômicas</td>
 </tr>
 <tr>
 <td><b>Área</b></td>
-<td>Métodos Quantitativos · Finanças · Microeconomia Aplicada</td>
+<td>Econometria Financeira · Séries Temporais · Machine Learning</td>
 </tr>
 <tr>
-<td><b>Status</b></td>
-<td>🏃 Avançado </td>
+<td><b>Objeto de estudo</b></td>
+<td>Volatilidade da taxa de câmbio USD/BRL</td>
+</tr>
+<tr>
+<td><b>Período amostral</b></td>
+<td>Janeiro de 2000 a maio de 2026</td>
 </tr>
 </table>
 
 ## 🔬 Escopo Metodológico
 
-Esta pesquisa aborda a **previsão de volatilidade de ativos financeiros** na interseção entre **econometria de séries temporais** e **machine learning**. A abordagem empírica utiliza dados cambiais de alta frequência obtidos de fontes oficiais globais para modelar e comparar o desempenho preditivo de abordagens tradicionais e computacionais.
+A estratégia empírica está estruturada na comparação entre abordagens *model-based* e *data-driven* para a previsão da volatilidade cambial.
 
-### Ferramental Analítico e Econométrico
+### Modelos estimados
 
-| Método / Técnica | Aplicação no Projeto |
+| Modelo            | Abordagem   | Aplicação                                                                        |
+| :---------------- | :---------- | :------------------------------------------------------------------------------- |
+| **GARCH(1,1)**    | Model-based | Modelagem da volatilidade condicional                                            |
+| **EGARCH(1,1)**   | Model-based | Modelagem da assimetria nos efeitos dos choques sobre a volatilidade             |
+| **Random Forest** | Data-driven | Aprendizado de relações não lineares entre variáveis explicativas e volatilidade |
+
+### Estratégia de avaliação
+
+A avaliação considera previsões fora da amostra (*out-of-sample*), utilizando diferentes procedimentos de estimação e atualização dos modelos.
+
+As métricas de desempenho incluem:
+
+- **MSE** — Mean Squared Error;
+- **RMSE** — Root Mean Squared Error;
+- **MAE** — Mean Absolute Error;
+- **QLIKE** — Quasi-Likelihood Loss.
+
+A comparação estatística entre as previsões é realizada por meio do teste de Diebold-Mariano.
+
+Também é conduzida uma análise de robustez com janela móvel (*rolling window*) de cinco anos.
+
+### Fonte de dados
+
+**FRED — Federal Reserve Economic Data**
+
+- Série: `DEXBZUS`;
+- Variável: taxa de câmbio entre o dólar americano e o real brasileiro;
+- Frequência: diária;
+- Período: janeiro de 2000 a maio de 2026.
+
+---
+
+## 📁 Dados da Pesquisa
+
+Os dados utilizados na análise empírica estão organizados no diretório `DATA/`, dividido entre dados originais (`RAW`) e dados processados (`PROCESSED`).
+
+| Arquivo | Finalidade |
 | :--- | :--- |
-| **Estatística Descritiva e Momentos** | Análise de distribuição, assimetria, curtose e momentos estatísticos dos retornos |
-| **Testes de Raiz Unitária (ADF)** | Verificação de estacionariedade da série em nível e em retornos logarítmicos |
-| **Testes de Autocorrelação e ARCH** | Diagnóstico de dependência linear (Ljung-Box) e detecção de efeitos ARCH nos resíduos |
-| **Modelos GARCH / Volatilidade Condicional** | Estimação paramétrica da volatilidade com distribuições condicionais (ex.: Student-t) |
-| **Random Forest & Walk-Forward** | Abordagem de aprendizado de máquina com validação temporal cruzada (*walk-forward*) |
+| `cambio_usdbrl.csv` (RAW) | Base original obtida da fonte de dados |
+| `cambio_usdbrl_metadados.txt` | Informações sobre a fonte, série e período |
+| `datas_sem_cotacao.csv` | Registro de datas sem cotação |
+| `cambio_usdbrl.csv` (PROCESSED) | Base tratada utilizada na pesquisa |
 
-### Fontes de Dados
-
-`FRED (Federal Reserve Economic Data)` 
+**Fonte:** Federal Reserve Economic Data (FRED), série `DEXBZUS`.
 
 ---
 
@@ -65,65 +112,105 @@ Esta pesquisa aborda a **previsão de volatilidade de ativos financeiros** na in
 <div align="center">
 
 ![Python](https://img.shields.io/badge/Python-1a0a0a?style=for-the-badge&logo=python&logoColor=ffdd54)
-![R](https://img.shields.io/badge/R-3d1515?style=for-the-badge&logo=r&logoColor=f5c0c0)
-![Jupyter](https://img.shields.io/badge/Jupyter-6b2020?style=for-the-badge&logo=jupyter&logoColor=F37626)
 ![Git](https://img.shields.io/badge/Git-1a0a0a?style=for-the-badge&logo=git&logoColor=F05032)
-![VS Code](https://img.shields.io/badge/VS%20Code-3d1515?style=for-the-badge&logo=visual-studio-code&logoColor=007ACC)
 ![LaTeX](https://img.shields.io/badge/LaTeX-6b2020?style=for-the-badge&logo=latex&logoColor=white)
 
 </div>
 
-**Python / R** — Limpeza, manipulação e modelagem econométrica (`pandas`, `statsmodels`, `tidyverse`, `fixest`)  
-**Jupyter Notebooks** — Análise exploratória e reprodutibilidade dos resultados  
-**LaTeX / Markdown** — Redação técnica e formatação da monografia  
-**Git/GitHub** — Controle de versão e rastreabilidade do fluxo de trabalho  
+**Python** — Tratamento de dados, construção de variáveis, estimação dos modelos e avaliação preditiva (`pandas`, `numpy`, `scikit-learn`, `arch`, entre outras bibliotecas).
+
+**LaTeX** — Redação, organização e formatação do trabalho acadêmico.
+
+**Git/GitHub** — Controle de versão, documentação e disponibilização dos códigos e dados da pesquisa.
 
 ---
 
 ## 🗂️ Estrutura do Repositório
 
-```
-📦 tccCamila/
-├── 📁 data/
-│   ├── raw/                 # Bases brutas originais (não modificadas)
-│   └── processed/           # Dados após tratamento e limpeza
-├── 📁 scripts/              # Rotinas de coleta, limpeza e análise
-├── 📁 docs/
-│   ├── references/          # Artigos, livros e base bibliográfica
-│   └── manuscript/          # Roteiro, pré-projeto e versões do texto
-├── 📁 outputs/
-│   ├── figures/             # Gráficos e visualizações exportadas
-│   └── tables/              # Tabelas de resultados (LaTeX/CSV)
-├── 📄 .gitignore
-└── 📄 README.md
+```text
+📦 tcc-economia-ibmec/
+│
+├── 📁 DATA/
+│   ├── 📁 RAW/
+│   │   ├── cambio_usdbrl.csv
+│   │   ├── cambio_usdbrl_metadados.txt
+│   │   └── datas_sem_cotacao.csv
+│   │
+│   └── 📁 PROCESSED/
+│       └── cambio_usdbrl.csv
+│
+├── 📁 DOCS/
+│   ├── 📁 manuscript_latex/
+│   │   ├── 📁 capitulos/
+│   │   ├── tcc_camila.tex
+│   │   └── referencias.bib
+│   │
+│   ├── 📁 manuscript_word/
+│   │
+│   └── 📁 REFERENCES/
+│       └── 📁 pdf/
+│
+├── 📁 OUTPUTS/
+│   ├── 📁 figures/
+│   ├── 📁 TABLES/
+│   └── 📁 results/
+│       └── metricas_desempenho.csv
+│
+├── 📁 SCRIPTS/
+│   ├── 📁 Backtesting/
+│   ├── main.py
+│   ├── data.py
+│   ├── features.py
+│   ├── garch_model.py
+│   ├── random_forest.py
+│   ├── avaliar_resultados.py
+│   ├── testes_estatisticos.py
+│   └── visualizacoes.py
+│
+├── .gitignore
+├── README.md
+├── requirements.txt
+└── configuracao_latex_vscode_windows.md
 ```
 
-### Arquivos-base já preparados
+### Organização dos diretórios
 
-- `docs/manuscript/roteiro_tcc_camila.pdf` para referência inicial do trabalho.
-- `docs/manuscript/plano_de_trabalho.md` para organizar tema, hipótese, dados e cronograma.
-- `scripts/README.md` com convenções mínimas para os scripts do projeto.
+| Diretório          | Descrição                                                 |
+| :----------------- | :-------------------------------------------------------- |
+| `DATA/RAW/`        | Dados originais obtidos na fonte e respectivos metadados  |
+| `DATA/PROCESSED/`  | Dados tratados e preparados para a análise empírica       |
+| `DOCS/`            | Manuscrito, documentação e referências bibliográficas     |
+| `OUTPUTS/figures/` | Figuras e gráficos produzidos pela análise                |
+| `OUTPUTS/TABLES/`  | Tabelas geradas para apresentação dos resultados          |
+| `OUTPUTS/results/` | Resultados das estimações e métricas de desempenho        |
+| `SCRIPTS/`         | Códigos de tratamento, modelagem, backtesting e avaliação |
 
 ---
 
-## 📅 Cronograma de Desenvolvimento
+## 📊 Resultados e Reprodutibilidade
 
-<div align="center">
+Os resultados produzidos durante a pesquisa estão organizados no diretório `OUTPUTS/`.
 
-| Etapa | Descrição | Status |
-| :--- | :--- | :---: |
-| **01 · Estruturação** | Criação do repositório e organização de pastas | ✅ |
-| **02 · Definição do Tema** | Escolha do recorte e alinhamento com orientador | 🏃 |
-| **03 · Revisão Bibliográfica** | Levantamento teórico e estado da arte | ✅ |
-| **04 · Coleta de Dados** | Obtenção das bases brutas nas fontes primárias | ✅ |
-| **05 · Tratamento de Dados** | Limpeza, merge e construção das variáveis | 🏃 |
-| **06 · Análise Exploratória** | Estatísticas descritivas e visualizações iniciais | 🏃 |
-| **07 · Modelagem** | Estimação e validação dos modelos econométricos | 🏃 |
-| **08 · Redação Final** | Escrita da monografia e revisão | 🏃 |
+Os arquivos incluem:
 
-`✅ Concluído` · `🏃 Em progresso` · `⏳ Pendente`
+- Métricas de desempenho preditivo dos modelos;
+- Previsões geradas pelas estimações;
+- Resultados das especificações com janela expansiva e janela móvel;
+- Figuras e tabelas utilizadas na análise empírica.
 
-</div>
+Os códigos responsáveis pelos procedimentos estão disponíveis em `SCRIPTS/`, permitindo consultar as etapas de preparação dos dados, construção das variáveis, estimação e avaliação dos modelos.
+
+As dependências necessárias para execução dos códigos são documentadas em `requirements.txt`.
+
+---
+
+## 📚 Referências Bibliográficas
+
+As referências utilizadas na pesquisa estão organizadas no arquivo `referencias.bib`, localizado em:
+
+`DOCS/manuscript_latex/referencias.bib`
+
+A base bibliográfica contempla trabalhos sobre modelagem da volatilidade, econometria financeira, aprendizado de máquina e avaliação de previsões.
 
 ---
 
@@ -138,4 +225,4 @@ Esta pesquisa aborda a **previsão de volatilidade de ativos financeiros** na in
 
 <br>
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:6b2020,50:3d1515,100:1a0a0a&height=100&section=footer" width="100%" />
+<img src="[https://capsule-render.vercel.app/api?type=waving&color=0:6b2020,50:3d1515,100:1a0a0a&height=100&section=footer](https://capsule-render.vercel.app/api?type=waving\&color=0:6b2020,50:3d1515,100:1a0a0a\&height=100\&section=footer)" width="100%" />
