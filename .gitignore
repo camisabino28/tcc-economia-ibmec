@@ -16,7 +16,7 @@ venv/
 .RData
 .Rproj.user/
 
-# LaTeX
+# LaTeX - arquivos auxiliares
 *.aux
 *.bbl
 *.bcf
@@ -30,13 +30,23 @@ venv/
 *.run.xml
 *.synctex.gz
 *.toc
-docs/manuscript/build/
-docs/manuscript/*.pdf
-docs/manuscript_latex/build/
-docs/manuscript_latex/*.pdf
+*.synctex(busy)
 
-# Project outputs
-outputs/figures/*.png
-outputs/figures/*.pdf
-outputs/tables/*.csv
-outputs/tables/*.tex
+# PDFs gerados do manuscrito
+/DOCS/manuscript_latex/*.pdf
+/DOCS/manuscript_word/*.pdf
+
+# PDFs de artigos e referências
+/DOCS/REFERENCES/pdf/
+
+# Resultados gráficos gerados
+/OUTPUTS/figures/*.png
+/OUTPUTS/figures/*.pdf
+
+# Tabelas geradas
+/OUTPUTS/TABLES/*.csv
+/OUTPUTS/TABLES/*.tex
+
+# Arquivos temporários
+*.tmp
+*.bak

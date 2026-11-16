@@ -1,0 +1,6 @@
+Fonte: FRED (Federal Reserve Bank of St. Louis)
+Serie: DEXBZUS
+Data do download: 2026-10-23
+Inicio solicitado: 2000-01-01
+Fim solicitado: 2026-05-31
+Ultima observacao disponivel: 2026-05-29
