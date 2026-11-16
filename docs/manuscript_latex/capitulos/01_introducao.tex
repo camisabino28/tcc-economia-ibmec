@@ -12,13 +12,13 @@ da estrutura de risco de mercado, reforçaram a utilização do Expected Shortfa
 a importância de estimativas adequadas da volatilidade \cite{bcbs2019minimum}.
 
 Entretanto, séries de retornos financeiros apresentam características que dificultam a modelagem
-estatística convencional, incluindo heterocedasticidade condicional, clustering de volatilidade, distribuições com caudas pesadas
+estatística convencional, incluindo heterocedasticidade condicional, \textit{clustering} de volatilidade, distribuições com caudas pesadas
 e evidências de assimetria na resposta da volatilidade a choques de mercado \cite{fama1965behavior,akgiray1989conditional}. Essas propriedades motivaram 
-o desenvolvimento de duas abordagens distintas para a previsão de volatilidade. A primeira, denominada model-based, fundamenta-se em estruturas 
-paramétricas previamente especificadas, que representam a dinâmica da volatilidade por meio de formas funcionais definidas. A segunda, denominada data-driven, utiliza algoritmos que aprendem padrões e relações diretamente dos dados, sem exigir a especificação prévia de uma estrutura paramétrica para a variável modelada. A comparação entre esses dois paradigmas constitui o 
+o desenvolvimento de duas abordagens distintas para a previsão de volatilidade. A primeira, denominada \textit{model-based}, fundamenta-se em estruturas 
+paramétricas previamente especificadas, que representam a dinâmica da volatilidade por meio de formas funcionais definidas. A segunda, denominada \textit{data-driven}, utiliza algoritmos que aprendem padrões e relações diretamente dos dados, sem exigir a especificação prévia de uma estrutura paramétrica para a variável modelada. A comparação entre esses dois paradigmas constitui o 
 objeto central deste trabalho.
 
-No paradigma model-based, a família de modelos GARCH (Generalized Autoregressive Conditional Heteroskedasticity), introduzida por \textcite{engle1982autoregressive} e generalizada 
+No paradigma \textit{model-based}, a família de modelos ARCH/GARCH (Autoregressive Conditional Heteroskedasticity / Generalized Autoregressive Conditional Heteroskedasticity), introduzida por \textcite{engle1982autoregressive} e generalizada 
 por \textcite{bollerslev1986generalized}, se consolidou como referência acadêmica e prática ao capturar a persistência e o agrupamento da volatilidade por meio de 
 uma equação paramétrica para a variância condicional. Além disso, extensões como o EGARCH \cite{nelson1991conditional} incorporam efeitos assimétricos, em que choques 
 de sinais opostos e mesma magnitude afetam a volatilidade de forma distinta (em ações, tipicamente choques negativos; no câmbio, depreciações da moeda doméstica). Em comum, esses modelos oferecem estruturas paramétricas 
@@ -29,23 +29,24 @@ A questão central que emerge não é simplesmente qual modelo é superior, mas 
 
 Nesse contexto, a taxa de câmbio USD/BRL constitui um objeto de análise particularmente relevante. O real brasileiro opera sob regime de câmbio flutuante desde 1999 e está sujeito 
 a uma combinação de fatores externos, como variações na política monetária americana e ciclos de aversão ao risco global, e fatores idiossincráticos domésticos, incluindo incerteza 
-fiscal e instabilidade política \cite{bacen2021volatilidade}. Nesse contexto, a volatilidade cambial brasileira está sujeita a diferentes fontes de influência e apresenta episódios de elevada instabilidade, o que torna relevante investigar a capacidade de diferentes abordagens em representar sua dinâmica. Adicionalmente, a ausência de um modelo estrutural amplamente consolidado para explicar as variações cambiais reforça a relevância de investigar empiricamente diferentes abordagens de previsão \cite{bacen2021volatilidade,campani2018forecasting}.
+fiscal e instabilidade política \cite{bacen2021volatilidade}. Ademais, a volatilidade cambial brasileira está sujeita a diferentes fontes de influência e apresenta episódios de elevada instabilidade, o que torna relevante investigar a capacidade de diferentes abordagens em representar sua dinâmica. Adicionalmente, a ausência de um modelo estrutural amplamente consolidado para explicar as variações cambiais reforça a relevância de investigar empiricamente diferentes abordagens de previsão \cite{bacen2021volatilidade,campani2018forecasting}.
 
 
 \section{Pergunta de pesquisa}
-Como se compara o desempenho preditivo das abordagens data-driven (Random Forest) e model-based (GARCH/EGARCH) na previsão da volatilidade diária da taxa de câmbio USD/BRL?
+Como se compara o desempenho preditivo das abordagens \textit{data-driven} (Random Forest) e \textit{model-based} (GARCH/EGARCH) na previsão da volatilidade diária da taxa de câmbio USD/BRL?
 
 \section{Objetivos}
 
 \subsection{Objetivo Geral}
-O objetivo deste estudo é comparar o desempenho preditivo de abordagens model-based (GARCH/EGARCH) e data-driven (Random Forest) na previsão da volatilidade diária da taxa de câmbio USD/BRL, considerando a acurácia das previsões fora da amostra e a significância estatística das diferenças de desempenho.
+O objetivo deste estudo é comparar o desempenho preditivo de abordagens \textit{model-based} (GARCH/EGARCH) e \textit{data-driven} (Random Forest) na previsão da volatilidade diária da taxa de câmbio USD/BRL, considerando a acurácia das previsões fora da amostra e a significância estatística das diferenças de desempenho.
 
 \subsection{Objetivos Específicos}
 Para alcançar o objetivo geral, definem-se os seguintes passos:
 \begin{itemize}
     \item Estimar modelos GARCH(1,1) e EGARCH(1,1) sobre a série de retornos do USD\slash BRL e obter previsões de volatilidade fora da amostra;
-    \item Treinar e calibrar modelo data-driven (Random Forest) com engenharia de features baseada em retornos defasados, proxies de volatilidade;
-    \item Comparar o desempenho preditivo dos modelos por meio de métricas de erro (MSE e QLIKE) e do teste Diebold-Mariano;
+    \item Treinar um modelo \textit{data-driven} (Random Forest) com engenharia de \textit{features} baseada em retornos defasados e proxies de volatilidade;
+    \item Avaliar o desempenho preditivo dos modelos por meio de procedimentos \textit{walk-forward}, considerando janelas expansiva e rolante;
+    \item Comparar o desempenho preditivo dos modelos por meio de métricas de erro (MSE e QLIKE) e do teste Diebold–Mariano.
 \end{itemize}
 
 \section{Justificativa}
@@ -66,7 +67,7 @@ a métodos de aprendizado de máquina nesse mercado.
 
 Diante disso, este trabalho contribui para a literatura ao comparar o desempenho preditivo de modelos econométricos da família GARCH e de uma abordagem de aprendizado de máquina, representada pelo Random 
 Forest, na previsão da volatilidade diária da taxa de câmbio USD/BRL. A comparação considera a acurácia das previsões fora da amostra e a significância estatística das diferenças de desempenho, por meio do 
-teste de Diebold-Mariano, buscando avaliar em que medida as abordagens apresentam resultados distintos na previsão da volatilidade cambial brasileira.
+teste de Diebold–Mariano, buscando avaliar em que medida as abordagens apresentam resultados distintos na previsão da volatilidade cambial brasileira.
 
 \section{Estrutura do trabalho}
 
@@ -78,4 +79,4 @@ os critérios de avaliação e as limitações do estudo. Em seguida, o quarto c
 fontes, a construção das variáveis e o tratamento dos dados. Os resultados são discutidos no quinto capítulo, que compreende a análise descritiva, os
 resultados principais e o teste de robustez com janela rolante de cinco anos, que avalia a sensibilidade dos resultados à estratégia de estimação. Por fim,
 o sexto capítulo apresenta a conclusão, respondendo à pergunta de pesquisa, sintetizando os achados, as contribuições do trabalho e as sugestões para pesquisas futuras. Ao final, são apresentados os apêndices, que reúnem
-resultados e procedimentos complementares à análise empírica, incluindo a declaração de uso de ferramentas de inteligência artificial.
+resultados e procedimentos complementares à análise empírica, bem como informações sobre a disponibilidade dos códigos e dados utilizados na pesquisa.

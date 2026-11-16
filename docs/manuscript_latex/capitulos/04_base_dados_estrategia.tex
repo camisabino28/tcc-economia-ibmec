@@ -1,4 +1,4 @@
-\chapter{Base de Dados e Estrategia Empirica}
+\chapter{Base de Dados e Estratégia Empírica}
 
 Este capítulo apresenta os dados utilizados na análise e os procedimentos adotados para sua preparação. Inicialmente, são descritas a fonte e as características da série histórica 
 da taxa de câmbio USD/BRL, assim como a delimitação do período de estudo. Em seguida, são apresentadas a construção da variável dependente e das variáveis explicativas utilizadas 
@@ -15,7 +15,7 @@ garantir homogeneidade institucional da série. O período cobre episódios rele
 confiança de 2002, a crise financeira global de 2008, a recessão brasileira de 2015-2016, o choque da pandemia de COVID-19 em 2020
  e o ciclo de incerteza fiscal de 2021-2024.
 
-\section{Construcao das variaveis}
+\section{Construção das variáveis}
 
 A variável dependente é a proxy de volatilidade, o retorno ao quadrado ($r_t^2$), em que $r_t = \ln\left(\frac{P_t}{P_{t-1}}\right)$ é o log-retorno diário e $P_t$ é 
 a taxa de câmbio USD/BRL. Para a estimação do GARCH e do EGARCH, os retornos são multiplicados por 100 (pontos percentuais), e as previsões são convertidas de volta à 
@@ -32,10 +32,14 @@ As variáveis explicativas do \textit{Random Forest} são construídas exclusiva
 
 Os modelos da família GARCH utilizam apenas os retornos passados. Não são incluídas variáveis de controle exógenas.
 
+Para facilitar a interpretação das variáveis utilizadas no modelo Random Forest, os nomes apresentados nas tabelas de importância correspondem às seguintes construções: \texttt{ret\_lag1} representa o retorno logarítmico defasado em um período; 
+\texttt{vol\_lag1} representa o retorno ao quadrado defasado em um período (\(r_{t-1}^{2}\)); \texttt{ma\_abs\_5} e \texttt{ma\_abs\_21} correspondem às médias móveis dos retornos absolutos em janelas de 5 e 21 dias, respectivamente; e 
+\texttt{vol\_hist\_21} representa a medida histórica de volatilidade calculada em uma janela de 21 dias.
+
 \section{Tratamento dos dados}
 
 A série bruta foi preservada sem alterações, com as observações ausentes mantidas, e as datas sem cotação foram registradas em arquivo separado (269 datas). Essas datas foram excluídas da amostra, sem interpolação, 
-e o retorno foi calculado entre observações consecutivas disponíveis. Assim, um retorno que atravessa um fim de semana ou feriado cobre mais de um dia corrido. Foi verificado, também, a ausência de datas duplicadas 
+e o retorno foi calculado entre observações consecutivas disponíveis. Assim, um retorno que atravessa um fim de semana ou feriado cobre mais de um dia corrido. Foi verificada, também, a ausência de datas duplicadas 
 e a ordenação cronológica, e a amostra foi truncada em 31 de maio de 2026, com última observação em 29 de maio. Não foram aplicados filtros de exclusão de outliers.
 
 Os códigos em Python e os dados utilizados neste trabalho estão disponíveis

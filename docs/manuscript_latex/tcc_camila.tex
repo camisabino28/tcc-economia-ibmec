@@ -11,7 +11,7 @@
 % (o manual recomenda). Se for entregar só em PDF/uma face, troque por:
 % \documentclass[12pt,a4paper,oneside,openany]{report}
 % e, no geometry, use "left=3cm,right=2cm" no lugar de inner/outer.
-\documentclass[12pt,a4paper,twoside,openright]{report}
+\documentclass[12pt,a4paper,oneside,openany]{report}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -22,7 +22,7 @@
 
 % Margens: anverso esquerda/superior 3 cm, direita/inferior 2 cm;
 % verso direita/superior 3 cm, esquerda/inferior 2 cm.
-\usepackage[a4paper,twoside,inner=3cm,outer=2cm,top=3cm,bottom=2cm,
+\usepackage[a4paper,left=3cm,right=2cm,top=3cm,bottom=2cm,
             headheight=14pt,headsep=0.5cm]{geometry}
 
 \usepackage{setspace}
@@ -44,6 +44,8 @@
 \usepackage{longtable}
 \usepackage{array}
 \usepackage{caption}
+\usepackage{refcount}
+\usepackage{ragged2e}
 
 % Citações e referências no padrão ABNT (biblatex-abnt + Biber).
 % \cite{chave}       -> (AKGIRAY, 1989)
@@ -68,11 +70,11 @@
 \newcommand{\tccinstituicao}{IBMEC BRASÍLIA}
 \newcommand{\tcccurso}{CURSO DE CIÊNCIAS ECONÔMICAS}
 \newcommand{\tccautor}{CAMILA SABINO RIBEIRO}
-\newcommand{\tcctitulo}{Abordagens model-based e data-driven na previsão da volatilidade cambial: evidências para a taxa USD/BRL}
+\newcommand{\tcctitulo}{Abordagens \textit{model-based} e \textit{data-driven} na previsão da volatilidade cambial: evidências para a taxa USD/BRL}
 \newcommand{\tccsubtitulo}{}            % se houver; sai após dois pontos
 \newcommand{\tcclocal}{BRASÍLIA}
 \newcommand{\tccano}{2026}
-\newcommand{\tccorientador}{Prof. [Esp./Ms./Dr.] Laerte Jun Takeuti}
+\newcommand{\tccorientador}{Prof. MSc. Laerte Jun Takeuti}
 \newcommand{\tccnatureza}{Trabalho de Conclusão de Curso apresentado ao curso
 de Ciências Econômicas do Ibmec Brasília, como requisito parcial para a
 obtenção do grau de Bacharel em Ciências Econômicas.}
@@ -123,9 +125,17 @@ obtenção do grau de Bacharel em Ciências Econômicas.}
 %%  quinária:    normal, caixa baixa
 %%  sem número (resumo, sumário, referências...): centralizado, negrito, caixa alta
 %% ----------------------------------------------------------------------
-\titleformat{\chapter}[hang]{\normalfont\normalsize\bfseries}{\thechapter}{0.5em}{\MakeUppercase}
+\titleformat{\chapter}[hang]
+  {\normalfont\normalsize\bfseries}
+  {\thechapter\label{autochap:\thechapter}}
+  {0.5em}
+  {\MakeUppercase}
 \titleformat{name=\chapter,numberless}[block]{\normalfont\normalsize\bfseries\centering}{}{0pt}{\MakeUppercase}
-\titleformat{\section}[hang]{\normalfont\normalsize}{\thesection}{0.5em}{\MakeUppercase}
+\titleformat{\section}[hang]
+  {\normalfont\normalsize}
+  {\thesection\label{autosec:\thesection}}
+  {0.5em}
+  {\MakeUppercase}
 \titleformat{\subsection}[hang]{\normalfont\normalsize\bfseries}{\thesubsection}{0.5em}{}
 \titleformat{\subsubsection}[hang]{\normalfont\normalsize\itshape}{\thesubsubsection}{0.5em}{}
 \titleformat{\paragraph}[hang]{\normalfont\normalsize}{\theparagraph}{0.5em}{}
@@ -165,7 +175,7 @@ obtenção do grau de Bacharel em Ciências Econômicas.}
 \newcommand{\paginacaonumerada}{%
   \fancypagestyle{plain}{%
     \fancyhf{}%
-    \fancyhead[RO,LE]{\footnotesize\thepage}%
+    \fancyhead[R]{\footnotesize\thepage}%
     \renewcommand{\headrulewidth}{0pt}\renewcommand{\footrulewidth}{0pt}}%
   \pagestyle{plain}}
 
@@ -214,11 +224,12 @@ obtenção do grau de Bacharel em Ciências Econômicas.}
   {\tcctitulocompleto\par}
 \end{center}
 \vspace{2cm}
-\hfill\begin{minipage}{0.5\textwidth}% do meio da página para a margem direita
-  \singlespacing\raggedright\normalfont
-  \tccnatureza\par
+\hfill
+\begin{minipage}{0.5\textwidth}
+  \singlespacing\normalfont\justifying
+  \noindent\tccnatureza\par
   \vspace{\baselineskip}
-  Orientador: \tccorientador.
+  \noindent Orientador: \tccorientador.
 \end{minipage}
 \vfill
 \begin{center}\bfseries\singlespacing
@@ -227,14 +238,34 @@ obtenção do grau de Bacharel em Ciências Econômicas.}
 \end{center}
 \newpage
 
-%% --- VERSO DA FOLHA DE ROSTO: FICHA CATALOGRÁFICA --------------------
-% Substitua pela ficha gerada pela biblioteca (fonte 10, espaço simples).
+%% --- FICHA CATALOGRÁFICA (página seguinte à folha de rosto) ----------
 \thispagestyle{empty}
 \vspace*{\fill}
 \begin{center}
-\fbox{\begin{minipage}{12.5cm}\footnotesize\singlespacing\raggedright
-  [Inserir aqui a ficha catalográfica fornecida pela Biblioteca]
-\end{minipage}}
+\begin{minipage}{\textwidth}
+\footnotesize\singlespacing\centering
+Dados Internacionais de Catalogação na Publicação\\
+Faculdade Ibmec do Distrito Federal\\
+Gerado automaticamente mediante os dados fornecidos pelo(a) autor(a)\par
+\vspace{3pt}\hrule\vspace{12pt}
+\raggedright
+\noindent\begin{minipage}[t]{1.6cm}R484a\end{minipage}%
+\begin{minipage}[t]{\dimexpr\textwidth-1.6cm\relax}
+\setlength{\parindent}{0.5cm}\raggedright
+\noindent Ribeiro, Camila Sabino.\par
+Abordagens model-based e data-driven na previsão da volatilidade cambial:
+evidências para a taxa USD/BRL / Camila Sabino Ribeiro. - 2026.\par
+61 f.: il. color.\par
+\vspace{\baselineskip}
+Trabalho de Conclusão de Curso (Graduação) - Faculdade Ibmec do Distrito
+Federal, Graduação em Ciências Econômicas, Campus Ibmec DF, Brasília, 2026\par
+Orientador: Prof. Me. Laerte Jun Takeuti.\par
+\vspace{\baselineskip}
+1. Volatilidade cambial. 2. Previsão de volatilidade. 3. GARCH.
+4. Random Forest. 5. Aprendizado de máquina.
+\end{minipage}
+\vspace{6pt}\hrule
+\end{minipage}
 \end{center}
 \newpage
 
@@ -251,11 +282,12 @@ obtenção do grau de Bacharel em Ciências Econômicas.}
   {\tcctitulocompleto\par}
 \end{center}
 \vspace{1.5cm}
-\hfill\begin{minipage}{0.5\textwidth}
-  \singlespacing\raggedright\normalfont
-  \tccnatureza\par
+\hfill
+\begin{minipage}{0.5\textwidth}
+  \singlespacing\normalfont\justifying
+  \noindent\tccnatureza\par
   \vspace{\baselineskip}
-  Orientador: \tccorientador.
+  \noindent Orientador: \tccorientador.
 \end{minipage}
 \vspace{1.5cm}
 
@@ -264,25 +296,34 @@ obtenção do grau de Bacharel em Ciências Econômicas.}
 \vspace{1cm}
 \begin{center}\bfseries BANCA EXAMINADORA\end{center}
 \assinatura{\tccorientador\ (Orientador)}{Ibmec Brasília}
-\assinatura{Prof. [titulação] [Nome do examinador 1]}{[Instituição]}
-\assinatura{Prof. [titulação] [Nome do examinador 2]}{[Instituição]}
+\assinatura{Prof. Dr. Raphael Rocha Gouvea}{Ibmec Brasília}
 \newpage
 
 %% --- DEDICATÓRIA / AGRADECIMENTOS / EPÍGRAFE (opcionais) --------------
-% \chapter*{Agradecimentos}
-% Texto dos agradecimentos.
-% \newpage
+\chapter*{Agradecimentos}
+À minha mãe, Kellen, aos meus avós, Magna e Elcio, e à minha tia, Mariana, meu muito obrigada por todo o amor, por estarem sempre ao meu lado e por tornarem esta caminhada mais leve.
+
+Ao meu orientador, Professor Laerte, pela paciência, pelas trocas e por toda a ajuda na condução deste trabalho. Sua orientação foi essencial para que esta pesquisa ganhasse forma.
+
+Um agradecimento especial ao Professor Raphael, por ter me aberto as portas e confiado no meu potencial ao me dar a oportunidade de trabalhar como sua assistente de pesquisa. A vivência ao seu lado fez toda a diferença no meu desenvolvimento.
+
+A todos que dividiram comigo os desafios e as alegrias desta etapa, o meu sincero obrigado.
+\newpage
+
+%% --- DECLARAÇÃO DE USO DE IA -----------------------------------------
+\cleardoublepage
+\subimport{capitulos/}{09_declaracao_ia.tex}
 
 %% --- RESUMO (150 a 500 palavras, parágrafo único, espaço simples) ----
 \cleardoublepage
 \chapter*{Resumo}
 \begin{singlespace}\noindent
 A previsão da volatilidade cambial é relevante para a mensuração de riscos financeiros e a tomada de decisões nos mercados. 
-Nesse contexto, este trabalho compara o desempenho preditivo de abordagens model-based e data-driven na previsão da volatilidade 
+Nesse contexto, este trabalho compara o desempenho preditivo de abordagens \textit{model-based} e \textit{data-driven} na previsão da volatilidade 
 diária da taxa de câmbio USD/BRL. Para isso, são estimados os modelos GARCH(1,1), EGARCH(1,1) e Random Forest, utilizando dados 
 diários da série cambial obtida no Federal Reserve Bank of St. Louis (FRED), referentes ao período de janeiro de 2000 a maio de 2026. 
 A volatilidade é representada pelo quadrado dos retornos logarítmicos diários, e as previsões são avaliadas fora da amostra por meio das 
-métricas MSE, RMSE, MAE e QLIKE e do teste de Diebold-Mariano. Na janela expansiva, o Random Forest apresentou os menores valores de MSE, 
+métricas MSE, RMSE, MAE e QLIKE e do teste de Diebold–Mariano. Na janela expansiva, o Random Forest apresentou os menores valores de MSE, 
 RMSE e QLIKE, enquanto o EGARCH obteve o menor MAE. Entretanto, não foram identificadas diferenças estatisticamente significativas entre os 
 modelos. Na análise de robustez com janela rolante de cinco anos, o GARCH apresentou os melhores resultados em todas as métricas, com 
 diferenças significativas em relação ao Random Forest para MSE e QLIKE. Os resultados indicam que a flexibilidade dos métodos de aprendizado 
@@ -297,10 +338,10 @@ de máquina não garante ganhos preditivos e que o desempenho relativo das abord
 \chapter*{Abstract}
 \begin{singlespace}\noindent
 Predicting exchange rate volatility is relevant for financial risk measurement and decision-making. In this context, this study compares the 
-predictive performance of model-based and data-driven approaches in forecasting the daily volatility of the USD/BRL exchange rate. To this end, 
+predictive performance of \textit{model-based} and \textit{data-driven} approaches in forecasting the daily volatility of the USD/BRL exchange rate. To this end, 
 the GARCH(1,1), EGARCH(1,1), and Random Forest models are estimated using daily exchange rate data obtained from the Federal Reserve Bank of St. 
 Louis (FRED), covering the period from January 2000 to May 2026. Volatility is represented by squared daily log returns, and the forecasts are 
-evaluated out of sample using the MSE, RMSE, MAE, and QLIKE metrics, as well as the Diebold-Mariano test. Under the expanding window, Random Forest 
+evaluated out of sample using the MSE, RMSE, MAE, and QLIKE metrics, as well as the Diebold–Mariano test. Under the expanding window, Random Forest 
 achieved the lowest MSE, RMSE, and QLIKE values, while EGARCH yielded the lowest MAE. However, no statistically significant differences were found 
 among the models. In the five-year rolling window robustness analysis, GARCH achieved the best results across all metrics, with statistically 
 significant differences relative to Random Forest for MSE and QLIKE. The results indicate that the flexibility of machine learning methods does not 
@@ -344,6 +385,5 @@ guarantee predictive gains and that the relative performance of the approaches d
 %% --- APÊNDICES ---------------------------------------------------------
 \iniciarapendices
 \subimport{capitulos/}{08_apendice.tex}
-\subimport{capitulos/}{09_declaracao_ia.tex}
 
 \end{document}

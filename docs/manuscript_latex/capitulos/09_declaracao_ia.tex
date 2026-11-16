@@ -1,13 +1,12 @@
 %% ======================================================================
-%% Declaração de uso de inteligência artificial
-%% Salve em capitulos/09_declaracao_ia.tex
+%% Declaração de utilização de ferramentas de IA generativa no TCC
+%% Salve em capitulos/09_declaracao_ia.tex (substitui o anterior).
 %%
-%% Como preencher:
-%%  - Troque \caixa por \marcada nas opções que SE APLICAM ao seu trabalho.
-%%  - Escreva o nome da ferramenta na 3ª coluna da linha correspondente.
-%%  - Descreva outros usos no quadro final, se houver.
-%% O formulário é uma declaração de responsabilidade: marque somente o que
-%% realmente aconteceu.
+%% PÁGINAS AUTOMÁTICAS: este arquivo usa rótulos que são criados sozinhos
+%% pelos títulos de capítulo e seção. Para isso, no tcc_camila.tex, as
+%% linhas \titleformat{\chapter} e \titleformat{\section} (versões com
+%% número) precisam ter o \label dentro do campo do número, como explicado
+%% na mensagem. Não é preciso editar os arquivos de capítulo.
 %% ======================================================================
 
 \newcommand{\caixa}{$\square$}      % caixa vazia
@@ -15,15 +14,34 @@
 \newcommand{\linhaia}[4]{#1 & #2\newline\textit{Exemplos: #3} & #4 \\ \hline}
 \newcommand{\blocoia}[1]{\hline\multicolumn{3}{|c|}{\textbf{#1}} \\ \hline}
 
-\chapter{Declaração de uso de inteligência artificial}
-\label{ap:declaracao_ia}
+% Trechos revisados/reformulados com IA para dar fluidez ao texto.
+% Capítulos 2 e 5 inteiros: da 1ª página do capítulo até a página anterior
+% ao início do capítulo seguinte.
+\newcommand{\trechosia}{%
+  Seções~\ref{autosec:1.1} (p.~\pageref{autosec:1.1}),
+  \ref{autosec:1.4} (p.~\pageref{autosec:1.4}),
+  \ref{autosec:3.3} (p.~\pageref{autosec:3.3}),
+  \ref{autosec:3.4} (p.~\pageref{autosec:3.4}) e
+  \ref{autosec:6.1} (p.~\pageref{autosec:6.1});
+  Capítulo~2 inteiro (p.~\pageref{autochap:2}--\the\numexpr\getpagerefnumber{autochap:3}-1\relax);
+  Capítulo~5 inteiro (p.~\pageref{autochap:5}--\the\numexpr\getpagerefnumber{autochap:6}-1\relax).}
+
+\chapter*{Declaração de utilização de ferramentas de Inteligência Artificial Generativa na confecção do TCC}
+\thispagestyle{empty}
+\pagestyle{empty}
 
 \begin{singlespace}
 \setlength{\parindent}{0pt}
 \footnotesize
 \renewcommand{\arraystretch}{1.25}
 
-\vspace{0.5\baselineskip}
+\noindent Eu, Camila Sabino Ribeiro, aluna do Ibmec sob matrícula 202303161107,
+autora do Trabalho de Conclusão de Curso de Pesquisa, sob título
+\textit{\tcctitulo}, sob orientação do(a) professor(a) Laerte Jun Takeuti,
+declaro que utilizei ferramentas de Inteligência Artificial generativa (IA) no
+processo de elaboração do manuscrito submetido, conforme detalho abaixo:\par
+
+\vspace{1\baselineskip}
 \noindent\textbf{PARTE A -- USO DE INTELIGÊNCIA ARTIFICIAL NO TCC}\par
 \vspace{0.4\baselineskip}
 \noindent Informe abaixo se utilizou ou não ferramentas de Inteligência Artificial (IA) na elaboração deste trabalho:\par
@@ -32,7 +50,7 @@
 \noindent\begin{tabular}{|>{\centering\arraybackslash}p{0.6cm}|p{14.3cm}|}
 \hline
 \caixa & NÃO utilizei nenhuma ferramenta de IA na elaboração deste trabalho. \\ \hline
-\marcada & SIM, utilizei ferramenta(s) de IA. Preencha as partes B e C abaixo. \\ \hline
+\marcada & SIM, utilizei ferramenta(s) de IA. Preencha as partes B, C e D abaixo. \\ \hline
 \end{tabular}
 
 \vspace{1\baselineskip}
@@ -112,14 +130,52 @@
         {}
 
 \blocoia{5. OUTROS USOS}
-\marcada & Outro uso não listado acima (descreva no campo abaixo) & \\ \hline
+\marcada & Outro uso não listado acima (descreva na Parte D) & Claude e ChatGPT \\ \hline
 \end{longtable}
 
-\vspace{0.5\baselineskip}
-\noindent Descrição de outro uso e/ou scripts (se aplicável):\par
+%% ----------------------------------------------------------------------
+%% PARTE C - trechos do texto final e observações (modelo do Ibmec)
+%% ----------------------------------------------------------------------
+\vspace{1\baselineskip}
+\noindent\textbf{PARTE C -- TRECHOS DO TEXTO FINAL CONSTRUÍDOS A PARTIR DA FERRAMENTA (INDICAÇÃO DE PÁGINAS)}\par
+\vspace{0.4\baselineskip}
+\noindent Em todos os casos, o conteúdo intelectual e a redação original do
+texto são de minha autoria. A IA foi usada para revisar e reformular frases
+já escritas por mim, e \textbf{não} para gerar texto a partir de instruções.\par
 \vspace{0.4\baselineskip}
 
-% --- Parte 1: texto curto ---
+\noindent\begin{longtable}{|p{2.2cm}|p{3.1cm}|p{4.6cm}|p{4.0cm}|}
+\hline
+\textbf{Ferramenta(s)} & \textbf{Etapa do trabalho} &
+\textbf{Trechos do texto final (páginas)} & \textbf{Observações importantes} \\ \hline
+\endfirsthead
+\hline
+\textbf{Ferramenta(s)} & \textbf{Etapa do trabalho} &
+\textbf{Trechos do texto final (páginas)} & \textbf{Observações importantes} \\ \hline
+\endhead
+Claude e Gemini & Revisão gramatical e ortográfica & Todo o documento &
+Revisão de frases já escritas por mim; sem geração de texto a partir de instruções. \\ \hline
+Claude e ChatGPT & Melhoria da clareza e fluidez & \trechosia &
+Reformulação de frases já redigidas por mim e retirada de juízos de valor que não cabiam no texto, principalmente nos Capítulos 2 e 5. No Capítulo 5, também usei a IA para dar mais fluidez ao texto que acompanha os resultados. Como não guardei os rascunhos originais, indico as seções de que me lembro e, nos Capítulos 2 e 5, a totalidade das páginas dos capítulos como referência. \\ \hline
+ChatGPT e Gemini & Estruturação inicial ou esboço de seções & Capítulos 2, 3 e 5 e Apêndices &
+Sugestão de organização das seções; o texto de cada seção foi redigido por mim. \\ \hline
+NotebookLM & Resumos de textos científicos & Não se aplica &
+Apoio à leitura; as fontes foram conferidas diretamente no PDF do texto original. \\ \hline
+Claude e ChatGPT & Busca e identificação de fontes & Não se aplica &
+Sugestões de leitura; as fontes foram conferidas diretamente no PDF do texto original. \\ \hline
+Claude & Formatação (ABNT) e tabelas & Todo o documento &
+Formatação do arquivo em \LaTeX{} e das tabelas, a partir de dados e resultados gerados por mim. \\ \hline
+Claude e ChatGPT & Códigos em Python da análise empírica & Não se aplica ao texto; ver Parte D &
+Resultados do Capítulo 5 e dos Apêndices A e B são gerados por esses scripts. \\ \hline
+\end{longtable}
+
+%% ----------------------------------------------------------------------
+%% PARTE D - descrição de outros usos e scripts
+%% ----------------------------------------------------------------------
+\vspace{1\baselineskip}
+\noindent\textbf{PARTE D -- DESCRIÇÃO DE OUTRO USO E/OU SCRIPTS}\par
+\vspace{0.4\baselineskip}
+
 \noindent Utilizei ferramentas de IA (Claude e ChatGPT) como apoio no
 desenvolvimento dos códigos em Python da análise empírica. Em geral, eu
 tentava escrever o código sozinha e recorria à IA quando encontrava erros ou
@@ -127,13 +183,11 @@ dificuldades. O nível de apoio em cada script está detalhado na tabela
 abaixo. Os resultados foram conferidos por mim.
 \par\vspace{0.5\baselineskip}
 
-% --- Parte 2: legenda dos níveis ---
 \noindent\textbf{Níveis de apoio da IA:} A = escrito por mim, com correções
 pontuais da IA; B = desenvolvido em conjunto; C = escrito majoritariamente
 com a IA a partir das minhas instruções, com revisão e testes meus.
 \par\vspace{0.5\baselineskip}
 
-% --- Parte 3: tabela ---
 \noindent\begin{longtable}{|p{5.4cm}|c|p{8.2cm}|}
 \hline
 \textbf{Script} & \textbf{Nível} & \textbf{Observação} \\ \hline
@@ -154,20 +208,31 @@ com a IA a partir das minhas instruções, com revisão e testes meus.
 \texttt{main.py}                 & A & A IA ajudou apenas com algumas correções nas partes que tinham loop. \\ \hline
 \end{longtable}
 
+%% ----------------------------------------------------------------------
+%% DECLARAÇÃO FINAL (texto do modelo do Ibmec)
+%% ----------------------------------------------------------------------
 \vspace{1.2\baselineskip}
-\noindent\textbf{DECLARAÇÃO DE RESPONSABILIDADE}\par
-\vspace{0.4\baselineskip}
 \noindent\begin{minipage}{\linewidth}\raggedright
-Declaro que as informações prestadas neste formulário são verdadeiras e que
-assumo integral responsabilidade pelo conteúdo intelectual do presente
-trabalho, tendo procedido à revisão e validação crítica de seu conteúdo.
+Declaro ainda que assumo total responsabilidade pelo conteúdo do manuscrito,
+garantindo sua originalidade, precisão, validade e integridade ética, conforme
+previsto no Regimento Interno da Faculdade Ibmec Brasília.
 \end{minipage}
 
-\vspace{2cm}
-\noindent\begin{minipage}[t]{0.45\textwidth}\centering
-  \rule{\linewidth}{0.4pt}\\ Assinatura do(a) discente
-\end{minipage}\hfill
-\begin{minipage}[t]{0.45\textwidth}\centering
-  \rule{\linewidth}{0.4pt}\\ Brasília, \underline{\hspace{0.8cm}} de \underline{\hspace{2cm}} de \underline{\hspace{1cm}}
+\vspace{1\baselineskip}
+
+\begin{center}
+Brasília, \underline{\hspace{0.7cm}}/\underline{\hspace{0.7cm}}/2026.
+
+\vspace{1.8cm}
+
+\begin{minipage}[t]{0.5\textwidth}
+  \centering
+  \rule{\linewidth}{0.4pt}\\
+  Assinatura da(o) aluna(o)
 \end{minipage}
+\end{center}
+
 \end{singlespace}
+
+\clearpage
+\pagestyle{plain}

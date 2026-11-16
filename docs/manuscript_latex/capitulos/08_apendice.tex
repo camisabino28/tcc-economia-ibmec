@@ -6,6 +6,9 @@
     \centering
     \includegraphics[width=0.9\textwidth]{../../../OUTPUTS/figures/decomposicao.png}
     \caption{Decomposição da série cambial USD/BRL}
+    \begin{center}
+    \footnotesize Fonte: Elaboração própria.
+    \end{center}
     \label{fig:decomposicao}
 \end{figure}
 
@@ -13,6 +16,9 @@
     \centering
     \includegraphics[width=0.9\textwidth]{../../../OUTPUTS/figures/acf_pacf.png}
     \caption{Funções de autocorrelação (ACF e PACF) dos retornos e dos retornos ao quadrado}
+    \begin{center}
+    \footnotesize Fonte: Elaboração própria.
+    \end{center}
     \label{fig:acf_pacf}
 \end{figure}
 
@@ -20,6 +26,9 @@
     \centering
     \includegraphics[width=0.9\textwidth]{../../../OUTPUTS/figures/retornos.png}
     \caption{Retornos logarítmicos diários da taxa de câmbio USD/BRL}
+    \begin{center}
+    \footnotesize Fonte: Elaboração própria.
+    \end{center}
     \label{fig:retornos}
 \end{figure}
 
@@ -27,6 +36,9 @@
     \centering
     \includegraphics[width=0.9\textwidth]{../../../OUTPUTS/figures/densidade_retornos.png}
     \caption{Distribuição dos retornos logarítmicos diários do USD/BRL}
+    \begin{center}
+    \footnotesize Fonte: Elaboração própria.
+    \end{center}
     \label{fig:densidade_retornos}
 \end{figure}
 
@@ -70,7 +82,7 @@
 
 \chapter{Resultados complementares dos modelos}
 
-\section{Estimação dos modelos GARCH}
+\section{Estimação do modelo GARCH}
 
 \begin{table}[H]
     \centering
@@ -87,11 +99,15 @@
         \bottomrule
     \end{tabular}
     \begin{center}
-        \footnotesize Fonte: Elaboração própria.
+        \footnotesize
+        Nota: Os parâmetros foram estimados utilizando a amostra completa,
+        de janeiro de 2000 a maio de 2026.
+
+        Fonte: Elaboração própria.
     \end{center}
 \end{table}
 
-\section{Estimação dos modelos EGARCH}
+\section{Estimação do modelo EGARCH}
 
 \begin{table}[H]
     \centering
@@ -109,7 +125,11 @@
         \bottomrule
     \end{tabular}
     \begin{center}
-        \footnotesize Fonte: Elaboração própria.
+        \footnotesize 
+        Nota: Os parâmetros foram estimados utilizando a amostra completa, 
+        de janeiro de 2000 a maio de 2026.
+        
+        Fonte: Elaboração própria.
     \end{center}
 \end{table}
 
@@ -136,11 +156,15 @@
         \bottomrule
     \end{tabular}
     \begin{center}
-        \footnotesize Fonte: Elaboração própria.
+        \footnotesize
+        Nota: As importâncias correspondem ao último modelo estimado 
+        no procedimento \textit{walk-forward} com janela expansiva.
+        
+        Fonte: Elaboração própria.
     \end{center}
 \end{table}
 
-\section{Resultados completos do teste Diebold-Mariano}
+\section{Resultados completos do teste Diebold–Mariano}
 
 \begin{table}[H]
     \centering
@@ -267,12 +291,16 @@
         \bottomrule
     \end{tabular}
     \begin{center}
-        \footnotesize Fonte: Elaboração própria.
+        \footnotesize 
+        Nota: As importâncias correspondem ao último modelo estimado no procedimento 
+        \textit{walk-forward} com janela rolante de cinco anos.
+        
+        Fonte: Elaboração própria.
     \end{center}
 \end{table}
 
 \FloatBarrier
-\section{Resultados completos do teste Diebold-Mariano com janela rolante}
+\section{Resultados completos do teste Diebold–Mariano com janela rolante}
 
 \begin{table}[H]
     \centering
@@ -296,7 +324,7 @@
 
 \begin{table}[H]
     \centering
-    \caption{Resultados completos do teste Diebold-Mariano para QLIKE --- janela rolante}
+    \caption{Resultados completos do teste Diebold–Mariano para QLIKE --- janela rolante}
     \label{tab:dm_qlike_rolante_completo}
     \small
     \resizebox{\textwidth}{!}{%
@@ -313,3 +341,24 @@
     {\footnotesize Nota: A comparação utiliza 1.602 observações.\par}
     \fonte{Elaboração própria.}
 \end{table}
+
+\chapter{Disponibilidade dos códigos e dados da pesquisa}
+\label{ap:repositorio}
+
+Os códigos e as bases de dados utilizados no desenvolvimento desta pesquisa estão disponíveis publicamente no repositório GitHub:
+
+\begin{center}
+    \url{https://github.com/camisabino28/tcc-economia-ibmec}
+\end{center}
+
+O repositório está organizado em diretórios que permitem identificar os dados empregados, os procedimentos computacionais e os resultados obtidos. Sua estrutura está dividida principalmente em:
+
+\begin{itemize}
+    \item \textbf{DATA/}: contém as bases de dados utilizadas na pesquisa. O subdiretório \texttt{RAW/} reúne os dados originais obtidos no Federal Reserve Economic Data (FRED), juntamente com seus metadados e registros de datas sem cotação. O subdiretório \texttt{PROCESSED/} contém a base após os procedimentos de tratamento e preparação para a análise empírica.
+
+    \item \textbf{SCRIPTS/}: reúne os códigos em Python utilizados no tratamento dos dados, construção das variáveis explicativas, estimação dos modelos GARCH, EGARCH e Random Forest, procedimentos de backtesting e avaliação do desempenho preditivo.
+
+    \item \textbf{OUTPUTS/}: contém os resultados produzidos pelos procedimentos computacionais, incluindo métricas de desempenho, previsões dos modelos, tabelas e figuras.
+\end{itemize}
+
+A documentação complementar e o manuscrito da pesquisa estão organizados no diretório \texttt{DOCS/}. Dessa forma, o repositório disponibiliza os dados, os códigos e os resultados necessários para documentar os procedimentos empíricos adotados neste trabalho e possibilitar a reprodução das análises realizadas.

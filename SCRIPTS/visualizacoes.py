@@ -41,6 +41,7 @@ def plot_decomposicao(serie_cambio, period=252, salvar=True):
     )
     fig = result.plot()
     fig.set_size_inches(12, 8)
+    fig.axes[0].set_title("Decomposição da taxa de câmbio USD/BRL")
     plt.tight_layout()
     _salvar_figura("decomposicao", salvar)
     plt.show()
