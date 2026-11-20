@@ -50,3 +50,6 @@ venv/
 # Arquivos temporários
 *.tmp
 *.bak
+
+# Resultados dos modelos
+results/
