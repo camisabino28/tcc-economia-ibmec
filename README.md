@@ -215,7 +215,7 @@ A base bibliográfica contempla trabalhos sobre modelagem da volatilidade, econo
 
 <div align="center">
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Camila%20Sabino-1a0a0a?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/camila-sabino-r-a8919830a/)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Camila%20Sabino-1a0a0a?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/camila-sabino-ribeiro/)
 [![Gmail](https://img.shields.io/badge/Gmail-camilasab2806%40gmail.com-3d1515?style=for-the-badge&logo=gmail&logoColor=white)](mailto:camilasab2806@gmail.com)
 
 </div>
