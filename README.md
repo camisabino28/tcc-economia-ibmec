@@ -5,7 +5,7 @@
 [![Last Commit](https://img.shields.io/github/last-commit/camisabino28/tcc-economia-ibmec?style=flat-square&color=6b2020&label=último%20commit)](https://github.com/camisabino28/tcc-economia-ibmec/commits)
 [![Repo Size](https://img.shields.io/github/repo-size/camisabino28/tcc-economia-ibmec?style=flat-square&color=3d1515&label=tamanho)](https://github.com/camisabino28/tcc-economia-ibmec)
 [![Top Language](https://img.shields.io/github/languages/top/camisabino28/tcc-economia-ibmec?style=flat-square&color=1a0a0a)](https://github.com/camisabino28/tcc-economia-ibmec)
-[![Status](https://img.shields.io/badge/status-em%20desenvolvimento-e05555?style=flat-square)](https://github.com/camisabino28/tcc-economia-ibmec)
+[![Status](https://img.shields.io/badge/status-concluído-2e8b57?style=flat-square)](https://github.com/camisabino28/tcc-economia-ibmec)
 
 </div>
 
@@ -81,6 +81,8 @@ A comparação estatística entre as previsões é realizada por meio do teste d
 
 Também é conduzida uma análise de robustez com janela móvel (*rolling window*) de cinco anos.
 
+Na análise de robustez, a comparação considera GARCH(1,1) e Random Forest, uma vez que o EGARCH apresentou problemas de convergência durante as estimações com janela móvel.
+
 ### Fonte de dados
 
 **FRED — Federal Reserve Economic Data**
@@ -144,20 +146,15 @@ Os dados utilizados na análise empírica estão organizados no diretório `DATA
 │   │   ├── 📁 capitulos/
 │   │   ├── tcc_camila.tex
 │   │   └── referencias.bib
-│   │
-│   ├── 📁 manuscript_word/
-│   │
-│   └── 📁 REFERENCES/
-│       └── 📁 pdf/
 │
 ├── 📁 OUTPUTS/
 │   ├── 📁 figures/
 │   ├── 📁 TABLES/
-│   └── 📁 results/
-│       └── metricas_desempenho.csv
 │
 ├── 📁 SCRIPTS/
 │   ├── 📁 Backtesting/
+│   |     ├── backtesting.py
+│   |     ├── diebold_mariano.py
 │   ├── main.py
 │   ├── data.py
 │   ├── features.py
@@ -170,7 +167,7 @@ Os dados utilizados na análise empírica estão organizados no diretório `DATA
 ├── .gitignore
 ├── README.md
 ├── requirements.txt
-└── configuracao_latex_vscode_windows.md
+└── main.py
 ```
 
 ### Organização dos diretórios
@@ -225,4 +222,4 @@ A base bibliográfica contempla trabalhos sobre modelagem da volatilidade, econo
 
 <br>
 
-<img src="[https://capsule-render.vercel.app/api?type=waving&color=0:6b2020,50:3d1515,100:1a0a0a&height=100&section=footer](https://capsule-render.vercel.app/api?type=waving\&color=0:6b2020,50:3d1515,100:1a0a0a\&height=100\&section=footer)" width="100%" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:6b2020,50:3d1515,100:1a0a0a&height=100&section=footer" width="100%" />
