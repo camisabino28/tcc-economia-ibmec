@@ -11,6 +11,8 @@ from SCRIPTS.garch_model import ajustar_modelo, evaluate_model, garch_walk_forwa
 from SCRIPTS.random_forest import rf_walk_forward
 import os
 os.makedirs("results", exist_ok=True)
+os.makedirs("OUTPUTS/figures", exist_ok=True)
+os.makedirs("OUTPUTS/tables", exist_ok=True)
 from SCRIPTS.Backtesting.backtesting import (
         carregar_resultados,
         calcular_metricas,
