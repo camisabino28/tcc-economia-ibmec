@@ -138,14 +138,3 @@ Para as métricas MSE e QLIKE, valores menores indicam melhor desempenho prediti
 
 Ademais, como no teste Diebold–Mariano a hipótese nula estabelece que os dois modelos apresentam perdas esperadas iguais, p-valores inferiores ao nível de significância adotado indicam diferenças estatisticamente significativas entre os modelos. O sinal da estatística DM-HLN indica a direção dessa diferença, considerando a ordem dos modelos na 
 comparação, em que valores negativos favorecem o Modelo A, enquanto valores positivos favorecem o Modelo B.
-
-\section{Limitações}
-
-Este estudo apresenta algumas limitações que devem ser registradas. A primeira é que a proxy de volatilidade adotada, o retorno ao quadrado ($r_t^2$), é uma medida ruidosa da volatilidade latente, pois combina variância condicional e o quadrado da inovação. Em estudos com dados intradiários, 
-seria possível calcular a volatilidade realizada de forma mais precisa; no entanto, a disponibilidade de dados diários de fechamento é suficiente para o escopo deste trabalho e é o padrão adotado na literatura comparativa com modelos GARCH.
-
-Outras limitações vêm do próprio Random Forest, que não possui estrutura de memória temporal interna, dependendo inteiramente da engenharia de \textit{features} para capturar a dinâmica serial da volatilidade. A escolha das defasagens e variáveis incluídas no vetor de \textit{features} introduz um grau de subjetividade 
-que modelos econométricos tradicionais evitam por construção. Há ainda a diferença na frequência de reestimação, em que o Random Forest é reestimado a cada cinco dias úteis, enquanto o GARCH e o EGARCH são reestimados diariamente. Essa assimetria, se houver algum efeito, é contra o Random Forest, que passa até quatro dias defasado.
-
-Por fim, a análise é restrita à previsão de um passo à frente (one-step-ahead), não abrangendo horizontes mais longos. A extensão para múltiplos horizontes, bem como a incorporação de variáveis exógenas, como o índice VIX, o diferencial de juros Brasil-EUA e o CDS soberano brasileiro, constituem agenda para pesquisas futuras.
-
